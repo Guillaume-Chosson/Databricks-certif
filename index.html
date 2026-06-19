@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Databricks DEA — Entraînement à la certification</title>
+  <meta name="description" content="Application d'entraînement à la certification Databricks Certified Data Engineer Associate : cours complet par section et examens blancs avec correction et renvoi vers le cours." />
+
+  <!-- Polices -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- ===================== Sidebar ===================== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">
+          <span class="b"></span>
+          <span class="s"></span>
+          <span class="g"></span>
+        </div>
+        <div>
+          <h1>Databricks DEA</h1>
+          <span class="tag">Data Engineer Associate</span>
+        </div>
+      </div>
+
+      <div class="mode-switch">
+        <button id="mode-course" type="button">Cours</button>
+        <button id="mode-exam" type="button">Examen</button>
+      </div>
+
+      <nav id="nav-area"></nav>
+
+      <div class="sidebar-foot">
+        Entraînement non officiel basé sur l'Exam Guide (v. 4 mai 2026).<br />
+        45 questions notées · 90 min · seuil ≈ 70 %.<br />
+        Questions originales ; les 5 exemples officiels sont reproduits de l'Exam Guide.
+      </div>
+    </aside>
+
+    <!-- ===================== Main ===================== -->
+    <main class="main">
+      <div class="topbar">
+        <button class="burger" id="burger" type="button" aria-label="Ouvrir le menu">☰</button>
+        <span class="tb-title" id="tb-title">Databricks DEA</span>
+      </div>
+      <div class="content" id="content"></div>
+    </main>
+
+    <div class="scrim" id="scrim"></div>
+  </div>
+
+  <!-- data.js doit être chargé AVANT app.js -->
+  <script src="assets/data.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
