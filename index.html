@@ -1317,12 +1317,12 @@ const QUESTIONS = [
   <script>
 /* ============================================================
    Databricks DEA Trainer — COURS COMPLET (par module W1→W4)
-   Reprise fidèle et exhaustive des 4 supports fournis,
-   reformulée (les supports Databricks Academy sont sous droit d'auteur).
+   Reprise détaillée et fidèle des 4 supports fournis.
+   Usage personnel/local.
    ============================================================ */
 const MODULES = [
   /* =========================================================
-     W1 — Data Ingestion with Lakeflow Connect (98 slides)
+     W1 — Data Ingestion with Lakeflow Connect
      ========================================================= */
   {
     id: "w1", num: "W1", tier: "bronze",
@@ -1332,101 +1332,147 @@ const MODULES = [
       {
         id: "w1l1", title: "Objectifs & prérequis du module",
         html: `
-<p>Ce module présente <strong>Lakeflow Connect</strong> comme une solution scalable et simplifiée pour ingérer des données dans Databricks depuis des sources variées.</p>
-<p><strong>Objectifs d'apprentissage :</strong></p>
+<p>Ce module présente <strong>Lakeflow Connect</strong> comme une solution <em>scalable</em> et <em>simplifiée</em> pour ingérer des données dans Databricks depuis une grande variété de sources.</p>
+<p><strong>Objectifs d'apprentissage du cours :</strong></p>
 <ul>
-<li>Décrire Lakeflow Connect et son rôle dans l'ingestion.</li>
+<li>Décrire Lakeflow Connect comme solution d'ingestion scalable et simplifiée depuis des sources variées.</li>
 <li>Revoir les bénéfices des tables Delta et de l'architecture Médaillon.</li>
-<li>Ingérer des données depuis le stockage objet cloud vers des tables Delta avec <code>CREATE TABLE AS</code>, <code>COPY INTO</code> et Auto Loader, y compris la capture des métadonnées de fichier dans les tables Bronze.</li>
-<li>Expliquer l'usage de la colonne <em>rescued</em> pour gérer les enregistrements malformés.</li>
-<li>Ingérer et aplatir des données JSON semi-structurées.</li>
-<li>Décrire les connecteurs managés (Managed Connectors) pour les systèmes d'entreprise.</li>
-<li>Discuter des alternatives : <code>MERGE INTO</code>, Delta Sharing, Databricks Marketplace.</li>
+<li>Démontrer comment ingérer des données depuis le stockage objet cloud vers des tables Delta avec <code>CREATE TABLE AS</code>, <code>COPY INTO</code> et Auto Loader, y compris la <strong>capture des métadonnées de fichier</strong> dans les tables de la couche Bronze.</li>
+<li>Expliquer comment les colonnes <em>rescued</em> servent à gérer les enregistrements malformés pendant l'ingestion.</li>
+<li>Illustrer les techniques d'ingestion et d'<em>aplatissement</em> de données JSON semi-structurées depuis le stockage cloud.</li>
+<li>Décrire les options d'ingestion depuis des systèmes d'entreprise via les <strong>Managed Connectors</strong> de Lakeflow Connect.</li>
+<li>Discuter des méthodes d'ingestion alternatives : <code>MERGE INTO</code>, Delta Sharing et Databricks Marketplace.</li>
 </ul>
-<div class="callout"><strong>Prérequis :</strong> connaissance des Workspaces Databricks, d'Apache Spark, de Delta Lake, de l'architecture Médaillon et des objets Unity Catalog ; aisance avec différents types de fichiers (Parquet, CSV, JSON, TXT…) ; SQL et Python dans des notebooks Databricks.</div>
-<p>Les ateliers (labs) du cours s'exécutent dans un environnement fourni par <strong>Vocareum</strong> (ouvert dans un nouvel onglet, cookies tiers et pop-ups à autoriser).</p>`
+<p><strong>Prérequis requis :</strong></p>
+<ul>
+<li><strong>Connaissance fondamentale de la plateforme Databricks</strong> — soit le cours « Get Started with Databricks for Data Engineering », soit une connaissance des Workspaces Databricks, d'Apache Spark, de Delta Lake et de l'architecture Médaillon, et des objets de données Unity Catalog.</li>
+<li><strong>Expérience avec différents types de fichiers</strong> — Parquet, CSV, JSON, TXT, etc.</li>
+<li><strong>Maîtrise de SQL / Python et des notebooks Databricks</strong> — coder en SQL et Python, et exécuter du code dans des notebooks.</li>
+</ul>
+<div class="callout"><strong>Environnement de lab :</strong> fourni par <strong>Vocareum</strong> (ouvert dans un nouvel onglet, préconfiguré avec les permissions et ressources). Les cookies tiers et les pop-ups doivent être autorisés dans le navigateur.</div>
+<p><strong>Plan du cours (4 sections) :</strong> Introduction au Data Engineering dans Databricks ; Ingestion depuis le stockage cloud avec les <em>Standard Connectors</em> ; Ingestion de données d'entreprise avec les <em>Managed Connectors</em> ; Alternatives d'ingestion.</p>`
       },
       {
         id: "w1l2", title: "Le Data Engineering dans Databricks",
         html: `
-<p>L'ingénierie de données dans Databricks repose sur <strong>Lakeflow</strong>, l'offre unifiée de data engineering pour la Data Intelligence Platform. Elle s'appuie sur trois fondations transverses :</p>
-<ul>
-<li><strong>Stockage optimisé</strong> (Optimized Storage)</li>
-<li><strong>Gouvernance unifiée</strong> (Unified Governance, via Unity Catalog)</li>
-<li><strong>Moteur de traitement leader</strong> : Apache Spark + Structured Streaming</li>
-</ul>
-<p>Lakeflow se décompose en trois composants :</p>
+<p>Databricks propose un <strong>data engineering unifié pour la Data Intelligence Platform</strong>, regroupé sous la marque <strong>Lakeflow</strong>. L'ensemble s'empile en couches, des fondations vers le haut :</p>
+<table class="tbl">
+<thead><tr><th>Couche</th><th>Rôle</th></tr></thead>
+<tbody>
+<tr><td><strong>Optimized Storage</strong></td><td>Stockage optimisé via <strong>Delta Lake</strong>, <strong>Parquet</strong> ou <strong>Iceberg</strong>.</td></tr>
+<tr><td><strong>Unified Governance</strong></td><td>Gouvernance unifiée assurée par <strong>Unity Catalog</strong> : contrôle d'accès, audit, lignage, monitoring qualité, découverte — partagés entre workspaces.</td></tr>
+<tr><td><strong>Data Processing Engine</strong></td><td>Moteur de traitement leader du marché : <strong>Apache Spark + Structured Streaming</strong>.</td></tr>
+</tbody>
+</table>
+<p>Au-dessus de ces fondations, <strong>Lakeflow</strong> est la solution de data engineering de bout en bout. Elle expose trois composants complémentaires :</p>
 <div class="cards-3">
-<div class="mini-card"><strong>Connect</strong><br/>Connecteurs d'ingestion efficaces.</div>
-<div class="mini-card"><strong>Spark Declarative Pipelines</strong><br/><em>(anciennement DLT)</em> — développement ETL accéléré.</div>
-<div class="mini-card"><strong>Jobs</strong><br/><em>(anciennement Workflows)</em> — orchestration fiable pour l'analytique et l'IA.</div>
+<div class="mini-card"><h4>Connect</h4><p>Connecteurs d'ingestion efficaces (<em>efficient ingestion connectors</em>) depuis applications, bases, stockage cloud, message buses et fichiers locaux.</p></div>
+<div class="mini-card"><h4>Declarative Pipelines</h4><p><em>Previously DLT</em> — framework SQL/Python pour pipelines batch et streaming ; développement ETL accéléré.</p></div>
+<div class="mini-card"><h4>Jobs</h4><p><em>Previously Workflows</em> — orchestration fiable des charges de traitement pour l'analytique et l'IA.</p></div>
 </div>
-<div class="callout"><strong>Renommages à connaître pour l'examen :</strong> DLT → <strong>Spark Declarative Pipelines</strong> ; Workflows → <strong>Lakeflow Jobs</strong>. Ce module se concentre sur l'<strong>ingestion avec Lakeflow Connect</strong>.</div>`
+<div class="callout"><strong>Renommages essentiels pour l'examen :</strong> <strong>DLT → (Lakeflow) Declarative Pipelines</strong> ; <strong>Workflows → Lakeflow Jobs</strong>. Ce cours se concentre sur l'<strong>ingestion de données avec Lakeflow Connect</strong>.</div>`
       },
       {
         id: "w1l3", title: "Qu'est-ce que Lakeflow Connect ?",
         html: `
-<p>Sans solution unifiée, les organisations assemblent un <strong>patchwork d'outils</strong> (outils tiers, solutions maison) pour ingérer depuis des fichiers on-prem, des systèmes legacy, des bases de données, du stockage cloud, des applications SaaS et des flux d'événements temps réel. C'est coûteux et difficile à maintenir.</p>
-<p>Lakeflow Connect apporte des <strong>connecteurs intégrés</strong> à la plateforme :</p>
-<ul>
-<li>Solution managée et efficace → coûts réduits et mise en valeur plus rapide.</li>
-<li>Interfaces self-service pour chaque profil → démocratisation des données.</li>
-<li>Observabilité et gouvernance unifiées → pipelines et tables sains et sécurisés.</li>
-</ul>
+<p><strong>Le problème :</strong> pour ingérer leurs données, les organisations finissent par assembler un <strong>patchwork de solutions</strong>. Les sources sont multiples — fichiers on-prem, systèmes legacy, bases de données, stockage cloud, applications SaaS, flux d'événements temps réel — et chacune est branchée via des outils tiers différents ou des solutions maison. Ce patchwork est coûteux, fragile et difficile à gouverner.</p>
+<p><strong>La réponse :</strong> Lakeflow Connect apporte des <strong>connecteurs intégrés</strong> à la Data Intelligence Platform. Les données arrivent depuis les bases on-prem, le stockage cloud, les applications SaaS et les flux d'événements, et bénéficient en sortie d'une gouvernance unifiée, d'un compute et stockage efficaces, et de cas d'usage variés (Streaming Analytics, Data Science & ML, Data Sharing, BI & Reporting).</p>
+<p><strong>Bénéfices clés :</strong></p>
+<table class="tbl">
+<thead><tr><th>Bénéfice</th><th>Conséquence</th></tr></thead>
+<tbody>
+<tr><td>Solution <strong>managée et efficace</strong></td><td>Coûts plus bas et mise en valeur plus rapide (<em>quicker time to value</em>).</td></tr>
+<tr><td>Interfaces <strong>self-service</strong> pour chaque profil</td><td>Données démocratisées, rythme d'innovation accéléré.</td></tr>
+<tr><td><strong>Observabilité et gouvernance unifiées</strong></td><td>Pipelines et tables sécurisés et sains (<em>secured and healthy</em>).</td></tr>
+</tbody>
+</table>
+<p><strong>Sources supportées :</strong> stockage objet cloud, Kafka, et d'autres sources. <strong>Méthodes d'ingestion :</strong> batch, batch incrémental, streaming.</p>
 <p><strong>Trois familles de connecteurs :</strong></p>
 <div class="cards-3">
-<div class="mini-card"><strong>Upload Files</strong><br/>Téléverser un fichier local vers un volume ou créer une table depuis un fichier local.</div>
-<div class="mini-card"><strong>Standard Connectors</strong><br/>Stockage objet cloud, Kafka et autres sources ; lectures/écritures incrémentales efficaces.</div>
-<div class="mini-card"><strong>Managed Connectors</strong><br/>Applications SaaS et bases de données d'entreprise.</div>
-</div>`
+<div class="mini-card"><h4>Upload Files</h4><p>Téléverser un fichier local vers un <em>volume</em>, ou créer une table à partir d'un fichier local.</p></div>
+<div class="mini-card"><h4>Standard Connectors</h4><p>Ingestion depuis le stockage objet cloud, Kafka et autres sources ; lectures/écritures incrémentales efficaces — ingestion plus rapide, scalable et économique.</p></div>
+<div class="mini-card"><h4>Managed Connectors</h4><p>Ingestion depuis des applications SaaS et des bases de données d'entreprise.</p></div>
+</div>
+<div class="callout"><strong>Question type :</strong> « quelle famille de connecteurs pour ingérer depuis Salesforce / Workday / une base PostgreSQL ? » → <strong>Managed Connectors</strong>. « Pour lire des fichiers CSV/JSON depuis S3/ADLS/GCS ? » → <strong>Standard Connectors</strong>.</div>`
       },
       {
         id: "w1l4", title: "Méthodes d'ingestion : batch, batch incrémental, streaming",
         html: `
-<p>Lakeflow Connect supporte trois méthodes d'ingestion :</p>
-<table class="tbl">
-<thead><tr><th>Méthode</th><th>Principe</th><th>Outils</th></tr></thead>
-<tbody>
-<tr><td><strong>Batch</strong></td><td>Charge des lots de lignes, souvent planifiés. Le batch traditionnel <em>retraite tous les enregistrements</em> à chaque exécution.</td><td><code>CREATE TABLE AS</code> (CTAS), <code>spark.read.load()</code></td></tr>
-<tr><td><strong>Batch incrémental</strong></td><td>Seules les <em>nouvelles</em> données sont ingérées (les enregistrements déjà chargés sont ignorés automatiquement). Plus rapide et plus économe.</td><td><code>COPY INTO</code>, <code>spark.readStream</code> (Auto Loader, trigger planifié), Declarative Pipelines (<code>CREATE OR REFRESH STREAMING TABLE</code>)</td></tr>
-<tr><td><strong>Streaming</strong></td><td>Charge les données en continu, au fil de leur génération, pour les interroger quasi en temps réel ; micro-batchs à intervalles très courts.</td><td><code>spark.readStream</code> (Auto Loader, trigger continu), Declarative Pipelines (mode continu)</td></tr>
-</tbody>
-</table>`
+<p>Avec les <strong>Standard Connectors</strong>, Lakeflow Connect propose trois approches, du retraitement complet au temps réel.</p>
+<h4>1) Batch</h4>
+<ul>
+<li>Charge des <strong>lots de lignes</strong> dans Databricks, souvent selon une <strong>planification</strong>.</li>
+<li>Le batch traditionnel <strong>retraite tous les enregistrements</strong> à chaque exécution (toutes les données sont ré-ingérées à chaque run du pipeline).</li>
+<li>Outils : <code>CREATE TABLE AS</code> (CTAS), <code>spark.read.load()</code>.</li>
+</ul>
+<h4>2) Batch incrémental</h4>
+<ul>
+<li>Seules les <strong>nouvelles données</strong> sont ingérées (append) ; les enregistrements déjà chargés sont <strong>ignorés automatiquement</strong>.</li>
+<li>Ingestion plus rapide et plus économe en ressources car on traite moins de données.</li>
+<li>Outils : <code>COPY INTO</code> ; <code>spark.readStream</code> (Auto Loader avec <em>trigger</em> planifié/timed) ; Declarative Pipelines (<code>CREATE OR REFRESH STREAMING TABLE</code>).</li>
+</ul>
+<h4>3) Streaming</h4>
+<ul>
+<li>Charge en continu les lignes (ou lots de lignes) au fur et à mesure de leur génération, pour les interroger <strong>quasi en temps réel</strong> à leur arrivée.</li>
+<li>Le <strong>micro-batch</strong> traite de petits lots à intervalles très courts et fréquents (secondes/minutes) — équilibre entre latence et efficacité système.</li>
+<li>Idéal pour les sources comme <strong>Apache Kafka, Amazon Kinesis, Google Pub/Sub, Apache Pulsar</strong>.</li>
+<li>Outils : <code>spark.readStream</code> (Auto Loader avec <em>trigger</em> continu) ; Declarative Pipelines (mode <em>trigger</em> continu).</li>
+</ul>
+<div class="callout"><strong>À retenir :</strong> <strong>batch</strong> = tout retraiter ; <strong>incrémental</strong> = uniquement le nouveau ; <strong>streaming</strong> = en continu, par micro-batchs.</div>`
       },
       {
         id: "w1l5", title: "Revue de Delta Lake & architecture Médaillon",
         html: `
-<p><strong>Delta Lake</strong> est un protocole open-source de lecture/écriture de fichiers vers le stockage cloud. Une <strong>table Delta</strong> stocke ses données dans un répertoire :</p>
+<p><strong>Delta Lake</strong> est un <strong>protocole open-source</strong> de lecture et d'écriture de fichiers vers le stockage cloud. On y ingère des données depuis des sources variées, et il s'appuie sur des fichiers <strong>Parquet</strong> (et est compatible avec le format <strong>Iceberg</strong>). Les tables Delta offrent un <em>open table format</em> qui supporte l'architecture Lakehouse.</p>
+<h4>Composants d'une table Delta</h4>
+<p>Une table Delta est stockée comme un <strong>répertoire</strong> (<code>DeltaTableName/</code>) qui contient :</p>
 <ul>
-<li>les données sous forme de <strong>fichiers Parquet</strong> (<code>…snappy.parquet</code>) ;</li>
-<li>un <strong>journal de transactions</strong> avec métadonnées dans <code>_delta_log/</code> (<code>…0000.json</code>, <code>…0001.json</code>, …).</li>
+<li>les <strong>données</strong> sous forme de fichiers Parquet — par ex. <code>…282e.snappy.parquet</code>, <code>…432c.snappy.parquet</code> ;</li>
+<li>un <strong>journal de transactions</strong> (transaction log) avec les métadonnées, dans le sous-dossier <code>_delta_log/</code> — fichiers <code>…0000.json</code>, <code>…0001.json</code>, <code>…0002.json</code>, etc.</li>
 </ul>
-<p><strong>Fonctionnalités clés des tables Delta :</strong> transactions <strong>ACID</strong>, <strong>Time Travel</strong>, <strong>DML</strong> (Data Manipulation Language), <strong>évolution et application de schéma</strong> (schema evolution & enforcement), et bien d'autres.</p>
-<p><strong>Architecture Médaillon (multi-hop) :</strong> on organise les données par niveaux de qualité croissante.</p>
+<pre><code>DeltaTableName/
+├── …282e.snappy.parquet      ← données
+├── …432c.snappy.parquet
+└── _delta_log/               ← transactions + métadonnées
+    ├── 0000.json
+    ├── 0001.json
+    └── 0002.json</code></pre>
+<p>Le transaction log introduit la notion d'<strong>états de table</strong> (table states) : chaque INSERT / UPDATE / DELETE ajoute une transaction (fichier de log), ce qui maintient la table à jour et permet des <strong>vues cohérentes</strong> ainsi que le <strong>voyage dans le temps</strong>. Sans Delta, modifier un fichier de data lake imposait de le recréer manuellement et de suivre les versions à la main.</p>
+<h4>Fonctionnalités clés des tables Delta</h4>
+<ul>
+<li><strong>Transactions ACID</strong> — atomicité, cohérence, isolation, durabilité ; lectures/écritures concurrentes sans conflit.</li>
+<li><strong>Time Travel</strong> — interroger et revenir à des versions antérieures (audit, recovery).</li>
+<li><strong>DML</strong> — INSERT, UPDATE, DELETE, MERGE.</li>
+<li><strong>Schema Evolution & Enforcement</strong> — évolution et application du schéma sans casser les workflows existants.</li>
+<li>… et bien d'autres (batch + streaming unifiés, optimisation/performance, scalabilité). Delta Lake est <strong>open-source</strong>.</li>
+</ul>
+<h4>Architecture Médaillon (multi-hop)</h4>
+<p>On améliore <strong>progressivement la structure et la qualité</strong> des données à mesure qu'elles traversent les couches :</p>
 <div class="medallion-row">
-<span class="med-tier bronze">Bronze — données brutes ingérées</span>
-<span class="med-arrow">→</span>
-<span class="med-tier silver">Silver — données nettoyées</span>
-<span class="med-arrow">→</span>
-<span class="med-tier gold">Gold — agrégats métier</span>
+<div class="med-tier bronze"><span class="badge">Bronze</span><p>Raw Data Ingestion — données brutes, non traitées, ingérées « as is ».</p></div>
+<div class="med-arrow">→</div>
+<div class="med-tier silver"><span class="badge">Silver</span><p>Cleaned Data — nettoyées, transformées, enrichies ; adaptées à l'analyse.</p></div>
+<div class="med-arrow">→</div>
+<div class="med-tier gold"><span class="badge">Gold</span><p>Business-Level Aggregates — curées, agrégées, haute qualité ; pour BI et analytique avancée.</p></div>
 </div>
-<p>Consommateurs en sortie : ML &amp; IA, BI &amp; reporting, analytique streaming.</p>`
+<p>Le traitement et la transformation peuvent se faire en <strong>batch</strong> ou en <strong>streaming</strong>. Les consommateurs en sortie : <strong>ML & IA</strong>, <strong>BI & Reporting</strong>, <strong>Streaming Analytics</strong>.</p>`
       },
       {
         id: "w1l6", title: "Ingestion depuis le stockage cloud — vue d'ensemble",
         html: `
-<p>L'objectif est de convertir des formats de fichiers bruts (CSV, JSON, Parquet…) du stockage objet cloud en <strong>tables Delta</strong>. Trois patterns principaux :</p>
+<p>Le but de cette section : convertir des <strong>formats de fichiers bruts</strong> (CSV, JSON, Parquet, etc.) présents dans le <strong>stockage objet cloud</strong> en <strong>tables Delta</strong> propres et exploitables — débloquant ACID, Time Travel et application du schéma.</p>
+<p>Trois patterns d'ingestion depuis le stockage objet cloud, réalisés via les <strong>Standard Connectors</strong> de Lakeflow Connect :</p>
 <div class="cards-3">
-<div class="mini-card"><strong>CREATE TABLE AS</strong><br/>Batch.</div>
-<div class="mini-card"><strong>COPY INTO</strong><br/>Batch incrémental.</div>
-<div class="mini-card"><strong>Auto Loader</strong><br/>Batch incrémental ou streaming.</div>
+<div class="mini-card"><h4>CREATE TABLE AS</h4><p>(CTAS) — ingestion <strong>batch</strong>.</p></div>
+<div class="mini-card"><h4>COPY INTO</h4><p>Ingestion <strong>batch incrémental</strong>.</p></div>
+<div class="mini-card"><h4>Auto Loader</h4><p>Batch incrémental <strong>ou streaming</strong>.</p></div>
 </div>
-<p>Les leçons suivantes détaillent chacune de ces méthodes, puis leur comparaison.</p>`
+<p>Les leçons suivantes détaillent chacune de ces trois méthodes, puis fournissent un comparatif complet pour choisir la bonne selon le volume, la latence et la fréquence.</p>`
       },
       {
         id: "w1l7", title: "Méthode 1 — CREATE TABLE AS (CTAS)",
         html: `
-<p><code>CREATE TABLE AS</code> (CTAS) crée par défaut une <strong>table Delta</strong> à partir de fichiers du stockage objet cloud.</p>
+<p><code>CREATE TABLE AS</code> (CTAS) crée <strong>par défaut une table Delta</strong> à partir de fichiers du stockage objet cloud.</p>
 <pre><code>CREATE TABLE new_table AS
 SELECT *
 FROM read_files(
@@ -1434,19 +1480,24 @@ FROM read_files(
   format =&gt; '&lt;file_type&gt;',
   &lt;other_format_specific_options&gt;
 );</code></pre>
-<p>La fonction <code>read_files()</code> lit les fichiers d'un emplacement et renvoie les données sous forme tabulaire :</p>
+<p>La fonction <code>read_files()</code> lit les fichiers situés sous un emplacement fourni et renvoie les données sous <strong>forme tabulaire</strong>. Caractéristiques :</p>
 <ul>
-<li>supporte JSON, CSV, XML, TEXT, BINARYFILE, PARQUET, AVRO, ORC ;</li>
-<li>peut <strong>détecter le format automatiquement</strong> et inférer un schéma unifié sur tous les fichiers ;</li>
-<li>accepte des options spécifiques au format source ;</li>
-<li>peut être utilisée dans des <strong>streaming tables</strong> pour ingérer de façon incrémentale via Auto Loader.</li>
+<li>Supporte la lecture des formats <strong>JSON, CSV, XML, TEXT, BINARYFILE, PARQUET, AVRO et ORC</strong>.</li>
+<li>Peut <strong>détecter automatiquement le format</strong> du fichier et <strong>inférer un schéma unifié</strong> sur l'ensemble des fichiers.</li>
+<li>Permet de spécifier des <strong>options propres au format</strong> source pour adapter la lecture.</li>
+<li>Peut être utilisée dans des <strong>streaming tables</strong> pour ingérer de façon incrémentale des fichiers dans Delta Lake via <strong>Auto Loader</strong>.</li>
 </ul>
-<div class="callout">CTAS en mode batch est idéal pour des jeux de données plus petits ou une ingestion ponctuelle. Il peut être planifié, mais relit alors l'ensemble des données à chaque exécution (pas d'idempotence).</div>`
+<div class="callout"><strong>Résumé d'usage :</strong> idéal pour une ingestion ponctuelle, ad hoc, ou sur de plus petits jeux de données. Peut être planifié, mais relit alors et retraite toutes les données à chaque exécution (<strong>pas d'idempotence</strong>, latence élevée).</div>`
       },
       {
         id: "w1l8", title: "Méthode 2 — COPY INTO (batch incrémental, legacy)",
         html: `
-<p><code>COPY INTO</code> charge de façon incrémentale dans une table existante. On crée d'abord la table (avec ou sans schéma), puis on copie :</p>
+<p><code>COPY INTO</code> réalise une <strong>ingestion incrémentale</strong> (bulk load) depuis des fichiers du stockage cloud vers une table Delta existante, en deux temps.</p>
+<h4>Étape 1 — créer une table pour recevoir les données</h4>
+<ul>
+<li>On peut créer une table <strong>sans schéma</strong> (il sera déduit), ou explicitement <strong>avec un schéma</strong>.</li>
+</ul>
+<h4>Étape 2 — copier de façon incrémentale</h4>
 <pre><code>CREATE TABLE new_table;
 
 COPY INTO new_table
@@ -1455,24 +1506,25 @@ FILEFORMAT = &lt;file_type&gt;
 FORMAT_OPTIONS (&lt;options&gt;)
 COPY_OPTIONS (&lt;options&gt;);</code></pre>
 <ul>
-<li>Opération <strong>idempotente et ré-essayable</strong> : les fichiers déjà chargés sont <strong>ignorés</strong> (ingestion incrémentale).</li>
-<li>Supporte les formats courants (Parquet, JSON, XML…).</li>
-<li><code>FROM</code> pointe vers l'emplacement cloud qui reçoit continuellement des fichiers.</li>
-<li><code>FORMAT_OPTIONS()</code> : comment les fichiers sources sont analysés/interprétés (dépend du format).</li>
-<li><code>COPY_OPTIONS()</code> : comportement de l'opération elle-même, par ex. évolution de schéma (<code>mergeSchema</code>) et idempotence (<code>force</code>).</li>
+<li>Opération <strong>idempotente et ré-essayable</strong> (<em>retriable</em>) : les fichiers <strong>déjà chargés sont ignorés</strong> → ingestion incrémentale, idéale quand l'emplacement cloud reçoit continuellement de nouveaux fichiers.</li>
+<li>Supporte les types de fichiers courants : Parquet, JSON, XML, etc.</li>
+<li><code>FROM</code> spécifie le chemin de l'emplacement cloud qui reçoit continuellement de nouveaux fichiers.</li>
+<li><code>FORMAT_OPTIONS()</code> contrôle la façon dont les fichiers sources sont <strong>analysés et interprétés</strong> ; les options disponibles dépendent du format de fichier.</li>
+<li><code>COPY_OPTIONS()</code> contrôle le comportement de l'opération <code>COPY INTO</code> elle-même — par ex. l'<strong>évolution de schéma</strong> (<code>mergeSchema</code>) et l'<strong>idempotence</strong> (<code>force</code>).</li>
 </ul>
-<div class="callout">Simple et répétable pour l'ingestion incrémentale de fichiers ; adapté aux jobs/pipelines planifiés. Qualifié de « legacy » au profit d'Auto Loader pour les très gros volumes.</div>`
+<div class="callout"><strong>Résumé d'usage :</strong> simple et répétable pour l'ingestion incrémentale de fichiers, parfait pour des jobs/pipelines planifiés. Désigné « legacy » : pour de gros volumes, Databricks recommande désormais <strong>Auto Loader + streaming tables</strong>.</div>`
       },
       {
         id: "w1l9", title: "Méthode 3 — Auto Loader",
         html: `
-<p><strong>Auto Loader</strong> traite de façon incrémentale et efficace les nouveaux fichiers à mesure qu'ils arrivent dans le stockage cloud, sans configuration additionnelle.</p>
+<p><strong>Auto Loader</strong> traite de façon <strong>incrémentale et efficace</strong> les nouveaux fichiers de données à mesure qu'ils arrivent dans le stockage cloud, <strong>sans configuration additionnelle</strong>. Il détecte et ingère automatiquement les nouveaux fichiers dans des tables Delta.</p>
 <ul>
-<li>Fonctionne en batch ou en streaming ; support Python et SQL (via Declarative Pipelines).</li>
-<li>Peut traiter des <strong>milliards de fichiers</strong>.</li>
+<li>Fonctionne en <strong>batch ou en streaming</strong>.</li>
+<li>Support <strong>Python et SQL</strong> (le SQL via Declarative Pipelines).</li>
+<li>Peut traiter des <strong>milliards de fichiers</strong> (built to scale).</li>
 <li>Construit sur <strong>Spark Structured Streaming</strong>.</li>
 </ul>
-<p><strong>Auto Loader en Python :</strong></p>
+<h4>Auto Loader en Python</h4>
 <pre><code>(spark.readStream
   .format("cloudFiles")
   .option("cloudFiles.format", "json")
@@ -1483,13 +1535,18 @@ COPY_OPTIONS (&lt;options&gt;);</code></pre>
   .trigger(processingTime="5 seconds")
   .toTable("catalog.database.table")
 )</code></pre>
-<p><strong>Auto Loader en SQL (Declarative Pipelines) :</strong></p>
+<p>Points clés du code : le format spécial <code>cloudFiles</code> (active Auto Loader), le <code>cloudFiles.schemaLocation</code> (où Auto Loader mémorise/fait évoluer le schéma), le <code>checkpointLocation</code> (suivi des fichiers déjà lus + état/progression), et le <code>trigger</code> qui fixe le rythme des micro-batchs. <code>.toTable()</code> écrit dans la table Delta cible.</p>
+<h4>Auto Loader en SQL (Declarative Pipelines)</h4>
 <pre><code>CREATE OR REFRESH STREAMING TABLE catalog.schema.table
 SCHEDULE EVERY 1 HOUR
 AS
 SELECT *
-FROM STREAM read_files('&lt;dir_path&gt;', format =&gt; '&lt;file_type&gt;');</code></pre>
-<div class="callout">Idéal pour l'ingestion quasi temps réel ou incrémentale à grande échelle, avec forte automatisation (détection et évolution automatiques de schéma).</div>`
+FROM STREAM read_files(
+  '&lt;dir_path&gt;',
+  format =&gt; '&lt;file_type&gt;'
+);</code></pre>
+<p>Pour utiliser Auto Loader en Databricks SQL, on emploie <code>read_files</code> avec le mot-clé <strong><code>STREAM</code></strong> dans la clause <code>FROM</code>. Une <strong>streaming table</strong> est enregistrée dans Unity Catalog et génère automatiquement un pipeline ; Databricks recommande les streaming tables (plutôt que <code>COPY INTO</code>) pour ingérer en SQL.</p>
+<div class="callout">Un approfondissement d'Auto Loader dépasse le périmètre du cours ; voir « Stream Processing and Analysis with Apache Spark », « Build Data Pipelines with Lakeflow Declarative Pipelines » et « Databricks Streaming and DLT (Advanced) ». <strong>Résumé d'usage :</strong> le meilleur choix pour le quasi temps réel ou l'incrémental à grande échelle, avec forte automatisation et détection/évolution automatiques de schéma.</div>`
       },
       {
         id: "w1l10", title: "Comparatif : CTAS vs COPY INTO vs Auto Loader",
@@ -1498,100 +1555,189 @@ FROM STREAM read_files('&lt;dir_path&gt;', format =&gt; '&lt;file_type&gt;');</c
 <thead><tr><th>Critère</th><th>CTAS (+ spark.read)</th><th>COPY INTO</th><th>Auto Loader</th></tr></thead>
 <tbody>
 <tr><td>Type d'ingestion</td><td>Batch</td><td>Batch incrémental</td><td>Incrémental (batch ou streaming)</td></tr>
-<tr><td>Cas d'usage</td><td>Petits jeux de données</td><td>Milliers de fichiers</td><td>Millions+ de fichiers/heure, backfills de milliards de fichiers</td></tr>
-<tr><td>Interface</td><td>Python (spark.read), SQL (CTAS)</td><td>SQL</td><td>Python (readStream), SQL via Declarative Pipelines (STREAMING TABLES)</td></tr>
+<tr><td>Cas d'usage</td><td>Meilleur pour les petits jeux de données</td><td>Idéal pour des milliers de fichiers</td><td>Passe à des millions+ de fichiers/heure ; backfills de milliards de fichiers</td></tr>
+<tr><td>Syntaxe / Interface</td><td>Python (<code>spark.read</code>), SQL (CTAS)</td><td>SQL</td><td>Python (<code>spark.readStream</code>), SQL via Declarative Pipelines (<code>CREATE OR REFRESH STREAMING TABLE</code>, utilisables aussi en Databricks SQL)</td></tr>
 <tr><td>Idempotence</td><td>Non</td><td>Oui</td><td>Oui</td></tr>
-<tr><td>Évolution de schéma</td><td>Manuelle / inférée à la lecture</td><td>Supportée via options</td><td>Détection et évolution automatiques</td></tr>
-<tr><td>Latence</td><td>Élevée</td><td>Modérée (planifiée)</td><td>Basse ou élevée selon config</td></tr>
-<tr><td>Facilité</td><td>Simple</td><td>Simple, basé SQL</td><td>Intermédiaire à avancé</td></tr>
+<tr><td>Évolution de schéma</td><td>Manuelle ou inférée à la lecture</td><td>Supportée via options</td><td>Détecte et fait évoluer automatiquement le schéma ; charge sans schéma prédéfini et gère les nouvelles colonnes</td></tr>
+<tr><td>Latence</td><td>Élevée</td><td>Modérée (planifiée)</td><td>Basse ou élevée selon la configuration</td></tr>
+<tr><td>Facilité d'usage</td><td>Simple</td><td>Simple, basé SQL</td><td>Intermédiaire à avancé (Python ou SQL, batch incrémental ou streaming)</td></tr>
 </tbody>
-</table>`
+</table>
+<p><strong>Synthèse :</strong> CTAS pour l'ingestion ponctuelle/ad hoc (planifiable mais relit tout) ; COPY INTO simple et répétable pour l'incrémental de fichiers (jobs/pipelines planifiés) ; Auto Loader pour le quasi temps réel ou l'incrémental à grande échelle, très automatisé et scalable.</p>
+<div class="callout"><strong>Question type :</strong> « des milliards de fichiers, schéma qui évolue, quasi temps réel » → <strong>Auto Loader</strong>. « Charger une fois un petit dataset pour exploration » → <strong>CTAS</strong>. « Job SQL planifié qui ne doit pas recharger les fichiers déjà vus » → <strong>COPY INTO</strong>.</div>`
       },
       {
         id: "w1l11", title: "Ajouter des colonnes de métadonnées à l'ingestion",
         html: `
-<p>À l'ingestion vers une table Bronze, on enrichit souvent les données avec des <strong>métadonnées de fichier</strong> issues des fichiers d'entrée :</p>
+<p>Au moment d'ingérer vers une table Bronze, on enrichit souvent les données avec des <strong>métadonnées de fichier</strong> issues des fichiers d'entrée — utile pour la <strong>traçabilité, l'audit et le débogage</strong>.</p>
+<p>Exemple : partant d'un fichier brut avec les colonnes <code>users</code> et <code>unix_ts</code>, on ajoute à la table Bronze une colonne <strong>horodatage de dernière modification</strong> et une colonne <strong>nom du fichier source</strong> :</p>
 <table class="tbl">
-<thead><tr><th>Métadonnée</th><th>Contenu</th><th>Exemple</th></tr></thead>
+<thead><tr><th>users</th><th>unix_ts</th><th>last_mod_time</th><th>source</th></tr></thead>
 <tbody>
-<tr><td><code>_metadata.file_name</code></td><td>Nom du fichier d'entrée</td><td><code>part-00002-7573-1-c000…</code></td></tr>
-<tr><td><code>_metadata.file_modification_time</code></td><td>Horodatage de dernière modification</td><td><code>2024-10-07T18:04:42.885+00:00</code></td></tr>
+<tr><td>peter</td><td>1592187804331222</td><td>2024-10-01T18:04…</td><td>raw_file</td></tr>
+<tr><td>zebi</td><td>1592200952155132</td><td>2024-10-01T18:04…</td><td>raw_file</td></tr>
 </tbody>
 </table>
-<p>On ajoute par exemple une colonne <em>source</em> (nom du fichier) et une colonne <em>last_mod_time</em> à la table Bronze, ce qui facilite la traçabilité et le débogage.</p>`
+<p>On utilise la colonne spéciale <strong><code>_metadata</code></strong> : c'est une colonne <strong>cachée</strong>, disponible pour <strong>tous les formats de fichiers d'entrée</strong>. Pour l'inclure dans le DataFrame retourné, il faut la <strong>sélectionner explicitement</strong> dans la requête de lecture lors de la spécification de la source.</p>
+<p>Les métadonnées courantes accessibles depuis les fichiers d'entrée :</p>
+<table class="tbl">
+<thead><tr><th>Champ</th><th>Contenu</th><th>Exemple</th></tr></thead>
+<tbody>
+<tr><td><code>_metadata.file_name</code></td><td>Nom du fichier d'entrée</td><td><code>part-00002-7573-1-c000…</code></td></tr>
+<tr><td><code>_metadata.file_modification_time</code></td><td>Horodatage de dernière modification du fichier</td><td><code>2024-10-07T18:04:42.885+00:00</code></td></tr>
+</tbody>
+</table>
+<pre><code>SELECT
+  *,
+  _metadata.file_name              AS source,
+  _metadata.file_modification_time AS last_mod_time
+FROM read_files('&lt;dir_path&gt;', format =&gt; 'csv');</code></pre>
+<p>Doc : <code>docs.databricks.com/.../ingestion/file-metadata-column</code></p>`
       },
       {
         id: "w1l12", title: "La colonne _rescued_data (lignes malformées)",
         html: `
-<p><code>read_files()</code>, <code>spark.read</code> et Auto Loader fournissent une colonne <strong><code>_rescued_data</code></strong> lorsque les données brutes ne correspondent pas au schéma attendu.</p>
-<p>La ligne malformée est « secourue » dans <code>_rescued_data</code> sous forme de chaîne JSON, plutôt que d'être perdue ou de faire échouer l'ingestion. Exemple :</p>
+<p><code>read_files()</code>, <code>spark.read</code> et Auto Loader fournissent une <strong>colonne <code>_rescued_data</code></strong> lorsque les données brutes ne correspondent pas au schéma attendu. Au lieu de <strong>perdre la ligne</strong> ou de faire échouer l'ingestion, la donnée problématique est « secourue » (rescued).</p>
+<p>La valeur non conforme est <strong>rescued dans la colonne <code>_rescued_data</code> sous forme de chaîne au format JSON</strong>, contenant la valeur et le chemin du fichier source (<code>_file_path</code>). Schéma de principe :</p>
+<pre><code>… | _rescued_data
+…   {"column": "&lt;data&gt;", "_file_path": "&lt;file_path&gt;"}
+…   null</code></pre>
+<h4>Exemple concret</h4>
+<p>La colonne <code>users</code> est lue en <strong>STRING</strong>, la colonne <code>cost</code> en <strong>BIGINT</strong>. Un fichier contient la valeur <code>$100</code> (une chaîne) pour Peter et <code>300</code> pour Zebi :</p>
 <table class="tbl">
-<thead><tr><th>users</th><th>cost (BIGINT)</th><th>_rescued_data</th></tr></thead>
+<thead><tr><th>users (STRING)</th><th>cost (BIGINT)</th><th>_rescued_data</th></tr></thead>
 <tbody>
 <tr><td>peter</td><td>null</td><td><code>{"cost":"$100","_file_path":"…"}</code></td></tr>
 <tr><td>zebi</td><td>300</td><td>null</td></tr>
 </tbody>
 </table>
-<p>Ici <code>$100</code> n'est pas un BIGINT valide : la valeur est mise en <code>_rescued_data</code> et <code>cost</code> passe à <code>null</code>. Pour la ligne valide (300), <code>_rescued_data</code> vaut <code>null</code>.</p>`
+<ul>
+<li><code>$100</code> n'est pas un BIGINT valide → la valeur est placée dans <code>_rescued_data</code> (JSON) et <code>cost</code> passe à <code>null</code> pour cette ligne.</li>
+<li>Pour la ligne valide (<code>300</code>, conforme au type), <code>_rescued_data</code> vaut <code>null</code>.</li>
+</ul>
+<div class="callout"><strong>À retenir :</strong> <code>_rescued_data</code> = filet de sécurité contre la perte de données. Les champs qui ne matchent pas le schéma ne sont pas droppés, ils sont capturés en JSON.</div>`
       },
       {
         id: "w1l13", title: "Ingestion de JSON semi-structuré",
         html: `
-<p>Le <strong>JSON</strong> est composé d'objets (entre accolades), de clés (entre guillemets) et de valeurs : String, Number, Boolean, Array, Object.</p>
-<p>Trois façons de manipuler du JSON selon le type de colonne :</p>
+<p>Ingérer du semi-structuré (JSON) est courant pour les données d'événements, les logs ou les données d'API. L'objectif : parser et transformer ce JSON, potentiellement <strong>imbriqué</strong>, en tables Delta structurées.</p>
+<h4>Rappel sur le JSON</h4>
+<ul>
+<li>Les <strong>objets</strong> JSON sont délimités par des accolades <code>{ }</code>.</li>
+<li>Les <strong>clés</strong> sont toujours des chaînes entre guillemets.</li>
+<li>Les <strong>valeurs</strong> peuvent être : String, Number, Boolean, Array, Object — ou <code>null</code>. Les objets peuvent être <em>plats</em> ou <em>imbriqués</em>.</li>
+</ul>
+<pre><code>{
+  "name": "John Doe",
+  "age": 35,
+  "address": { "city": "Anytown", "state": "CA" },
+  "children": [
+    { "name": "Owen", "age": 10 },
+    { "name": "Eva",  "age": 8 }
+  ]
+}</code></pre>
+<h4>Trois façons de manipuler du JSON selon le type de colonne</h4>
 <table class="tbl">
 <thead><tr><th>Type</th><th>Caractéristiques</th></tr></thead>
 <tbody>
-<tr><td><strong>STRING</strong></td><td>Stocke n'importe quel JSON sans contrainte ; le moins performant. Accès aux sous-champs avec la syntaxe <strong>deux-points</strong> : <code>json_column:name</code>, <code>json_column:address:city</code>.</td></tr>
-<tr><td><strong>STRUCT</strong></td><td>Parse le JSON selon un schéma défini ; applique le schéma ; plus performant en requête.</td></tr>
-<tr><td><strong>VARIANT</strong></td><td>Peut stocker tout type de données dont le JSON ; très flexible ; meilleures performances. <em>(Public Preview Q2 2025.)</em></td></tr>
+<tr><td><strong>1. STRING</strong></td><td>Le JSON est stocké comme une simple chaîne ; peut contenir n'importe quel JSON sans contrainte ; <strong>le moins performant</strong>. Accès aux sous-champs avec la <strong>syntaxe deux-points</strong> <code>:</code>.</td></tr>
+<tr><td><strong>2. STRUCT</strong></td><td>Le JSON est parsé en type STRUCT avec un <strong>schéma défini</strong> ; le STRUCT <strong>applique le schéma</strong> ; <strong>plus efficace</strong> en requête qu'une chaîne JSON.</td></tr>
+<tr><td><strong>3. VARIANT</strong></td><td>Peut stocker tout type de données, y compris du JSON ; idéal pour le semi-structuré ; <strong>très flexible</strong> (s'adapte sans schéma rigide) et <strong>meilleures performances</strong> que les méthodes existantes. <em>(Public Preview à partir du Q2 2025.)</em></td></tr>
 </tbody>
 </table>
-<p><strong>Correspondance JSON → SQL :</strong> String→STRING, Number→INT/FLOAT/DOUBLE, Boolean→BOOLEAN, Object→STRUCT&lt;&gt;, Array→ARRAY&lt;&gt;.</p>
-<p><strong>Dériver et appliquer un schéma :</strong></p>
-<pre><code>-- 1) Déduire le schéma d'une chaîne JSON
+<h4>Accès aux sous-champs d'une colonne JSON STRING (syntaxe deux-points)</h4>
+<pre><code>SELECT json_column:name             -- → John Doe
+SELECT json_column:address:city     -- → Anytown</code></pre>
+<h4>Correspondance des types JSON → types SQL Databricks</h4>
+<table class="tbl">
+<thead><tr><th>Type JSON</th><th>Type SQL Databricks</th></tr></thead>
+<tbody>
+<tr><td>String</td><td>STRING</td></tr>
+<tr><td>Number</td><td>INT / FLOAT / DOUBLE</td></tr>
+<tr><td>Boolean</td><td>BOOLEAN</td></tr>
+<tr><td>Object</td><td>STRUCT&lt;&gt;</td></tr>
+<tr><td>Array</td><td>ARRAY&lt;&gt;</td></tr>
+</tbody>
+</table>
+<h4>Convertir une chaîne JSON en STRUCT</h4>
+<p>On définit un schéma STRUCT correspondant à la structure du JSON. La clé <code>address</code> (objet) devient un <code>STRUCT&lt;city, state&gt;</code> et la clé <code>children</code> (tableau d'objets) un <code>ARRAY&lt;STRUCT&lt;name, age&gt;&gt;</code> :</p>
+<pre><code>STRUCT&lt;
+  name: STRING,
+  age: INT,
+  address: STRUCT&lt;city: STRING, state: STRING&gt;,
+  children: ARRAY&lt;STRUCT&lt;name: STRING, age: INT&gt;&gt;
+&gt;</code></pre>
+<p>Deux fonctions clés, en deux étapes :</p>
+<pre><code>-- 1) Déduire automatiquement le schéma d'un exemple de chaîne JSON
 SELECT schema_of_json('sample-json-string');
 
--- 2) Convertir une colonne JSON en STRUCT
+-- 2) Convertir une colonne JSON en colonne STRUCT à partir du schéma obtenu
 SELECT from_json(json_col, 'json-struct-schema') AS struct_column
-FROM table;</code></pre>`
+FROM table;</code></pre>
+<div class="callout"><strong>Question type :</strong> « accéder à un sous-champ d'une colonne JSON stockée en STRING » → syntaxe <strong>deux-points</strong> (<code>col:champ:sous_champ</code>). « Convertir une colonne JSON STRING en colonne typée » → <code>schema_of_json()</code> puis <code>from_json()</code>.</div>`
       },
       {
         id: "w1l14", title: "Connecteurs managés (données d'entreprise)",
         html: `
-<p>Au-delà du stockage cloud (CTAS, COPY INTO, Auto Loader), les <strong>Managed Connectors</strong> de Lakeflow Connect simplifient l'ingestion depuis des bases de données et applications d'entreprise.</p>
-<p><strong>Bénéfices :</strong> simplifient l'ingestion depuis de nombreuses bases/applications ; interface « point and click » (ou API) ; <strong>entièrement managés par Databricks</strong> (moins de configuration manuelle et de code custom).</p>
-<p><strong>Ingestion SaaS :</strong> un pipeline Declarative serverless collecte les identifiants depuis Unity Catalog, atteint la source publiquement accessible (API, port OLAP…), transforme et écrit dans des <strong>Streaming Delta Tables</strong>.</p>
-<p><strong>Ingestion base de données :</strong> une <em>Ingestion Gateway</em> (compute classique) collecte les identifiants depuis UC, se connecte à la base source, sauvegarde l'état/staging dans un <strong>volume Unity Catalog</strong>, puis un pipeline serverless traite les données vers des Streaming Delta Tables.</p>
-<div class="callout"><strong>Partner Connect</strong> permet d'utiliser un écosystème de partenaires pour l'ingestion (bases on-prem/cloud, sources fichier, applications d'entreprise).</div>`
+<p>Au-delà du stockage cloud (CTAS, COPY INTO, Auto Loader), il reste à répondre à la question « <em>et pour ingérer depuis les bases de données et applications d'entreprise ?</em> ». C'est le rôle des <strong>Managed Connectors</strong> de Lakeflow Connect.</p>
+<h4>Bénéfices des Managed Connectors</h4>
+<ul>
+<li>Simplifient l'ingestion depuis une large variété de <strong>bases de données et applications d'entreprise</strong> (Salesforce, Workday, PostgreSQL, SQL Server, Dynamics 365, ServiceNow, Google Analytics, NetSuite, SharePoint…).</li>
+<li>Offrent une <strong>interface « point and click »</strong> (ou une API).</li>
+<li><strong>Entièrement managés par Databricks</strong> → moins de configuration manuelle et de code custom. Les connecteurs managés existent dans différents états de disponibilité (release states : Public Preview, GA…).</li>
+</ul>
+<h4>Ingestion SaaS (applications)</h4>
+<p>Lakeflow Connect collecte les données depuis des sources externes vers des <strong>Streaming Delta Tables</strong> via un pipeline <strong>Serverless Declarative</strong> :</p>
+<ol>
+<li>Un job <em>Serverless Declarative Pipelines</em> récupère les <strong>credentials depuis Unity Catalog</strong>.</li>
+<li>Le job atteint la source de données publiquement accessible (API, port OLAP ouvert, etc.).</li>
+<li>Le service transforme les données et les stocke dans une <strong>Streaming Delta Table</strong>.</li>
+</ol>
+<p>Pour les connecteurs SaaS, tout le mouvement de données se fait dans le <em>data plane</em> ; le <em>control plane</em> ne sert qu'au setup, au monitoring (event logs) et à la gestion.</p>
+<h4>Ingestion base de données</h4>
+<p>Architecture similaire, mais depuis des bases externes (on-prem ou cloud), avec deux éléments supplémentaires :</p>
+<ol>
+<li>Une <strong>Ingestion Gateway</strong> (pipeline Declarative sur <em>compute classique</em>) récupère les credentials depuis Unity Catalog.</li>
+<li>Elle se connecte avec ces credentials et collecte les données depuis les sources base de données.</li>
+<li>L'état le plus récent et les données de <em>staging</em> (métadonnées, snapshots, change logs) sont sauvegardés dans un <strong>volume Unity Catalog</strong> (couche de staging intermédiaire, sécurisée par UC).</li>
+<li>Un job <em>Serverless Declarative Pipelines</em> traite les données collectées vers les <strong>Streaming Delta Tables</strong>.</li>
+</ol>
+<div class="callout"><strong>Pourquoi une Gateway ?</strong> (1) <strong>Réseau</strong> : beaucoup de bases sont derrière un firewall / non exposées à Internet ; la gateway peut être déployée dans votre réseau. (2) <strong>Charge</strong> : une seule gateway parle à la base puis « fan-out » vers N pipelines, limitant le nombre de connexions directes à la source.</div>
+<div class="callout"><strong>Partner Connect :</strong> s'il n'existe pas de Managed Connector pour votre source, vous pouvez utiliser un riche écosystème de partenaires (Informatica, Qlik, Rivery, Alteryx, Prophecy, Fivetran…) — comptes d'essai et connexion depuis l'UI Databricks.</div>`
       },
       {
         id: "w1l15", title: "Alternatives d'ingestion (bonus)",
         html: `
-<p><strong>Fonctionnalités complémentaires</strong> à connaître :</p>
+<h4>Fonctionnalités hors périmètre détaillé du cours, mais à connaître</h4>
 <div class="cards-3">
-<div class="mini-card"><strong>Delta Sharing</strong><br/>Partage sécurisé de données entre plateformes, clouds et régions.</div>
-<div class="mini-card"><strong>Lakehouse Federation</strong><br/>Interroger des sources externes sans déplacer les données (reporting ad hoc, PoC, exploration, migration incrémentale).</div>
-<div class="mini-card"><strong>Zerobus</strong> (à venir)<br/>API pour écrire des événements directement dans le lakehouse à très haut débit (100 Mo/s) et faible latence (&lt;5 s) : IoT, clickstream, télémétrie.</div>
+<div class="mini-card"><h4>Delta Sharing</h4><p>Partager des données de façon sécurisée entre plateformes, clouds et régions.</p></div>
+<div class="mini-card"><h4>Lakehouse Federation</h4><p>Interroger des sources externes <em>sans déplacer</em> les données. Utile pour : reporting ad hoc, PoC, phase exploratoire de nouveaux pipelines/rapports, support des charges pendant une migration incrémentale.</p></div>
+<div class="mini-card"><h4>Zerobus (à venir)</h4><p>API Lakeflow Connect : écrire des événements directement dans le lakehouse à <strong>très haut débit (100 Mo/s)</strong> et <strong>latence quasi temps réel (&lt;5 s)</strong> — IoT, clickstream, télémétrie.</p></div>
 </div>
-<p><strong>Databricks Marketplace :</strong> place de marché ouverte de produits data (datasets, notebooks, dashboards, modèles ML, solution accelerators), <em>propulsée par Delta Sharing</em>.</p>
-<p><strong>MERGE INTO</strong> — fusionner des mises à jour/insertions/suppressions d'une source vers une table Delta cible :</p>
+<h4>Databricks Marketplace</h4>
+<p>Place de marché ouverte pour tous les <strong>data products</strong> : datasets, notebooks, dashboards, modèles ML, solution accelerators. <strong>Propulsée par Delta Sharing.</strong> En 3 étapes : ouvrir le Marketplace dans le workspace → rechercher des assets → <em>Get instant access</em>.</p>
+<h4>Ingérer dans des tables Delta existantes : MERGE INTO</h4>
+<p><code>MERGE INTO</code> fusionne un ensemble de mises à jour, insertions et suppressions depuis une table <strong>source</strong> vers une table Delta <strong>cible</strong>, en <strong>une seule opération atomique</strong>. Il supporte l'<strong>application</strong> ou l'<strong>évolution</strong> de schéma, et permet des actions différentes selon l'appariement :</p>
 <ul>
-<li>lignes <strong>appariées</strong> : <code>UPDATE</code> ou <code>DELETE</code> ;</li>
-<li>lignes non appariées côté <strong>cible</strong> : <code>INSERT</code> ;</li>
-<li>lignes non appariées côté <strong>source</strong> : <code>UPDATE</code> ou <code>DELETE</code>.</li>
+<li><strong>Lignes appariées (matched) :</strong> <code>UPDATE</code> ou <code>DELETE</code> ;</li>
+<li><strong>Lignes non appariées par la cible (not matched) :</strong> <code>INSERT</code> ;</li>
+<li><strong>Lignes non appariées par la source (not matched by source) :</strong> <code>UPDATE</code> ou <code>DELETE</code>.</li>
 </ul>
-<p>Idéal pour les dimensions à variation lente (SCD), les chargements incrémentaux et la capture de changements (CDC).</p>
+<p>Cela rend <code>MERGE INTO</code> idéal pour les <strong>dimensions à variation lente (SCD Type 1)</strong>, les <strong>chargements incrémentaux</strong> et les scénarios complexes de <strong>change data capture (CDC)</strong>.</p>
 <pre><code>MERGE INTO target_table target
 USING source_table source
 ON target.id = source.id
 WHEN MATCHED AND source.status = 'update' THEN
-  UPDATE SET target.email = source.email, target.status = source.status
+  UPDATE SET
+    target.email  = source.email,
+    target.status = source.status
 WHEN MATCHED AND source.status = 'delete' THEN
   DELETE
 WHEN NOT MATCHED THEN
   INSERT (id, first_name, email, sign_up_date, status)
-  VALUES (source.id, source.first_name, source.email, source.sign_up_date, source.status);</code></pre>`
+  VALUES (source.id, source.first_name, source.email, source.sign_up_date, source.status);</code></pre>
+<p>Mécanique : <code>MERGE INTO … target</code> déclare la cible (alias <code>target</code>) ; <code>USING … source</code> déclare la source (alias <code>source</code>) ; <code>ON</code> fixe la <strong>condition de fusion</strong> (souvent une clé unique <code>id</code>) ; puis on enchaîne les clauses <code>WHEN MATCHED …</code> (UPDATE/DELETE selon le statut) et <code>WHEN NOT MATCHED THEN INSERT …</code> pour insérer les nouvelles lignes.</p>
+<div class="callout"><strong>Question type :</strong> « appliquer en une opération atomique des updates + inserts + deletes pour du CDC ou du SCD Type 1 » → <strong>MERGE INTO</strong>. « Partager des données entre régions/clouds sans copie propriétaire » → <strong>Delta Sharing</strong>. « Requêter une base externe sans la migrer » → <strong>Lakehouse Federation</strong>.</div>`
       }
     ]
   },
@@ -1606,157 +1752,277 @@ WHEN NOT MATCHED THEN
       {
         id: "w2l1", title: "Objectifs & prérequis du module",
         html: `
-<p>Ce module présente <strong>Lakeflow Jobs</strong> comme plateforme d'orchestration unifiée pour les charges data, analytique et IA.</p>
-<p><strong>Objectifs :</strong></p>
+<p>Ce module présente <strong>Lakeflow Jobs</strong> comme plateforme d'orchestration <strong>unifiée</strong> pour les charges data, analytique et IA.</p>
+<p><strong>Objectifs d'apprentissage :</strong></p>
 <ul>
-<li>Comprendre le rôle de Lakeflow Jobs dans l'écosystème Databricks.</li>
-<li>Concevoir des charges de travail avec des <strong>DAG</strong> (graphes orientés acycliques) : relations entre jobs, tâches et dépendances.</li>
-<li>Configurer les déclencheurs : manuel, planifié, à l'arrivée de fichier, continu.</li>
-<li>Mettre en œuvre des fonctionnalités avancées : exécution conditionnelle, dépendances <em>run-if</em>, boucle <em>for each</em>, <em>repair runs</em>.</li>
-<li>Appliquer les bonnes pratiques de production : choix du compute, orchestration modulaire, gestion des erreurs.</li>
+<li>Comprendre le rôle de Lakeflow Jobs dans l'écosystème Databricks comme plateforme d'orchestration unifiée.</li>
+<li>Concevoir et implémenter des charges de travail avec des <strong>DAG</strong> (Directed Acyclic Graphs), en démontrant la relation entre jobs, tâches et dépendances.</li>
+<li>Configurer les options de planification : déclencheurs <strong>manuel, planifié, à l'arrivée de fichier, continu</strong>.</li>
+<li>Implémenter des fonctionnalités avancées : exécution conditionnelle, dépendances <em>run-if</em>, boucle <em>for each</em>, <em>repair runs</em>, pour des pipelines robustes et tolérants aux pannes.</li>
+<li>Appliquer les bonnes pratiques de production : choix du compute approprié, orchestration modulaire, gestion correcte des erreurs.</li>
 </ul>
-<div class="callout"><strong>Prérequis :</strong> Workspaces, Apache Spark, Delta Lake & Médaillon, Unity Catalog ; Python intermédiaire (fonctions, variables, DataFrames, transformations select/filter/groupBy) ; SQL intermédiaire (requêtes, colonnes, agrégations, filtres).</div>`
+<p><strong>Prérequis requis :</strong></p>
+<ul>
+<li><strong>Connaissance fondamentale de la plateforme :</strong> Workspaces, Apache Spark, Delta Lake & architecture Médaillon, Unity Catalog.</li>
+<li><strong>Python intermédiaire :</strong> créer des fonctions et manipuler des variables, lire des données dans des DataFrames, appliquer des transformations de base (select, filter, groupBy, etc.).</li>
+<li><strong>SQL intermédiaire :</strong> écrire des requêtes de niveau intermédiaire, créer et manipuler des colonnes, agréger, filtrer.</li>
+</ul>
+<p><strong>Plan du cours (4 sections) :</strong> Introduction au Data Engineering dans Databricks ; Concepts fondamentaux de Lakeflow Jobs ; Création et planification de jobs ; Fonctionnalités avancées de Lakeflow Jobs.</p>`
       },
       {
         id: "w2l2", title: "Qu'est-ce que Lakeflow Jobs ?",
         html: `
-<p>Il existe de nombreuses façons d'orchestrer des charges de travail, mais des <strong>orchestrateurs externes</strong> non intégrés au lakehouse créent des difficultés : équipes moins productives, architecture complexe à maintenir, coût de possession élevé, fiabilité moindre, causes racines difficiles à identifier.</p>
-<p><strong>Lakeflow Jobs</strong> apporte une orchestration unifiée pour la data, l'analytique et l'IA sur la Data Intelligence Platform :</p>
+<p>Il existe de nombreuses façons d'orchestrer des charges de travail (clics, sessions, commandes… qu'on joint, <em>featurize</em>, agrège, analyse, entraîne…). La question est : <em>comment orchestrer de façon fiable ?</em></p>
+<h4>Les orchestrateurs externes créent des difficultés</h4>
+<p>Quand l'outil d'orchestration <strong>n'est pas unifié avec le lakehouse</strong> :</p>
 <ul>
-<li><strong>Authoring simple</strong>, <strong>insights actionnables</strong>, <strong>fiabilité éprouvée</strong>.</li>
-<li>Orchestre tout type de charge : notebooks, SQL, dashboards, pipelines, etc.</li>
-<li>S'appuie sur le moteur Photon, la gouvernance Unity Catalog et le stockage Delta Lake / Iceberg.</li>
+<li>les équipes data sont <strong>moins productives</strong> ; l'outil est <strong>difficile à utiliser</strong> pour de nombreux profils ;</li>
+<li>les <strong>mauvaises données</strong> diminuent la valeur des applications en aval ;</li>
+<li><strong>coût de possession plus élevé</strong> et <strong>fiabilité moindre</strong> ;</li>
+<li><strong>cause racine difficile à comprendre</strong> en cas d'incident ; <strong>architecture complexe</strong> à gérer et maintenir.</li>
 </ul>
-<p>Un workflow Jobs combine : déclencheurs (planifié, continu, arrivée de fichier, mise à jour de table), compute, control flow et observabilité, sur des charges ETL, ML/IA et analytique/BI.</p>`
+<h4>Lakeflow Jobs : orchestration unifiée</h4>
+<p>Orchestration unifiée pour la data, l'analytique et l'IA sur la Data Intelligence Platform, avec trois promesses :</p>
+<ul>
+<li><strong>Simple authoring</strong> (authoring simple) ;</li>
+<li><strong>Actionable insights</strong> (insights actionnables) ;</li>
+<li><strong>Proven reliability</strong> (fiabilité éprouvée).</li>
+</ul>
+<p>Elle s'appuie sur le moteur de traitement <strong>Photon</strong>, la gouvernance <strong>Unity Catalog</strong> et le stockage <strong>Delta Lake / Iceberg</strong>, et orchestre les charges <strong>data warehousing</strong> et <strong>machine learning</strong>.</p>
+<p>Un workflow Jobs combine : <strong>déclencheurs</strong> (Scheduled, Continuous, File Arrival, Table Updates), <strong>compute</strong>, <strong>control flow</strong> et <strong>observabilité</strong>, au service de charges ETL, ML/IA et Analytics/BI.</p>`
       },
       {
         id: "w2l3", title: "Blocs de base : Jobs & Tâches",
         html: `
-<p>Un <strong>Job</strong> est la ressource principale pour planifier, coordonner et exécuter des opérations (traitement de données, ETL, analytique, ML). Une <strong>tâche (task)</strong> est une unité de travail unique au sein d'un job qui exécute une charge spécifique (notebook, script, requête…). Chaque job comporte une ou plusieurs tâches.</p>
-<p><strong>Types de tâches</strong> disponibles :</p>
+<h4>Job et Task</h4>
 <ul>
-<li>Notebooks Databricks, scripts Python, Python Wheels, fichiers/requêtes SQL ;</li>
-<li>Spark Declarative Pipelines, dbt, JAR Java, Spark Submit ;</li>
-<li>Dashboards AI/BI, Power BI.</li>
+<li>Un <strong>Job</strong> est la ressource principale pour <strong>planifier, coordonner et exécuter</strong> des opérations : traitement de données, ETL, analytique, charges de machine learning dans l'environnement Databricks.</li>
+<li>Une <strong>tâche (task)</strong> est une <strong>unité de travail unique</strong> au sein d'un job qui exécute une charge spécifique : notebook, script, requête, etc.</li>
+<li>Chaque job est constitué d'<strong>une ou plusieurs tâches</strong> — les unités de travail individuelles qui composent le job.</li>
 </ul>
-<p><strong>Options de tâche</strong> (spécifiques au type) : définir le chemin, ajouter des librairies, des paramètres, activer les notifications, etc. Exemple pour une tâche Notebook : source, chemin, options de compute… Pour une tâche SQL : nom, requête SQL, SQL warehouse.</p>
-<p><strong>Langages supportés :</strong> Python, SQL, Scala, R, Java (via un fichier JAR).</p>`
+<h4>Types de tâches disponibles</h4>
+<p>Une tâche peut être : <strong>Databricks Notebooks</strong>, <strong>scripts Python</strong>, <strong>Python Wheels</strong>, <strong>fichiers/requêtes SQL</strong>, <strong>Spark Declarative Pipelines</strong>, <strong>dbt</strong>, <strong>JAR Java</strong>, <strong>Spark Submit</strong>, <strong>dashboards AI/BI</strong>, <strong>Power BI</strong>.</p>
+<h4>Options de tâche</h4>
+<p>Pour chaque tâche on règle des options, <strong>spécifiques au type de tâche</strong> : définir le chemin, ajouter des librairies, ajouter des paramètres, activer les notifications, etc.</p>
+<ul>
+<li><strong>Tâche Notebook</strong> — par ex. : source, chemin (path), options de compute, et plus.</li>
+<li><strong>Tâche SQL</strong> — par ex. : nom de la tâche, requête SQL, SQL warehouse.</li>
+</ul>
+<h4>Langages supportés</h4>
+<p>Python, SQL, Scala, R, Java (via un fichier JAR).</p>`
       },
       {
         id: "w2l4", title: "Control flow & déclencheurs (vue d'ensemble)",
         html: `
-<p>Entre les tâches, on peut établir des <strong>flux de contrôle</strong> :</p>
+<p>Les jobs combinent des tâches, des flux de contrôle entre tâches, et des déclencheurs.</p>
+<h4>Control flow entre tâches</h4>
 <ul>
-<li><strong>Séquentiel</strong>, <strong>parallèle</strong>, <strong>conditionnel</strong> (If/Else) ;</li>
-<li><strong>Run Job</strong> (modulaire : un job appelle un autre job) ;</li>
-<li><strong>For Each</strong> (boucle).</li>
+<li><strong>Sequential</strong> (séquentiel)</li>
+<li><strong>Parallel</strong> (parallèle)</li>
+<li><strong>Conditionals (If/else)</strong></li>
+<li><strong>Run Job (Modular)</strong> — un job appelle un autre job</li>
+<li><strong>For each</strong> (boucle)</li>
 </ul>
-<p>Les jobs supportent différents <strong>déclencheurs</strong> : manuel, planifié (Cron), API, à l'arrivée de fichier, mise à jour de table, continu (streaming). Le détail des déclencheurs est vu plus loin.</p>`
+<h4>Déclencheurs supportés (vue d'ensemble)</h4>
+<ul>
+<li><strong>Manual Trigger</strong></li>
+<li><strong>Scheduled (Cron)</strong></li>
+<li><strong>API Trigger</strong></li>
+<li><strong>File Arrival Triggers</strong></li>
+<li><strong>Table Triggers</strong></li>
+<li><strong>Continuous (Streaming)</strong></li>
+</ul>
+<p>Les jobs s'exécutent par ailleurs sur différents types de <strong>compute</strong> (voir leçon suivante).</p>`
       },
       {
         id: "w2l5", title: "Options de compute",
         html: `
+<p>Un job peut s'exécuter sur différents types de compute, et chaque tâche peut en avoir un propre.</p>
 <table class="tbl">
-<thead><tr><th>Compute</th><th>Usage & caractéristiques</th></tr></thead>
+<thead><tr><th>Compute</th><th>Détail</th></tr></thead>
 <tbody>
-<tr><td><strong>Clusters interactifs</strong> (all-purpose)</td><td>Partageables entre utilisateurs ; pour l'analyse ad-hoc, l'exploration, le développement. <strong>À éviter en production</strong> (peu économes, scalabilité limitée, disponibilité concurrente).</td></tr>
-<tr><td><strong>Job clusters</strong></td><td>≈ 50 % moins chers car ils se terminent à la fin du job. Soumis aux temps de démarrage du fournisseur cloud. On peut <strong>réutiliser le même cluster</strong> entre tâches pour un meilleur rapport coût/performance.</td></tr>
-<tr><td><strong>Serverless</strong></td><td>Service entièrement managé : simple, rapide, fiable, économique. Clusters rapides, autoscaling, optimisations prêtes à l'emploi → TCO global plus bas. Pas besoin de choisir le type de VM ; Photon activé par défaut.</td></tr>
-<tr><td><strong>SQL Warehouse</strong></td><td>Compute pour requêtes SQL et BI (serverless par défaut). Haute concurrence + autoscaling via Intelligent Workload Management ; auto-start/stop et taille ajustable pour maîtriser les coûts.</td></tr>
+<tr><td><strong>Clusters interactifs</strong> (all-purpose)</td><td>Partageables par plusieurs utilisateurs. Idéaux pour l'analyse ad-hoc, l'exploration de données, le développement. <strong>À ne pas utiliser en production</strong> car peu économes.</td></tr>
+<tr><td><strong>Job clusters</strong></td><td>Environ <strong>50 % moins chers</strong> car ils se terminent à la fin du job, réduisant l'usage des ressources et les coûts. Mais soumis aux <strong>temps de démarrage</strong> du fournisseur cloud. On peut <strong>réutiliser le même cluster</strong> entre les tâches pour un meilleur rapport prix/performance.</td></tr>
+<tr><td><strong>Serverless</strong></td><td>« Simple, Fast, Reliable, Cost Efficient ! » Service <strong>entièrement managé</strong>, plus simple opérationnellement et plus fiable. Clusters rapides et capacités d'<strong>auto-scaling</strong>, meilleure expérience pour un coût plus bas. Optimisations de performance prêtes à l'emploi → <strong>TCO global plus bas</strong>.</td></tr>
+<tr><td><strong>SQL Warehouse</strong></td><td>Compute pour les requêtes SQL et la BI, <strong>serverless par défaut</strong>. Conçu pour les requêtes SQL, dashboards et BI ; attachable à un notebook. <strong>Haute concurrence + autoscaling</strong> via Intelligent Workload Management pour une latence basse constante. Auto-start/auto-stop, taille et nombre max de clusters ajustables pour gérer les pics et maîtriser les coûts.</td></tr>
 </tbody>
 </table>
-<div class="callout"><strong>Performance optimized</strong> (serverless) : <em>Off</em> = économique mais démarrage plus long (4–6 min), pour charges non urgentes ; <em>On</em> = démarrage et exécution plus rapides, pour charges sensibles au temps. Chaque tâche d'un job peut avoir son propre compute, ou partager le même.</div>`
+<h4>Serverless — Performance Mode</h4>
+<p>Réglage « Performance optimized » dans la page de détails du job :</p>
+<ul>
+<li><strong>Off</strong> : mode standard axé sur le coût ; démarrage plus long (typiquement <strong>4–6 minutes</strong>) ; pour charges non urgentes au timing flexible.</li>
+<li><strong>On</strong> : démarrage et exécution plus rapides ; pour charges sensibles au temps ; ne s'applique qu'aux tâches en compute serverless du job.</li>
+</ul>
+<div class="callout"><strong>Sélection du compute :</strong> un job peut contenir une ou plusieurs tâches ; chaque tâche peut recevoir son propre compute ; les tâches d'un même job peuvent <strong>partager le même</strong> compute ou en <strong>utiliser des différents</strong> selon le besoin.</div>`
       },
       {
         id: "w2l6", title: "Orchestration des tâches & DAG",
         html: `
-<p>Un <strong>DAG</strong> (Directed Acyclic Graph) représente une série d'activités :</p>
+<h4>Qu'est-ce qu'un DAG ?</h4>
+<p>Un <strong>DAG</strong> (Directed Acyclic Graph) est une représentation conceptuelle d'une série d'activités, dont les flux de traitement de données :</p>
 <ul>
-<li><strong>Directed</strong> — chaque arête a une direction non ambiguë ;</li>
-<li><strong>Acyclic</strong> — aucun cycle ;</li>
-<li><strong>Graph</strong> — des sommets (tâches) reliés par des arêtes (dépendances).</li>
+<li><strong>Directed</strong> — direction non ambiguë pour chaque arête ;</li>
+<li><strong>Acyclic</strong> — ne contient aucun cycle ;</li>
+<li><strong>Graph</strong> — une collection de sommets (<em>vertices</em>) reliés par des arêtes (<em>edges</em>).</li>
 </ul>
-<p>On définit l'ordre d'exécution via les <strong>dépendances de tâches</strong> (<em>Depends On</em>), ce qui crée le DAG. L'orchestration se pilote via l'UI, l'API, le SDK ou les Asset Bundles.</p>
-<p><strong>Patterns courants :</strong></p>
+<p>Les <strong>sommets</strong> sont les tâches, les <strong>arêtes</strong> sont les dépendances.</p>
+<h4>Orchestration des tâches</h4>
+<ul>
+<li>Databricks Jobs supporte l'orchestration de tâches : exécuter plusieurs tâches en tant que DAG.</li>
+<li>Orchestration via l'<strong>UI</strong>, l'<strong>API</strong>, le <strong>SDK</strong> ou les <strong>Databricks Asset Bundles</strong>.</li>
+<li>On définit l'ordre d'exécution en configurant les <strong>dépendances de tâches</strong> (<em>Depends On</em>), ce qui crée le DAG. Exemple : Task-4 dépend de Task-2 et Task-3, qui dépendent elles-mêmes de Task-1.</li>
+</ul>
+<h4>Patterns de charges courants</h4>
 <div class="cards-3">
-<div class="mini-card"><strong>Sequence</strong><br/>Transformation/nettoyage en chaîne ; tables Bronze/Silver/Gold.</div>
-<div class="mini-card"><strong>Funnel</strong><br/>Plusieurs sources convergent ; collecte de données.</div>
-<div class="mini-card"><strong>Fan-out (star)</strong><br/>Une source unique se distribue ; ingestion puis diffusion.</div>
+<div class="mini-card"><strong>Sequence</strong><br/>Transformation/traitement/nettoyage en chaîne ; tables Bronze/Silver/Gold.</div>
+<div class="mini-card"><strong>Funnel</strong><br/>Plusieurs sources de données qui convergent ; collecte de données.</div>
+<div class="mini-card"><strong>Fan-out (star)</strong><br/>Une source unique ; ingestion puis distribution.</div>
 </div>`
       },
       {
         id: "w2l7", title: "Configuration des tâches : paramètres, valeurs, notifications, retries",
         html: `
-<p><strong>Paramètres de tâche vs de job</strong> :</p>
+<h4>Paramètres — Task vs Job</h4>
 <ul>
-<li><strong>Task Parameters</strong> : paires clé-valeur définies au niveau de la tâche (exécution conditionnelle, boucles, passage de contexte).</li>
-<li><strong>Job Parameters</strong> : paires clé-valeur au niveau du job, appliquées à toutes les tâches ; <strong>elles surchargent</strong> les task parameters de même clé ; surchargables au lancement.</li>
+<li><strong>Task Parameters</strong> : paires clé-valeur définies au <strong>niveau de la tâche</strong>. Permettent l'orchestration avancée : exécution conditionnelle, boucles, passage de contexte entre tâches.</li>
+<li><strong>Job Parameters</strong> : paires clé-valeur définies au <strong>niveau du job</strong>, qui fournissent des valeurs par défaut à tout le workflow. Appliquées automatiquement à toutes les tâches ; <strong>surchargent les task parameters de même clé</strong> ; surchargables au lancement.</li>
 </ul>
-<p><strong>Accès aux paramètres</strong> (notebook) : <code>dbutils.widgets.get("catalog_name")</code> (la méthode varie selon le type de tâche).</p>
-<p><strong>Task Values</strong> — partage dynamique de valeurs entre tâches :</p>
+<div class="callout"><strong>Règle de priorité :</strong> quand une même clé existe aux deux niveaux, le <strong>Job Parameter écrase le Task Parameter</strong>.</div>
+<h4>Définir et accéder aux paramètres (UI)</h4>
+<ul>
+<li><strong>Job Parameters :</strong> dans le job, section <em>Parameters</em>, ajouter des paires clé-valeur au niveau job.</li>
+<li><strong>Task Parameters :</strong> dans la tâche concernée, section <em>parameters</em> de la configuration (à côté du nom, type, chemin), ajouter les paires.</li>
+<li><strong>Accès dans un notebook :</strong> <code>dbutils.widgets.get("catalog_name")</code>. La méthode de récupération varie selon le type de tâche (notebook vs SQL vs Python wheel).</li>
+</ul>
+<pre><code>catalog = dbutils.widgets.get("catalog_name")
+schema  = dbutils.widgets.get("schema_name")</code></pre>
+<h4>Task Values (valeurs dynamiques partagées entre tâches)</h4>
+<p>Paires clé-valeur dynamiques que les tâches créent et partagent pendant l'exécution. On référence la valeur d'une tâche <em>amont</em> dans une tâche <em>aval</em> :</p>
 <pre><code>dbutils.jobs.taskValues.set(key="catalog_name", value="dbacademy")
 dbutils.jobs.taskValues.get(taskKey="task-name", key="catalog_name")</code></pre>
-<p><strong>Dynamic Value References</strong> — valeurs résolues à l'exécution avec la notation <code>{{ }}</code> : <code>{{job.start_time.day}}</code>, <code>{{task.name}}</code>, <code>{{tasks.&lt;task-name&gt;.values.my_value}}</code>.</p>
-<p><strong>Notifications :</strong> au niveau job et/ou tâche ; destinations Email, Teams, PagerDuty, Slack, Webhook ; déclenchables au début/à la fin/à l'échec, et sur seuil de durée ou backlog streaming.</p>
-<p><strong>Retry policy :</strong> définit quand et combien de fois les exécutions échouées sont ré-essayées.</p>`
+<h4>Dynamic Value References</h4>
+<p>Référencer des valeurs à l'exécution depuis le contexte du job et des tâches (sorties de tâches, paramètres, valeurs de tâche, métadonnées de run). Notation <code>{{ }}</code> :</p>
+<ul>
+<li><code>{{job.start_time.day}}</code> — accéder au jour.</li>
+<li><code>{{task.name}}</code> — nom de la tâche.</li>
+<li><code>{{tasks.&lt;task-name&gt;.values.my_value}}</code> — sortie d'une tâche amont.</li>
+</ul>
+<h4>Notifications</h4>
+<ul>
+<li>Configurables au <strong>niveau job</strong> (après complétion réussie, réglage dans Job Details) et/ou <strong>niveau tâche</strong> (personnalisable par tâche).</li>
+<li>Destinations : <strong>Email, Teams, PagerDuty, Slack, Webhook</strong> ; le Webhook permet l'intégration custom avec des API tierces.</li>
+<li>Déclenchées au <strong>début</strong>, à la <strong>complétion</strong> ou à l'<strong>échec</strong> ; aussi sur <strong>seuil de durée</strong> (avertissement/timeout) et <strong>backlog streaming</strong>.</li>
+</ul>
+<h4>Retry Policy</h4>
+<p>Une politique qui détermine <strong>quand</strong> et <strong>combien de fois</strong> les exécutions échouées sont ré-essayées.</p>`
       },
       {
         id: "w2l8", title: "Planifications & déclencheurs",
         html: `
-<p>Un <strong>déclencheur (trigger)</strong> est une règle qui démarre automatiquement une exécution.</p>
+<p>Un <strong>trigger</strong> est une règle qui démarre automatiquement une exécution de job selon une condition ou une planification ; cela permet l'automatisation sans intervention manuelle.</p>
 <table class="tbl">
 <thead><tr><th>Type</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><strong>Scheduled</strong></td><td>Exécution à intervalles fixes (horaire, quotidien…), via expressions <strong>cron</strong>.</td></tr>
-<tr><td><strong>File Arrival</strong></td><td>Démarre quand de nouveaux fichiers sont détectés (AWS S3, Azure Storage, GCP GS, volumes Databricks) ; idéal pour des arrivées irrégulières.</td></tr>
-<tr><td><strong>Continuous</strong></td><td>Relance dès que l'exécution précédente se termine ou échoue ; retry géré automatiquement ; pour le streaming.</td></tr>
-<tr><td><strong>Manual (None)</strong></td><td>À la demande, via UI (Run now), API, CLI, SDK ou DABs ; pour ad hoc, débogage, backfills.</td></tr>
-<tr><td><strong>Table Update</strong></td><td>Démarre quand des tables surveillées changent (insert/update/delete/merge).</td></tr>
+<tr><td><strong>1. Scheduled</strong></td><td>Exécute le job à des heures/intervalles définis (horaire, quotidien…) via l'UI. Planification possible par <strong>expressions cron</strong>. Assure des exécutions récurrentes cohérentes sans intervention manuelle.</td></tr>
+<tr><td><strong>2. File Arrival</strong></td><td>Déclenche automatiquement quand de <strong>nouveaux fichiers</strong> sont détectés dans un emplacement de stockage : <strong>AWS S3, Azure Storage, GCP GS, volumes Databricks</strong>. Traitement <em>event-driven</em>. Idéal pour des arrivées de données <strong>imprévisibles ou irrégulières</strong>.</td></tr>
+<tr><td><strong>3. Continuous</strong></td><td>Exécute en continu en démarrant un nouveau run dès que le précédent se termine ou échoue. <strong>Retry géré automatiquement</strong> par Databricks. Idéal pour les charges <strong>streaming</strong>.</td></tr>
+<tr><td><strong>4. Manual (None)</strong></td><td>Exécution à la demande, sans planification ni événement. Lançable via UI (<em>Run now</em> ou <em>Run now with different settings</em>), API, CLI, SDK, ou DABs. Idéal pour les runs ad hoc, le débogage, les backfills ponctuels. Combinable plus tard avec d'autres types de déclencheurs.</td></tr>
+<tr><td><strong>5. Table Update</strong></td><td>Démarre un job quand des <strong>tables spécifiées sont mises à jour</strong>. Surveille une ou plusieurs tables pour les changements (insert, update, delete, merge). Remplace la planification temporelle (cron) par une orchestration temps réel.</td></tr>
 </tbody>
 </table>
-<p><strong>Table Update — détails :</strong> jusqu'à 10 tables par déclencheur ; fonctionne avec tables Delta/Iceberg managées UC, Delta externes, vues matérialisées, streaming tables. Condition : <em>Any table updated</em> (au premier changement) ou <em>All tables updated</em>. Options avancées : durée minimale entre déclenchements, et délai d'attente après le dernier changement.</p>`
+<h4>Table Update — étapes de configuration</h4>
+<ol>
+<li>Sélectionner le type de déclencheur.</li>
+<li>Ajouter les tables sources : jusqu'à <strong>10 tables par déclencheur</strong> ; fonctionne avec tables Delta managées UC, Iceberg, Delta externes, vues matérialisées et streaming tables.</li>
+<li>Définir la condition de déclenchement : <strong>Any table updated</strong> (au premier changement) ou <strong>All tables updated</strong> (seulement quand toutes sont mises à jour).</li>
+<li>Fonctionnalités avancées (optionnel) : <strong>durée minimale entre déclenchements</strong> (évite le sur-déclenchement) et <strong>attente après le dernier changement</strong> (laisse toutes les données atterrir avant de lancer).</li>
+</ol>`
       },
       {
         id: "w2l9", title: "Tâches conditionnelles & itératives",
         html: `
-<p>Trois mécanismes avancés :</p>
-<p><strong>1) Run if — dépendances conditionnelles.</strong> Contrôle l'exécution selon le statut des tâches amont : <em>All succeeded</em>, <em>At least one succeeded</em>, <em>None failed</em>, etc. Exemple « At least one succeeded » : même si Task-3 échoue, Task-4 s'exécute.</p>
-<p><strong>2) If/Else.</strong> Ajoute une logique booléenne basée sur les résultats (contrôles qualité, comptages…), avec les opérateurs <code>==, !=, &gt;, &gt;=, &lt;, &lt;=</code> ; branche vers une <em>True Task</em> ou une <em>False Task</em>.</p>
-<p><strong>3) For Each.</strong> Boucle sur un tableau d'entrée et exécute la même tâche imbriquée par élément, passé via <code>{{input}}</code> :</p>
+<p>Trois mécanismes pour rendre les workflows dynamiques et robustes : <strong>Run if</strong>, <strong>If/Else</strong>, <strong>For Each</strong>.</p>
+<h4>1) Run if — dépendances conditionnelles</h4>
 <ul>
-<li>itérations possibles en parallèle (concurrence configurable) ;</li>
-<li>les dépendances aval s'attachent au conteneur For Each, pas à la tâche imbriquée ;</li>
-<li>nécessite deux composants : la tâche For Each (conteneur) et la tâche imbriquée.</li>
+<li>Contrôle l'exécution d'une tâche selon le <strong>statut des tâches amont</strong>.</li>
+<li>Conditions supportées : <strong>All succeeded</strong>, <strong>At least one succeeded</strong>, <strong>None failed</strong>, et d'autres.</li>
+<li>Représenté visuellement dans le DAG du job. Exemple « At least one succeeded » : même si Task-3 échoue, Task-4 s'exécute quand même (dès lors qu'au moins une dépendance a réussi).</li>
+</ul>
+<h4>2) If/Else — tâches conditionnelles</h4>
+<ul>
+<li>Ajoute une <strong>logique booléenne</strong> au workflow selon les résultats des tâches.</li>
+<li>Permet le <em>branching</em> selon des conditions (contrôles qualité, comptages d'enregistrements…).</li>
+<li>Utilise les opérateurs booléens <code>==, !=, &gt;, &gt;=, &lt;, &lt;=</code> pour évaluer des expressions.</li>
+<li>Branche vers une <strong>True Task</strong> ou une <strong>False Task</strong>.</li>
+</ul>
+<h4>3) For Each — tâche itérative</h4>
+<ul>
+<li><strong>For Each</strong> boucle sur un tableau d'entrée et exécute la <strong>même tâche imbriquée</strong> par élément, passé via <code>{{input}}</code>.</li>
+<li>Les itérations peuvent s'exécuter <strong>en parallèle</strong>, avec une <strong>concurrence configurable</strong> pour accélérer.</li>
+<li>Les dépendances aval s'attachent au <strong>conteneur For Each</strong>, pas à la tâche imbriquée.</li>
+<li>Nécessite deux composants : <strong>(1)</strong> la tâche For Each (conteneur de haut niveau qui gère la boucle) et <strong>(2)</strong> la tâche imbriquée (exécutée à chaque itération).</li>
 </ul>`
       },
       {
         id: "w2l10", title: "Gestion des échecs : Repair & Rerun",
         html: `
-<p>La fonctionnalité <strong>Repair</strong> permet de relancer un job en ne ré-exécutant <strong>que les tâches échouées</strong>, ce qui économise temps et argent par rapport à une relance complète.</p>
+<p>La fonctionnalité <strong>Repair</strong> permet de relancer un job en ré-exécutant <strong>uniquement les tâches échouées</strong>, sans relancer le job entier.</p>
 <ul>
-<li>On peut modifier la tâche et la relancer, ou modifier les paramètres et relancer.</li>
-<li>Réduit le temps et les ressources nécessaires pour récupérer d'une exécution infructueuse.</li>
+<li>Permet de <strong>réexécuter et surcharger les paramètres</strong> de tâche.</li>
+<li>Réduit le <strong>temps et les ressources</strong> nécessaires pour récupérer d'une exécution infructueuse.</li>
+<li>En cas d'échec de tâche, on peut : <strong>modifier la tâche et relancer</strong>, ou <strong>modifier les paramètres et relancer</strong>.</li>
+<li>En ne ré-exécutant que les tâches nécessaires (au lieu de tout le job), on <strong>économise temps et argent</strong>.</li>
 </ul>`
       },
       {
         id: "w2l11", title: "Monitoring des performances",
         html: `
-<p><strong>Tables système :</strong> <code>system.lakeflow</code> est un catalogue intégré en lecture seule qui journalise toute l'activité des jobs de la région. Les tables <em>timeline</em> découpent les longues exécutions par heure (<code>period_start_time</code>, <code>period_end_time</code>) pour des analytiques fiables de durée, concurrence et SLA. Tables clés : <code>jobs</code>, <code>job_tasks</code>, <code>job_run_timeline</code>, <code>job_task_run_timeline</code>, <code>pipelines</code>.</p>
-<p><strong>Spark UI :</strong> la timeline d'une exécution met en évidence début/fin, durée et chevauchement des tâches pour repérer les goulets. En cliquant sur une tâche : statut, horodatages, durée, cluster/runtime, logs, I/O. Sur une requête : texte complet, split temps (planification/pruning vs exécution), fichiers lus/écrits, partitions et <em>spill</em>.</p>
-<div class="callout"><strong>Agir sur les insights :</strong> temps de planification élevé → améliorer le <em>pruning</em>/partitionnement ; temps d'exécution élevé → optimiser jointures/agrégations (broadcast, correction de <em>skew</em>).</div>`
+<h4>Tables système — system.lakeflow</h4>
+<ul>
+<li><code>system.lakeflow</code> est un catalogue <strong>intégré, en lecture seule</strong>, qui journalise toute l'activité des jobs de tous les workspaces de la région.</li>
+<li>Les <strong>tables timeline</strong> découpent les longues exécutions par heure via <code>period_start_time</code> et <code>period_end_time</code>, permettant des analytiques fiables de <strong>durée, concurrence et SLA</strong>.</li>
+<li>Tables clés : <code>jobs</code> (infos de base des jobs), <code>job_tasks</code> (définitions de base des tâches), <code>job_run_timeline</code> (chaque run de job dans le temps), <code>job_task_run_timeline</code> (chaque run de tâche dans le temps), <code>pipelines</code> (infos de base des pipelines).</li>
+</ul>
+<h4>Spark UI</h4>
+<ul>
+<li>La <strong>timeline</strong> d'un run de job met en évidence le début/fin, la durée et le chevauchement des tâches pour repérer vite les goulets d'étranglement.</li>
+<li>Cliquer une tâche : statut, horodatages, durée, cluster/runtime, logs, I/O rapides.</li>
+<li>Cliquer une requête/le code : texte complet, run ID, <strong>répartition du temps</strong> (optimizing/pruning vs executing), détails des fichiers lus/écrits, fichiers & partitions, détails de <em>spill</em>.</li>
+</ul>
+<div class="callout"><strong>Agir sur les insights :</strong> temps de planification élevé → améliorer le <em>pruning</em>/partitionnement ; temps d'exécution élevé → optimiser jointures/agrégations (broadcast, corrections de <em>skew</em>).</div>`
       },
       {
         id: "w2l12", title: "Jobs en production & bonnes pratiques",
         html: `
-<p><strong>Choix du compute :</strong> en production, préférer <strong>job clusters</strong> ou <strong>serverless</strong> ; éviter les clusters interactifs. Le serverless apporte simplicité (pas de choix de VM), efficacité (Photon par défaut), démarrage rapide et fiabilité (protégé des perturbations cloud).</p>
-<p><strong>Structure de coût :</strong> en classique on paie les DBUs (à Databricks) + l'infrastructure (au cloud) + le coût opérationnel (déploiement, maintenance, suivi). Le serverless regroupe le tout en une facture unique et réduit le TCO.</p>
-<p><strong>Design modulaire :</strong> décomposer un gros DAG en sous-jobs (job parent → jobs enfants) pour des composants gérables.</p>
-<p><strong>Jobs & Git :</strong> exécuter des notebooks depuis un fournisseur Git (GitHub, GitLab, AWS CodeCommit…) ; source unique de vérité, évite les modifications accidentelles en prod, facilite le CI/CD. Configuration : créer la tâche avec Git comme source, puis définir le chemin du notebook depuis la racine du dépôt.</p>
-<p><strong>Bonnes pratiques (synthèse) :</strong></p>
+<h4>Sélection du compute</h4>
+<table class="tbl">
+<thead><tr><th>Type</th><th>En production</th></tr></thead>
+<tbody>
+<tr><td><strong>Clusters interactifs</strong></td><td>Pour l'ad-hoc, l'exploration, le développement — <strong>pas la production</strong> : coûteux pour les runs de job, scalabilité limitée, disponibilité incertaine en usage parallèle.</td></tr>
+<tr><td><strong>Job clusters</strong></td><td>Moins chers (se terminent à la fin du job) mais : <strong>latence de démarrage</strong>, soumis au temps de démarrage du cloud, charge de maintenance.</td></tr>
+<tr><td><strong>Serverless</strong></td><td>Simplicité (pas de choix de VM, pas besoin de DevOps dédié), haute efficacité (<strong>Photon activé par défaut</strong>), démarrage plus rapide (VMs dans le compte Databricks, capacité anticipée par ML), fiabilité (protégé des perturbations cloud).</td></tr>
+</tbody>
+</table>
+<h4>Structure de coût</h4>
 <ul>
-<li><strong>Compute & coût :</strong> job/serverless en prod, Photon activé, réutiliser les clusters.</li>
-<li><strong>Orchestration & modularité :</strong> jobs modulaires (Run Job), multi-tâches pour le parallélisme, logique conditionnelle (Run If, If/Else, For Each), limiter le nombre de tâches (max 1000).</li>
-<li><strong>Monitoring & gouvernance :</strong> <strong>service principals</strong> pour la propriété des jobs, alertes sur échecs/délais/complétions, Repair &amp; Run, tâches paramétrées et réutilisables.</li>
+<li><strong>Classique :</strong> on paie les <strong>DBUs</strong> (à Databricks) + le coût <strong>infrastructure</strong> (VMs, réseau FW/NAT, payé au cloud) + le coût <strong>opérationnel</strong> (temps de déploiement, automatisation, maintenance, suivi de coût/efficacité, au niveau de l'organisation).</li>
+<li><strong>Serverless :</strong> une <strong>facture unique</strong> (DBUs incluant infra + opérationnel) → <strong>économies de TCO</strong>. Service managé plus simple et fiable, clusters rapides et autoscaling, optimisations natives.</li>
+</ul>
+<h4>Design modulaire</h4>
+<p>L'orchestration modulaire permet de décomposer un DAG complexe en composants plus petits et gérables : un <strong>Job parent</strong> appelant des <strong>jobs enfants</strong> (Child Job 1, 2, 3).</p>
+<h4>Jobs & Git</h4>
+<ul>
+<li>Les jobs supportent l'exécution de notebooks <strong>depuis Git</strong>.</li>
+<li>Évite les modifications involontaires de la prod (par ex. quelqu'un fait des éditions locales dans un repo « Prod » ou change de branche).</li>
+<li>Simplifie la définition du job (<strong>source unique de vérité</strong>) ; facilite le déploiement des notebooks via CI/CD.</li>
+<li>Fournisseurs supportés : GitHub, GitLab, AWS CodeCommit et d'autres.</li>
+<li><strong>Configuration :</strong> (1) créer la tâche avec un fournisseur Git comme source ; (2) configurer le chemin du notebook principal sous la racine du dépôt.</li>
+</ul>
+<h4>Bonnes pratiques (synthèse en 3 axes)</h4>
+<ul>
+<li><strong>Orchestration & modularité :</strong> casser les pipelines complexes en jobs modulaires / run jobs ; multi-task jobs pour le parallélisme et la scalabilité ; logique conditionnelle (Run If, If/Else, For Each) ; limiter le nombre de tâches pour la maintenabilité (<strong>limite de 1000 tâches</strong>).</li>
+<li><strong>Monitoring & gouvernance :</strong> utiliser des <strong>service principals</strong> pour la propriété des jobs et l'accès aux données ; configurer des <strong>alertes</strong> (échecs, retards, complétions) ; tirer parti de <strong>Repair & Run</strong> ; <strong>paramétrer</strong> les tâches pour la réutilisabilité.</li>
+<li><strong>Compute & coût :</strong> en production, utiliser <strong>job ou serverless</strong> (éviter l'interactif) ; activer <strong>Photon</strong> ; <strong>réutiliser les clusters</strong> pour réduire temps de démarrage et coût.</li>
 </ul>`
       }
     ]
@@ -1772,138 +2038,234 @@ dbutils.jobs.taskValues.get(taskKey="task-name", key="catalog_name")</code></pre
       {
         id: "w3l1", title: "Objectifs & prérequis du module",
         html: `
-<p>Ce module enseigne <strong>Lakeflow Spark Declarative Pipelines (SDP)</strong> — anciennement DLT.</p>
-<p><strong>Objectifs :</strong></p>
+<p>Ce module enseigne <strong>Lakeflow Spark Declarative Pipelines (SDP)</strong> — anciennement <strong>DLT</strong>.</p>
+<p><strong>Objectifs d'apprentissage :</strong></p>
 <ul>
-<li>Comprendre concepts et composants de SDP, dont les différences entre <strong>streaming tables</strong>, <strong>materialized views</strong> et <strong>views</strong>.</li>
-<li>Configurer un pipeline : compute, data assets, modes de déclenchement, options avancées.</li>
-<li>Développer un pipeline fonctionnel avec le nouvel éditeur et la syntaxe SQL.</li>
-<li>Intégrer des <strong>expectations</strong> (qualité des données).</li>
-<li>Analyser l'<strong>event log</strong> et les métriques du pipeline.</li>
-<li>Concevoir un <strong>CDC</strong> avec <code>AUTO CDC INTO</code> pour gérer les SCD.</li>
+<li>Comprendre les concepts et composants clés de SDP, dont la fonction et les <strong>différences entre streaming tables, materialized views et temporary views</strong>.</li>
+<li>Identifier et configurer les paramètres d'un pipeline : <strong>compute, data assets, trigger modes, options avancées</strong>.</li>
+<li>Développer un pipeline fonctionnel avec le <strong>nouvel éditeur de pipeline</strong> et la syntaxe SQL.</li>
+<li>Intégrer des <strong>expectations</strong> (qualité de données) pour valider et faire respecter l'intégrité.</li>
+<li>Analyser l'<strong>event log</strong> et les métriques pour comprendre l'exécution complète et le cycle de vie d'un pipeline.</li>
+<li>Concevoir et implémenter du <strong>Change Data Capture (CDC)</strong> avec <code>AUTO CDC INTO</code> pour gérer les Slowly Changing Dimensions (SCD).</li>
 </ul>
-<div class="callout"><strong>Prérequis :</strong> Workspaces, Apache Spark, Delta Lake & Médaillon, Unity Catalog ; ingestion de données brutes via <code>read_files</code> (CSV, JSON, TXT, Parquet) ; SQL intermédiaire dont les jointures.</div>`
+<p><strong>Prérequis requis :</strong></p>
+<ul>
+<li><strong>Connaissance fondamentale de la plateforme :</strong> Workspaces, Apache Spark, Delta Lake & Médaillon, Unity Catalog.</li>
+<li><strong>Ingestion de données brutes dans une table :</strong> familiarité avec l'ingestion via la fonction SQL <code>read_files</code> (CSV, JSON, TXT, Parquet).</li>
+<li><strong>Transformation SQL :</strong> requêtes de niveau intermédiaire et connaissances de base des jointures SQL.</li>
+</ul>
+<p><strong>Plan du cours (3 sections) :</strong> Introduction au Data Engineering dans Databricks ; Fondamentaux des Lakeflow Spark Declarative Pipelines ; Construction des Lakeflow Spark Declarative Pipelines.</p>`
       },
       {
         id: "w3l2", title: "Qu'est-ce que SDP ?",
         html: `
-<p>Construire et opérer des pipelines fiables est difficile : gestion des dépendances, calcul des partitions, checkpointing & retries, gestion des backfills, contrôles qualité, gouvernance, versionnage, déploiement, infrastructure… Résultat : développement laborieux, pipelines lents et fragiles, complexité opérationnelle, silos batch/streaming.</p>
-<p><strong>SDP rend les pipelines fiables simples</strong> :</p>
+<h4>Pourquoi c'est difficile</h4>
+<p>Construire et opérer des pipelines de données fiables demande de gérer une multitude de préoccupations en plus de la logique de transformation : <strong>gestion des dépendances, calcul des partitions, checkpointing & retries, gestion des backfills, contrôles qualité, gouvernance, découverte des données, version control, déploiement, infrastructure…</strong></p>
+<p>Conséquences typiques :</p>
 <ul>
-<li><strong>Batch et streaming unifiés</strong> — le pipeline s'adapte au quasi temps réel comme au batch, optimisant performance et coût.</li>
-<li><strong>Optimisation intelligente à l'échelle</strong> — scaling et récupération automatiques.</li>
-<li><strong>Authoring simplifié</strong> — on déclare ingestion et transformations en SQL ou Python, SDP gère le reste.</li>
+<li><strong>Développement laborieux</strong> et pipelines lents/sources d'erreurs → retarde les produits data et l'impact métier.</li>
+<li><strong>Complexité opérationnelle</strong> → coûts élevés, downtime, gaspillage de ressources.</li>
+<li><strong>Batch et streaming en silos</strong> → flexibilité limitée, difficile et coûteux de s'adapter aux besoins de latence/coût/SLA.</li>
 </ul>
-<p><strong>Traitement incrémental dans le Médaillon :</strong> source brute → Bronze (streaming table) → Silver (streaming table) → Gold (materialized view). À chaque exécution, seules les <em>nouvelles</em> données sont ajoutées (append) puis transformées, avec des optimisations intégrées sur serverless.</p>`
+<h4>Ce qu'apporte SDP — « Reliable data pipelines made easy »</h4>
+<ul>
+<li><strong>Batch et streaming unifiés :</strong> les pipelines s'adaptent au quasi temps réel comme au batch, optimisant performance et coût.</li>
+<li><strong>Optimisation intelligente à l'échelle :</strong> scaling et récupération automatiques → fiabilité accrue, maintenance réduite.</li>
+<li><strong>Authoring simplifié :</strong> on déclare ingestion et transformations en SQL ou Python, et SDP gère le reste.</li>
+</ul>
+<h4>SDP dans le Médaillon & traitement incrémental</h4>
+<p>SDP simplifie l'ETL batch et streaming dans l'architecture Médaillon. Les sources (Lakeflow Connect, SaaS, stockage cloud, files d'attente comme Kafka/Pub-Sub/Kinesis, bases de données) alimentent Bronze → Silver → Gold.</p>
+<p><strong>Vue d'ensemble du traitement incrémental :</strong> source brute → Bronze (<em>streaming table</em>) → Silver (<em>streaming table</em>) → Gold (<em>materialized view</em>).</p>
+<ul>
+<li><strong>Run 1 :</strong> le fichier 1 est ingéré (append) en Bronze, transformé (append) en Silver, puis agrégé en Gold (materialized view), avec des optimisations natives sur serverless.</li>
+<li><strong>Run 2 :</strong> seules les <strong>nouvelles données</strong> (fichier 2) sont appendées et transformées ; le batch traite en mode <em>append</em> (planifié), le streaming en flux continu.</li>
+</ul>`
       },
       {
         id: "w3l3", title: "Types de datasets : ST, MV, Views",
         html: `
-<table class="tbl">
-<thead><tr><th>Type</th><th>Rôle</th></tr></thead>
-<tbody>
-<tr><td><strong>STREAMING TABLE (ST)</strong></td><td>Table avec traitement incrémental/streaming (exactly-once). À chaque rafraîchissement, les données ajoutées aux sources sont <strong>appendées</strong>. En SQL, <code>FROM STREAM read_files()</code> invoque Auto Loader (lecture incrémentale + checkpoints) ; chaque fichier est lu une seule fois.</td></tr>
-<tr><td><strong>MATERIALIZED VIEW (MV)</strong></td><td>Résultats <strong>recalculés</strong> à chaque mise à jour pour refléter les changements amont. Créée et tenue à jour par le pipeline. Utilisable partout (pas seulement en Gold). Sur serverless, rafraîchissement <strong>incrémental</strong> possible (optimiseur basé coût).</td></tr>
-<tr><td><strong>VIEW / TEMPORARY VIEW</strong></td><td>Table virtuelle sans données physiques. <em>TEMPORARY VIEW</em> : persiste sur la durée de vie du pipeline, privée, non enregistrée dans UC. <em>VIEW</em> : enregistrée dans UC (pipeline UC requis), mais pas de requête streaming ni d'usage comme source streaming.</td></tr>
-</tbody>
-</table>
-<div class="callout"><strong>Renommages (depuis DLT) :</strong> <code>STREAMING LIVE TABLE</code> → <code>STREAMING TABLE</code> ; <code>LIVE TABLE</code> → <code>MATERIALIZED VIEW</code> ; <code>LIVE VIEW</code> → <code>VIEW</code>. L'ancienne syntaxe reste supportée par compatibilité.</div>`
+<p>SDP manipule trois types de datasets selon la façon de traiter les données.</p>
+<h4>STREAMING TABLE (ST)</h4>
+<ul>
+<li>Table supportant le traitement <strong>incrémental ou streaming</strong> (<strong>exactly-once</strong> : chaque fichier lu une seule fois).</li>
+<li>À chaque rafraîchissement, les données ajoutées aux tables sources sont <strong>appendées</strong> à la streaming table.</li>
+<li>Code SQL : <code>CREATE OR REFRESH STREAMING TABLE</code>.</li>
+<li>En SQL, utiliser <code>FROM STREAM read_files()</code> pour invoquer Auto Loader (lectures streaming incrémentales + checkpoints).</li>
+</ul>
+<h4>MATERIALIZED VIEW (MV)</h4>
+<ul>
+<li>À chaque mise à jour, les résultats de la requête sont <strong>recalculés</strong> pour refléter les changements des datasets amont.</li>
+<li>Créée et tenue à jour par le pipeline ; syntaxe <code>CREATE OR REFRESH MATERIALIZED VIEW</code>.</li>
+<li>Utilisable <strong>partout</strong> dans le pipeline (pas seulement en Gold).</li>
+<li>Quand c'est possible, les résultats sont <strong>rafraîchis de façon incrémentale</strong> (évite la reconstruction complète à l'arrivée de nouvelles données) — <strong>Serverless uniquement</strong>, via un optimiseur basé sur les coûts.</li>
+<li>Sert aux transformations, agrégations, pré-calcul de requêtes lentes, calculs fréquents.</li>
+</ul>
+<h4>VIEW & TEMPORARY VIEW</h4>
+<ul>
+<li>Construisent une <strong>table virtuelle sans données physiques</strong>, basée sur la requête.</li>
+<li><strong>TEMPORARY VIEW :</strong> persiste seulement sur la durée de vie du pipeline, privée au pipeline, <strong>non enregistrée dans Unity Catalog</strong> ; utile comme requête intermédiaire non exposée aux utilisateurs finaux. Syntaxe <code>CREATE TEMPORARY VIEW</code>.</li>
+<li><strong>VIEW :</strong> <strong>enregistrée comme objet dans Unity Catalog</strong> ; syntaxe <code>CREATE VIEW</code>. <em>Limitations :</em> le pipeline doit être un pipeline UC ; les views ne peuvent pas avoir de requêtes streaming ni servir de source streaming.</li>
+</ul>
+<div class="callout"><strong>Renommages depuis DLT</strong> (l'ancienne syntaxe reste supportée par compatibilité) :<br/>
+<code>CREATE OR REFRESH STREAMING LIVE TABLE</code> → <code>CREATE OR REFRESH STREAMING TABLE</code><br/>
+<code>CREATE OR REFRESH LIVE TABLE</code> → <code>CREATE OR REFRESH MATERIALIZED VIEW</code><br/>
+<code>CREATE LIVE VIEW</code> / <code>CREATE TEMPORARY LIVE VIEW</code> → <code>CREATE VIEW</code> / <code>CREATE TEMPORARY VIEW</code></div>`
       },
       {
         id: "w3l4", title: "Créer des ST et MV en SQL",
         html: `
-<p><strong>Streaming table Bronze</strong> (depuis des fichiers JSON, via Auto Loader) :</p>
+<h4>Streaming table Bronze (depuis des fichiers JSON)</h4>
 <pre><code>CREATE OR REFRESH STREAMING TABLE 1_bronze_db.orders_bronze AS
 SELECT *,
        current_timestamp() AS processing_time,
        _metadata.file_name AS source_file
-FROM STREAM read_files("/Volumes/dbacademy/ops/labuser/orders", format =&gt; 'JSON');</code></pre>
-<p><strong>Streaming table Silver</strong> (transformation depuis Bronze, mot-clé <code>STREAM</code>) :</p>
+FROM STREAM read_files(
+  "/Volumes/dbacademy/ops/labuser/orders",
+  format =&gt; 'JSON');</code></pre>
+<ul>
+<li>Le mot-clé <strong><code>STREAM</code></strong> indique d'utiliser une lecture streaming des fichiers source.</li>
+<li><code>read_files()</code> lit les fichiers d'un emplacement et renvoie des données tabulaires.</li>
+<li>Le <code>SELECT</code> choisit les colonnes à lire ; ici on ajoute aussi <code>processing_time</code> et <code>source_file</code>.</li>
+<li>Crée la streaming table <code>orders_bronze</code> dans le schéma <code>1_bronze_db</code> (catalogue par défaut).</li>
+</ul>
+<h4>Streaming table Silver (transformation depuis Bronze)</h4>
 <pre><code>CREATE OR REFRESH STREAMING TABLE 2_silver_db.orders_silver AS
-SELECT order_id, timestamp(order_timestamp) AS order_timestamp, customer_id, notifications
+SELECT order_id,
+       timestamp(order_timestamp) AS order_timestamp,
+       customer_id,
+       notifications
 FROM STREAM 1_bronze_db.orders_bronze;</code></pre>
-<p><strong>Materialized view Gold</strong> (agrégation, sans <code>STREAM</code>) :</p>
+<p>On utilise le mot-clé <code>STREAM</code> avec le nom de la streaming table source pour ne transformer que les <strong>nouvelles lignes</strong>.</p>
+<h4>Materialized view Gold (agrégation)</h4>
 <pre><code>CREATE OR REFRESH MATERIALIZED VIEW 3_gold_db.gold_orders_by_date AS
-SELECT date(order_timestamp) AS order_date, count(*) AS total_daily_orders
+SELECT date(order_timestamp) AS order_date,
+       count(*) AS total_daily_orders
 FROM 2_silver_db.orders_silver
 GROUP BY date(order_timestamp);</code></pre>
-<div class="callout">Les <strong>dépendances sont déduites automatiquement</strong> : l'ordre du code n'a pas d'importance, SDP construit le graphe (Raw → Bronze → Silver → MV) seul.</div>`
+<p>On référence la table source <strong>sans le mot-clé <code>STREAM</code></strong> ; quand c'est possible, la MV est rafraîchie de façon incrémentale.</p>
+<div class="callout"><strong>Dépendances automatiques :</strong> SDP parse les dépendances seul — l'<strong>ordre du code n'a pas d'importance</strong>. Il construit le graphe : Raw JSON → <code>orders_bronze</code> (ST) → <code>orders_silver</code> (ST) → <code>gold_orders_by_date</code> (MV).</div>`
       },
       {
         id: "w3l5", title: "Développement simplifié & paramètres de pipeline",
         html: `
-<p><strong>Éditeur multi-fichiers</strong> (Data & AI Summit 2025) : on écrit en <code>.sql</code> ou <code>.py</code> (recommandé) ou en notebooks. Nouveautés : navigateur d'assets, éditeur multi-fichiers, barres d'outils dédiées, DAG interactif, aperçus de données, panneaux d'insights — débogage plus facile et validation rapide par <em>dry run</em>.</p>
-<p><strong>Compute :</strong></p>
+<h4>Éditeur multi-fichiers (depuis le Data & AI Summit 2025)</h4>
+<p>On écrit du code en <code>.sql</code> ou <code>.py</code> (recommandé), ou en notebooks. Nouveautés :</p>
+<ol>
+<li>Navigateur d'assets du pipeline (<em>pipeline asset browser</em>) ;</li>
+<li>Éditeur de code multi-fichiers avec développement pas-à-pas ;</li>
+<li>Barres d'outils spécifiques au pipeline ;</li>
+<li>DAG interactif ;</li>
+<li>Aperçus de données (<em>data previews</em>) ;</li>
+<li>Panneaux d'insights d'exécution.</li>
+</ol>
+<p>Bénéfices : <strong>débogage plus facile</strong> et <strong>validation plus rapide avec le dry run</strong>.</p>
+<h4>Paramètres communs : Compute</h4>
 <ul>
-<li><strong>Serverless</strong> (recommandé) : optimise le coût en gardant la performance ; inclut le rafraîchissement incrémental des MV ; option « Performance optimized » pour les charges sensibles au temps.</li>
-<li><strong>Classic</strong> (taille fixe) avec <strong>autoscaling amélioré</strong> activé par défaut : alloue les ressources selon le volume. Les utilisateurs ont besoin de permissions pour créer du compute ; les admins peuvent définir des cluster policies.</li>
+<li><strong>Serverless</strong> (recommandé par Databricks) : optimise le coût tout en maintenant la performance ; permet de se concentrer sur le code plutôt que l'infrastructure ; option « Performance optimized » pour les jobs sensibles au temps ; inclut le <strong>rafraîchissement incrémental des MV</strong> (optimiseur basé coût).</li>
+<li><strong>Classic (taille fixe)</strong> avec <strong>autoscaling amélioré</strong> activé par défaut sur les nouveaux pipelines : optimise l'utilisation du cluster en allouant les ressources selon le volume de la charge. Les utilisateurs ont besoin de permissions pour créer du compute ; les admins du workspace peuvent configurer des <strong>cluster policies</strong>.</li>
 </ul>
-<p><strong>Code assets :</strong> le dossier racine du pipeline inclut automatiquement les fichiers pertinents (.py, .sql, notebooks ; peut être un Git folder).</p>
-<p><strong>Configuration (paramètres) :</strong> une map clé-valeur paramètre le code (lisibilité, réutilisation). En SQL on référence une valeur avec <code>\${key-name}</code> :</p>
+<h4>Paramètres communs : Code Assets</h4>
+<p>La section <em>source code</em> référence les sous-dossiers/fichiers du pipeline (.py, .sql, notebooks). Le <strong>dossier racine du pipeline</strong> inclut automatiquement tous les fichiers pertinents (peut être un <strong>Git folder</strong>).</p>
+<h4>Paramètres communs : Configuration (parameters)</h4>
+<p>La configuration est une <strong>map clé-valeur</strong> pour paramétrer le code (lisibilité/maintenabilité, réutilisation entre fichiers/pipelines). En SQL, on référence la valeur d'une clé avec la syntaxe <code>\${key-name}</code> :</p>
 <pre><code>CREATE STREAMING TABLE bronze AS
-SELECT * FROM STREAM read_files("\${source}/orders", format =&gt; 'JSON');</code></pre>
-<p>Autres réglages : code assets, emplacement par défaut des data assets, compute, environnement, tags, budget, paramètres avancés.</p>`
+SELECT *
+FROM STREAM read_files("\${source}/orders", format =&gt; 'JSON');</code></pre>
+<p>Autres réglages explorés au fil du cours : pipeline settings, code assets, emplacement par défaut des data assets, compute, configuration, environnement, tags, budget, paramètres avancés.</p>`
       },
       {
         id: "w3l6", title: "Qualité des données : Expectations",
         html: `
-<p>Les <strong>expectations</strong> valident les lignes pendant l'ETL. Syntaxe générale :</p>
-<pre><code>CONSTRAINT &lt;nom&gt; EXPECT (&lt;condition&gt;) [ON VIOLATION &lt;action&gt;]</code></pre>
+<p>Avec SDP, on applique des <strong>règles de qualité</strong> pour valider les lignes pendant l'ETL et obtenir des insights sur l'intégrité des données. Syntaxe générale :</p>
+<pre><code>CONSTRAINT &lt;constraint-name&gt; EXPECT (&lt;column condition&gt;) [ON VIOLATION &lt;action&gt;]</code></pre>
 <table class="tbl">
-<thead><tr><th>Action</th><th>Effet</th></tr></thead>
+<thead><tr><th>Action</th><th>Exemple</th><th>Résultat</th></tr></thead>
 <tbody>
-<tr><td><strong>WARN</strong> (défaut)</td><td>Les lignes invalides sont <strong>quand même écrites</strong> ; les logs comptent valides vs invalides.</td></tr>
-<tr><td><strong>DROP</strong></td><td>Les lignes invalides sont <strong>supprimées</strong> de la table ; le compte est journalisé.</td></tr>
-<tr><td><strong>FAIL</strong></td><td>Provoque l'<strong>échec du flow</strong> concerné (sans faire échouer les autres flows) ; intervention manuelle requise.</td></tr>
+<tr><td><strong>WARN</strong> (défaut)</td><td><code>CONSTRAINT valid_notification EXPECT (notifications IN ('Y','N'))</code></td><td>Les lignes invalides sont <strong>quand même écrites</strong> dans la cible ; les logs incluent le compte de valides vs invalides et d'autres métriques.</td></tr>
+<tr><td><strong>DROP</strong></td><td><code>CONSTRAINT valid_date EXPECT (order_timestamp &gt; "2021-01-01") ON VIOLATION DROP ROW</code></td><td>Les lignes invalides sont <strong>supprimées</strong> de la table ; le compte est journalisé avec les autres métriques.</td></tr>
+<tr><td><strong>FAIL</strong></td><td><code>CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION FAIL UPDATE</code></td><td>Provoque l'<strong>échec du flow</strong> concerné (sans faire échouer les autres flows du pipeline) ; <strong>intervention manuelle</strong> requise.</td></tr>
 </tbody>
 </table>
-<p>Exemple combiné :</p>
+<h4>Exemple combiné</h4>
 <pre><code>CREATE OR REFRESH STREAMING TABLE 2_silver_db.orders_silver (
   CONSTRAINT valid_notifications EXPECT (notifications IN ('Y','N')),
-  CONSTRAINT valid_id           EXPECT (customer_id IS NOT NULL) ON VIOLATION DROP ROW,
-  CONSTRAINT valid_date         EXPECT (order_timestamp &gt; "2021-01-01") ON VIOLATION FAIL UPDATE
+  CONSTRAINT valid_id            EXPECT (customer_id IS NOT NULL) ON VIOLATION DROP ROW,
+  CONSTRAINT valid_date          EXPECT (order_timestamp &gt; "2021-01-01") ON VIOLATION FAIL UPDATE
 ) AS
-SELECT order_id, timestamp(order_timestamp) AS order_timestamp, customer_id, notifications
+SELECT order_id,
+       timestamp(order_timestamp) AS order_timestamp,
+       customer_id,
+       notifications
 FROM STREAM 1_bronze_db.orders_bronze;</code></pre>
-<div class="callout">Depuis Q2 2025, les MV utilisant des expectations sont toujours <strong>entièrement rafraîchies</strong>.</div>`
+<p>Pour chaque ligne, l'expectation décide : <strong>Pass</strong> → garder la ligne et continuer ; <strong>WARN</strong> → consigner en métrique ; <strong>DROP</strong> → écarter la ligne ; <strong>FAIL</strong> → faire échouer le flow.</p>
+<div class="callout">Depuis le Q2 2025, les <strong>materialized views</strong> qui utilisent des expectations sont <strong>toujours entièrement rafraîchies</strong>.</div>`
       },
       {
         id: "w3l7", title: "Jointures en streaming",
         html: `
-<p>Trois schémas de jointure :</p>
-<table class="tbl">
-<thead><tr><th>Type</th><th>Principe</th></tr></thead>
-<tbody>
-<tr><td><strong>Stream-Snapshot</strong> (ST ↔ table statique)</td><td>On joint de façon incrémentale les <em>nouvelles</em> données du flux avec l'intégralité d'une table de référence statique.</td></tr>
-<tr><td><strong>ST + ST via MV</strong></td><td>On prend toutes les lignes de deux streaming tables et on les joint à chaque exécution ; la materialized view recalcule efficacement la jointure à mesure que de nouvelles données arrivent.</td></tr>
-<tr><td><strong>Stream-Stream</strong></td><td>Jointure incrémentale des nouvelles données de deux flux (les données passées ne sont pas réutilisées). <em>Hors périmètre de ce cours</em> (cours Advanced).</td></tr>
-</tbody>
-</table>`
+<p>Trois schémas de jointure dans les pipelines.</p>
+<h4>1) Stream-Snapshot (ST ↔ table statique)</h4>
+<ul>
+<li>Objectif : joindre de façon <strong>incrémentale</strong> les <em>nouvelles</em> données d'une streaming table avec l'<strong>intégralité</strong> d'une table de référence (lookup) statique.</li>
+<li>Seules les nouvelles données du flux sont jointes, en utilisant toutes les données de la table de lookup. Résultat : une streaming table jointe (append).</li>
+</ul>
+<h4>2) ST + ST via Materialized View</h4>
+<ul>
+<li>Objectif : prendre <strong>toutes les lignes de deux streaming tables</strong> et les joindre à chaque exécution du pipeline.</li>
+<li>La <strong>materialized view</strong> calcule efficacement toutes les données des streaming tables et joint les lignes ; à l'arrivée de nouvelles données, elle recalcule efficacement la jointure.</li>
+</ul>
+<h4>3) Stream-Stream</h4>
+<ul>
+<li>Objectif : joindre de façon <strong>incrémentale</strong> les nouvelles données de <strong>deux flux</strong> ; les données passées ne sont pas utilisées.</li>
+<li><em>Hors périmètre du cours</em> (voir le cours « Databricks Streaming and DLT (Advanced) »).</li>
+</ul>`
       },
       {
         id: "w3l8", title: "Déployer un pipeline en production",
         html: `
-<p>Tâches de production courantes : <strong>planification</strong>, <strong>notifications email</strong>, <strong>monitoring via event log</strong>.</p>
-<p><strong>Modes de déclenchement :</strong></p>
+<p>Trois tâches de production courantes : <strong>planifier</strong> le pipeline, configurer les <strong>notifications email</strong>, <strong>monitorer</strong> via l'event log.</p>
+<h4>Scheduling — modes de déclenchement</h4>
 <ul>
-<li><strong>Triggered</strong> : rafraîchit les tables avec les données disponibles au démarrage, puis s'arrête. Déclenchable manuellement ou planifié.</li>
-<li><strong>Continuous</strong> : traite en continu les nouvelles données pour maintenir ST et MV quasi à jour ; surveille les dépendances et ne met à jour que si la source change.</li>
+<li><strong>Triggered :</strong> rafraîchit les tables sélectionnées avec les données disponibles au démarrage, puis <strong>s'arrête</strong> une fois la mise à jour terminée. Déclenchable manuellement ou planifié.</li>
+<li><strong>Continuous :</strong> traite en <strong>continu</strong> les nouvelles données pour maintenir streaming tables et materialized views quasi à jour en temps réel ; surveille les dépendances et ne met à jour que quand la source change.</li>
 </ul>
-<p><strong>Event log :</strong> capture toutes les informations clés du pipeline — logs d'audit, contrôles qualité, progression, <strong>data lineage</strong>. Par défaut, écrit comme table Delta <em>cachée</em> dans le catalogue/schéma par défaut. Via les paramètres avancés, on peut le <strong>publier</strong> comme table Delta (catalogue, schéma, nom) puis l'interroger :</p>
+<h4>Email Notifications</h4>
+<p>On peut configurer des notifications email lors de la planification du pipeline.</p>
+<h4>Monitoring — Event Log</h4>
+<p>L'<strong>event log</strong> du pipeline capture toutes les informations clés :</p>
+<ul>
+<li><strong>Logs d'audit</strong></li>
+<li><strong>Contrôles de qualité</strong> (data quality checks)</li>
+<li><strong>Progression du pipeline</strong></li>
+<li><strong>Data lineage</strong></li>
+</ul>
+<p>Par <strong>défaut</strong>, l'event log est écrit comme <strong>table Delta cachée</strong>, située dans le catalogue/schéma par défaut du pipeline. Via les paramètres avancés, on peut le <strong>publier</strong> comme table Delta (spécifier catalogue, schéma, nom de table), puis l'interroger :</p>
 <pre><code>SELECT * FROM &lt;catalog&gt;.&lt;schema&gt;.&lt;event_log_table_name&gt;;</code></pre>`
       },
       {
         id: "w3l9", title: "Change Data Capture (CDC) & SCD",
         html: `
-<p><strong>CDC</strong> = technique pour suivre et capturer les changements d'une source (insertions, mises à jour, suppressions), puis les appliquer au lakehouse. On distingue les <strong>Slowly Changing Dimensions (SCD)</strong> :</p>
-<table class="tbl">
-<thead><tr><th>Type</th><th>Comportement</th></tr></thead>
-<tbody>
-<tr><td><strong>SCD Type 1</strong></td><td>Lors d'une mise à jour, l'ancien enregistrement est <strong>écrasé</strong> par sa clé ; une suppression retire la ligne. <strong>Aucun historique</strong> : seule la donnée courante est conservée. À utiliser quand seul l'état actuel compte.</td></tr>
-<tr><td><strong>SCD Type 2</strong></td><td>L'ancien enregistrement est <strong>conservé</strong> avec une période de validité (start/end date ou flag courant) et un nouvel enregistrement est inséré ; une suppression marque la ligne inactive. À utiliser quand l'historique est important. <em>(Hors périmètre du cours.)</em> Colonnes <code>__START_AT</code> / <code>__END_AT</code> : <code>null</code> en fin = ligne courante.</td></tr>
-</tbody>
-</table>
-<p><strong>AUTO CDC INTO</strong> (anciennement <code>APPLY CHANGES INTO</code>) remplace un batch avec <code>MERGE INTO</code> complexe — les INSERT/UPDATE sont gérés implicitement via les clés, sans code :</p>
+<h4>Qu'est-ce que le CDC ?</h4>
+<p>Le <strong>Change Data Capture (CDC)</strong> est une technique pour <strong>suivre et capturer les changements</strong> dans une source (base de données, lakehouse, data warehouse) — <strong>INSERTS, UPDATES, DELETES</strong> — puis appliquer ces changements dans le lakehouse/data warehouse. La table source des changements doit actuellement être une <strong>streaming table</strong> ; la table cible reçoit les changements appliqués.</p>
+<p>Le CDC se catégorise en types de <strong>Slowly Changing Dimensions (SCD)</strong> selon la gestion de l'historique.</p>
+<h4>SCD Type 1 (écrasement)</h4>
+<ul>
+<li>Quand un enregistrement est mis à jour, l'ancien est <strong>simplement écrasé</strong> par sa clé avec la nouvelle valeur.</li>
+<li>Quand un enregistrement est supprimé par sa clé, la ligne est <strong>retirée</strong>.</li>
+<li><strong>Aucun suivi des anciennes valeurs</strong> : seule la donnée courante est conservée.</li>
+<li>À utiliser quand seul l'<strong>état actuel</strong> compte et que l'historique est sans importance.</li>
+</ul>
+<p>Exemple : sur la table <code>customers</code>, en appliquant les <code>updates</code> — Peter est mis à jour avec sa dernière info, Samarth est supprimé, Kostas est inséré.</p>
+<h4>SCD Type 2 (historisation / versioning)</h4>
+<ul>
+<li>Quand un enregistrement change, l'ancien est <strong>conservé</strong> avec une colonne indiquant sa <strong>période de validité</strong> (date de début, date de fin, ou flag courant), et un <strong>nouvel</strong> enregistrement est inséré avec l'info à jour.</li>
+<li>Une suppression conserve la ligne et la marque inactive.</li>
+<li>À utiliser quand l'<strong>historique est important</strong> (ex. suivre l'évolution de l'adresse ou du statut d'un client).</li>
+<li>Colonnes typiques <code>__START_AT</code> / <code>__END_AT</code> : un <code>__END_AT</code> à <code>null</code> indique la ligne <strong>courante</strong>, une valeur non nulle indique une ligne <strong>historique (inactive)</strong>.</li>
+<li><em>Hors périmètre détaillé du cours.</em></li>
+</ul>
+<h4>AUTO CDC INTO (anciennement APPLY CHANGES INTO)</h4>
+<p>À utiliser au lieu d'un batch traditionnel avec une syntaxe <code>MERGE INTO</code> complexe. Les INSERT et UPDATE sont implémentés <strong>implicitement via les clés</strong>, sans code.</p>
 <pre><code>CREATE OR REFRESH STREAMING TABLE customers;
 
 CREATE FLOW scd_type_1_flow AS
@@ -1915,26 +2277,35 @@ SEQUENCE BY ProcessDate
 COLUMNS * EXCEPT (operation)
 STORED AS SCD TYPE 1;</code></pre>
 <ul>
-<li><code>KEYS</code> : colonne(s) identifiant une ligne dans source et cible.</li>
-<li><code>APPLY AS DELETE WHEN</code> : quand traiter un événement comme suppression plutôt qu'upsert.</li>
-<li><code>SEQUENCE BY</code> : ordre logique des événements CDC.</li>
-<li><code>COLUMNS</code> : sous-ensemble de colonnes à inclure.</li>
-<li><code>STORED AS SCD TYPE 1</code> (défaut) ou TYPE 2.</li>
+<li>On crée d'abord une streaming table, puis on utilise <code>AUTO CDC</code> pour la peupler.</li>
+<li><code>FROM STREAM updates</code> : les enregistrements source qui déterminent updates/deletes/inserts.</li>
+<li><code>KEYS (CustomerID)</code> : la/les colonne(s) qui identifient une ligne dans source et cible.</li>
+<li><code>APPLY AS DELETE WHEN</code> : quand un événement CDC doit être traité comme un <strong>DELETE</strong> plutôt qu'un upsert.</li>
+<li><code>SEQUENCE BY ProcessDate</code> : l'<strong>ordre logique</strong> des événements CDC dans la source.</li>
+<li><code>COLUMNS * EXCEPT (operation)</code> : sous-ensemble de colonnes à inclure dans la cible.</li>
+<li><code>STORED AS SCD TYPE 1</code> (défaut) ou <code>TYPE 2</code>.</li>
 </ul>
-<div class="callout"><code>AUTO CDC FROM SNAPSHOT</code> (Public Preview Q2 2025) traite les changements à partir de snapshots de base de données.</div>`
+<div class="callout"><strong>AUTO CDC FROM SNAPSHOT</strong> (Public Preview au Q2 2025) traite les changements à partir de <em>snapshots</em> de base de données.</div>`
       },
       {
         id: "w3l10", title: "Fonctionnalités additionnelles",
         html: `
-<p>À connaître (hors périmètre détaillé) :</p>
+<p>Au-delà du périmètre détaillé du cours, plusieurs fonctionnalités enrichissent SDP.</p>
 <div class="cards-3">
-<div class="mini-card"><strong>Sinks</strong><br/>L'API Sink écrit vers des destinations externes au pipeline : Kafka, Delta, Event Hubs.</div>
-<div class="mini-card"><strong>Full Delta support</strong> pour MV/ST<br/>Liquid clustering, row-level security & column masking, change data feed (CDF) depuis les ST.</div>
-<div class="mini-card"><strong>Flows</strong><br/>Plusieurs flows vers une même cible = union de sources/tables.</div>
+<div class="mini-card"><strong>Sinks</strong><br/>L'API Sink permet d'écrire vers des destinations <em>en dehors</em> du pipeline : <strong>Kafka, Delta, Event Hubs</strong>.</div>
+<div class="mini-card"><strong>Full Delta support</strong> (MV/ST)<br/><strong>Liquid clustering</strong>, <strong>row-level security</strong> et <strong>column masking</strong>, <strong>change data feed (CDF)</strong> depuis les streaming tables.</div>
+<div class="mini-card"><strong>Flows</strong><br/>Ajouter plusieurs flows vers la <strong>même cible</strong> → union de deux sources (ou tables).</div>
 </div>
-<p><strong>Support UC complet :</strong> publier vers plusieurs catalogues/schémas, lire ST/MV en Dedicated Access Mode, cloner un pipeline Hive metastore vers UC.</p>
-<p><strong>Meilleures performances :</strong> serverless, rafraîchissement incrémental des MV, Photon.</p>
-<p><strong>DABs :</strong> les Databricks Asset Bundles permettent de valider, déployer et exécuter programmatiquement les pipelines pour le CI/CD (voir module W4).</p>`
+<h4>Support Unity Catalog complet</h4>
+<ul>
+<li>Publier vers <strong>plusieurs catalogues et schémas</strong>.</li>
+<li>Lire ST et MV en <strong>Dedicated Access Mode</strong>.</li>
+<li>Créer un pipeline UC en <strong>clonant</strong> un pipeline Hive metastore.</li>
+</ul>
+<h4>Meilleures performances</h4>
+<p>Améliorées partout : <strong>Serverless</strong>, <strong>rafraîchissement incrémental des MV</strong>, <strong>Photon</strong>.</p>
+<h4>Databricks Asset Bundles (DABs)</h4>
+<p>Les DABs permettent de <strong>valider, déployer et exécuter</strong> programmatiquement des ressources Databricks (dont les pipelines) pour le CI/CD des jobs de production (voir le cours « Automated Deployment with Databricks Asset Bundles » et le module W4).</p>`
       }
     ]
   },
@@ -1950,104 +2321,161 @@ STORED AS SCD TYPE 1;</code></pre>
         id: "w4l1", title: "Objectifs & prérequis du module",
         html: `
 <p>Ce module applique les principes <strong>DevOps</strong> à l'ingénierie de données.</p>
-<p><strong>Objectifs :</strong></p>
+<p><strong>Objectifs d'apprentissage :</strong></p>
 <ul>
-<li>Expliquer les bonnes pratiques de génie logiciel : qualité du code, version control, documentation, tests.</li>
-<li>Expliquer DevOps : composants, bénéfices, rôle du CI/CD.</li>
-<li>Appliquer la modularité pour organiser le code PySpark en fonctions réutilisables.</li>
-<li>Concevoir des tests unitaires et d'intégration pour un pipeline Databricks.</li>
-<li>Appliquer les opérations Git dans Databricks via les <strong>Git Folders</strong>.</li>
-<li>Décrire les méthodes de déploiement d'assets : REST API, CLI, SDK, et <strong>Declarative Automation Bundles (DABs)</strong>.</li>
+<li>Expliquer les principes des <strong>bonnes pratiques de génie logiciel</strong> : qualité du code, version control, documentation, tests.</li>
+<li>Expliquer les principes du <strong>DevOps</strong> : composants clés, bénéfices, rôle du CI/CD.</li>
+<li>Appliquer la <strong>modularité</strong> pour organiser le code PySpark en fonctions et composants réutilisables.</li>
+<li>Concevoir et implémenter des <strong>tests unitaires et d'intégration</strong> efficaces pour un pipeline Databricks.</li>
+<li>Appliquer les opérations Git de base dans Databricks via les <strong>Git Folders</strong> pour pratiquer l'intégration continue.</li>
+<li>Expliquer les différentes méthodes de déploiement d'assets Databricks : <strong>REST API, CLI, SDK, Declarative Automation Bundles (DABs)</strong>.</li>
 </ul>
-<div class="callout"><strong>Prérequis :</strong> bonne maîtrise de la plateforme (Workspaces, Spark, Delta & Médaillon, Unity Catalog, SDP, Lakeflow Jobs, Git de base) ; Python intermédiaire (fonctions, classes, packages) ; PySpark et SQL intermédiaire.</div>
-<p>Trois sections : 1) Bonnes pratiques SWE, DevOps & CI/CD ; 2) Intégration continue (CI) ; 3) Déploiement continu (CD).</p>`
+<p><strong>Prérequis requis :</strong></p>
+<ul>
+<li><strong>Maîtrise confirmée de la plateforme :</strong> Workspaces, Apache Spark, Delta Lake & Médaillon, Unity Catalog, Spark Declarative Pipelines, Lakeflow Jobs, Git de base.</li>
+<li><strong>Ingestion & transformation :</strong> PySpark (DataFrames) et SQL intermédiaire.</li>
+<li><strong>Python :</strong> niveau intermédiaire — fonctions, classes, création/import/usage de packages.</li>
+</ul>
+<p><strong>Plan du cours (3 sections) :</strong> 1) Bonnes pratiques de génie logiciel, DevOps et fondamentaux CI/CD ; 2) Intégration continue (CI) ; 3) Introduction au déploiement continu (CD).</p>`
       },
       {
         id: "w4l2", title: "Bonnes pratiques de génie logiciel",
         html: `
-<p>Pour des pipelines fiables, on s'inspire du génie logiciel afin d'avoir un code efficace, scalable et maintenable.</p>
+<p>Pour construire des pipelines fiables, on s'inspire du génie logiciel : suivre les bonnes pratiques garantit des pipelines <strong>efficaces, scalables et maintenables</strong>.</p>
+<h4>Pratiques de codage</h4>
 <table class="tbl">
 <thead><tr><th>Pratique</th><th>Détail</th></tr></thead>
 <tbody>
-<tr><td><strong>Code readability</strong></td><td>Code facile à comprendre, naviguer, maintenir.</td></tr>
-<tr><td><strong>Naming conventions</strong></td><td>Noms descriptifs et cohérents (variables, fonctions, classes).</td></tr>
-<tr><td><strong>Modular design</strong></td><td>Découper en composants réutilisables (fonctions). Des outils de <em>linting</em> aident.</td></tr>
-<tr><td><strong>Documentation</strong></td><td>Améliore la maintenabilité, la collaboration et le transfert de connaissances.</td></tr>
-<tr><td><strong>Automated testing</strong></td><td>Tests <em>unitaires</em> (une unité isolée) et tests <em>d'intégration</em> (interaction entre composants).</td></tr>
-<tr><td><strong>Version control & code review</strong></td><td>Git pour suivre les changements, collaborer, garder l'historique ; revue pour détecter les bugs tôt et faire respecter les standards.</td></tr>
-<tr><td><strong>CI/CD</strong></td><td>CI : commit/build/test/release fréquents vers un dépôt partagé. CD : automatiser la mise en production après tests.</td></tr>
-<tr><td><strong>Environnements isolés</strong></td><td>DEV / STAGE / PROD via plusieurs <strong>workspaces</strong> et/ou plusieurs <strong>catalogues</strong>.</td></tr>
+<tr><td><strong>Code Readability</strong></td><td>Écrire du code facile à comprendre, naviguer et maintenir.</td></tr>
+<tr><td><strong>Naming Conventions</strong></td><td>Noms descriptifs et cohérents pour variables, fonctions, classes.</td></tr>
+<tr><td><strong>Modular Design</strong></td><td>Découper le logiciel en composants plus petits et réutilisables (fonctions). Des outils de <strong>linting</strong> aident à respecter les bonnes pratiques.</td></tr>
 </tbody>
 </table>
-<p><strong>Outils côté Databricks :</strong> développer et tester dans les Workspaces (ou en local) avec notebooks/fichiers ; <strong>Git folders</strong> pour le version control ; <strong>Unity Catalog</strong> pour isoler les environnements ; CI/CD pour tester et déployer automatiquement.</p>`
+<h4>Autres piliers</h4>
+<ul>
+<li><strong>Document Code</strong> — améliore la maintenabilité, renforce la collaboration, facilite le transfert de connaissances.</li>
+<li><strong>Automated Testing</strong> — <em>tests unitaires</em> (vérifient la fonctionnalité d'une unité isolée) et <em>tests d'intégration</em> (vérifient comment plusieurs composants/systèmes fonctionnent ensemble).</li>
+<li><strong>Version Control & Code Review</strong> — Git pour suivre les changements, collaborer et garder l'historique ; la revue de code aide à détecter les bugs tôt et à faire respecter les standards.</li>
+<li><strong>CI/CD</strong> — <em>Continuous Integration</em> : les développeurs committent/buildent/testent/releasent fréquemment vers un dépôt partagé ; <em>Continuous Deployment</em> : automatise la mise en production après réussite des tests. <strong>(C'est le focus principal de ce cours.)</strong></li>
+<li><strong>Isolated Environments</strong> — DEV / STAGE / PROD via plusieurs <strong>workspaces</strong> (un par environnement) et/ou plusieurs <strong>catalogues</strong> (un par environnement).</li>
+</ul>
+<h4>Génie logiciel avec Databricks — outils</h4>
+<ul>
+<li>Développer et exécuter des tests unitaires dans les Workspaces ou en local, avec notebooks ou fichiers (SQL, Python, Scala…).</li>
+<li>Utiliser les <strong>Databricks Git folders</strong> pour le version control et améliorer le workflow.</li>
+<li>Utiliser <strong>Unity Catalog</strong> (un ou plusieurs workspaces) pour <strong>isoler les environnements</strong> de façon sécurisée.</li>
+<li>Tester et déployer via des <strong>pipelines CI/CD</strong> avec les outils de déploiement Databricks.</li>
+</ul>`
       },
       {
         id: "w4l3", title: "Modulariser le code PySpark",
         html: `
-<p>Un code <strong>non modularisé</strong> regroupe tout dans un bloc : difficile à modifier/tester partie par partie, risque de duplication.</p>
-<pre><code># Avant — tout dans un bloc
-df = spark.read.csv("health.csv", header=True, inferSchema=True)
+<h4>Avant (non modularisé)</h4>
+<pre><code># Load data
+df = (spark.read.csv("health.csv", header=True, inferSchema=True))
+
+# Create column
 df = df.withColumn("NewColumn",
         when(col("Column") == 0, 'Normal').otherwise('Unknown'))</code></pre>
-<p>En <strong>modularisant</strong> en fonctions réutilisables :</p>
+<p><strong>Problèmes :</strong> tout est dans un seul bloc → plus difficile de modifier ou tester des parties spécifiques (chargement, ajout de colonne) ; <strong>duplication de code</strong> probable si les mêmes opérations sont nécessaires ailleurs.</p>
+<h4>Après (modularisé en fonctions)</h4>
 <pre><code>def load_data(file_path):
-    return spark.read.csv(file_path, header=True, inferSchema=True)
+    return (spark.read.csv(file_path, header=True, inferSchema=True))
 
 def add_new_col(df, new, s_col):
     return df.withColumn(new,
              when(col(s_col) == 0, 'Normal').otherwise('Unknown'))</code></pre>
-<p><strong>Bénéfices :</strong> maintenance plus simple (modifier une fonction sans toucher au reste), réutilisation entre projets, et tests unitaires de fonctions individuelles pour la fiabilité.</p>`
+<p><strong>Bénéfices :</strong></p>
+<ul>
+<li><strong>Maintenance plus simple</strong> : mettre à jour uniquement des fonctions spécifiques sans changer tout le script.</li>
+<li><strong>Réutilisation</strong> des fonctions dans différents projets.</li>
+<li><strong>Tests</strong> des fonctions individuelles via des tests unitaires pour assurer la fiabilité.</li>
+</ul>`
       },
       {
         id: "w4l4", title: "Fondamentaux DevOps",
         html: `
-<p><strong>DevOps</strong> = bonnes pratiques de génie logiciel + opérations IT. Il favorise la collaboration entre développement et opérations pour automatiser les jobs et fluidifier les processus. Bénéfices : déploiements plus rapides, meilleure collaboration, fiabilité et scalabilité accrues.</p>
-<p>C'est un processus pour <strong>intégrer, tester et déployer le code en continu</strong>, suivant le cycle : <em>Plan → Code → Build → Test → Release → Deploy → Operate → Monitor</em>.</p>
+<h4>Qu'est-ce que le DevOps ?</h4>
+<p>Le <strong>DevOps</strong> est l'intersection des <strong>bonnes pratiques de génie logiciel</strong> et des <strong>opérations IT</strong>. Il favorise la <strong>collaboration</strong> entre les équipes de développement et d'opérations pour automatiser les jobs et fluidifier les processus. Bénéfices clés : <strong>déploiements plus rapides, meilleure collaboration, fiabilité accrue, meilleure scalabilité</strong>.</p>
+<p>C'est un processus pour <strong>intégrer, tester et déployer le code en continu</strong>, selon le cycle :</p>
+<p><em>Plan → Code → Build → Test → Release → Deploy → Operate → Monitor</em> (planifier les fonctionnalités, coder, builder en exécutables, tester automatiquement, releaser le package prêt, déployer en prod, opérer l'application, monitorer la performance et recueillir le feedback).</p>
+<h4>DevOps, DataOps, MLOps</h4>
 <table class="tbl">
-<thead><tr><th>Discipline</th><th>Focus</th></tr></thead>
+<thead><tr><th>Discipline</th><th>Domaine</th><th>Pratiques</th></tr></thead>
 <tbody>
-<tr><td><strong>DevOps</strong></td><td>Développement logiciel & opérations IT : CI/CD, tests continus, version control, jobs de production, monitoring.</td></tr>
-<tr><td><strong>DataOps</strong></td><td><em>DevOps appliqué à l'ingénierie de données</em> : optimiser le traitement, centraliser découverte/gouvernance, lineage traçable, qualité des données.</td></tr>
-<tr><td><strong>MLOps</strong></td><td>Cycle de vie des modèles ML (code comme logiciel, modèles comme données, monitoring). <em>Hors périmètre.</em></td></tr>
+<tr><td><strong>DevOps</strong></td><td>Développement logiciel & opérations IT</td><td>Automatiser le CI/CD, tests continus, version control, jobs de production, orchestration & automatisation, monitoring des performances.</td></tr>
+<tr><td><strong>DataOps</strong></td><td>Construire des processus de pipeline de qualité (Data Engineering)</td><td>Optimiser le traitement, centraliser découverte/gestion/gouvernance, lineage traçable et monitoring, collaboration accrue, monitoring de la qualité des données.</td></tr>
+<tr><td><strong>MLOps</strong></td><td>Développement & déploiement de modèles ML</td><td>Traiter le code modèle comme du logiciel, les modèles comme des données, gérer le cycle de vie du modèle, monitorer sa performance. <em>(Hors périmètre.)</em></td></tr>
 </tbody>
-</table>`
+</table>
+<div class="callout"><strong>DataOps = DevOps pour le Data Engineering :</strong> il s'agit de réfléchir à comment appliquer les principes et la culture DevOps à ses pipelines de données.</div>`
       },
       {
         id: "w4l5", title: "Le rôle du CI/CD",
         html: `
-<p><strong>CI (Intégration continue) :</strong> fusionner régulièrement les changements de plusieurs contributeurs dans un dépôt central et lancer des tests automatisés. Bénéfices : détection précoce des problèmes, cycle plus rapide, meilleure collaboration et qualité, tests/validation automatisés.</p>
-<p><strong>Niveaux de tests</strong> (du plus rapide au plus lent) :</p>
-<div class="cards-3">
-<div class="mini-card"><strong>Unit tests</strong><br/>Fonctions/méthodes isolées. Rapides, peu coûteux, haute couverture, automatisés (ex. fonctions PySpark custom).</div>
-<div class="mini-card"><strong>Integration tests</strong><br/>Interaction entre composants (ex. interactions Notebooks / SDP / Jobs).</div>
-<div class="mini-card"><strong>System tests</strong><br/>Toute l'application en conditions réelles (ex. pipeline end-to-end dans un Job).</div>
-</div>
-<p><strong>CD :</strong></p>
+<h4>Vue d'ensemble</h4>
 <ul>
-<li><strong>Continuous Delivery</strong> : push automatique vers staging/pré-prod, avec déploiement <strong>manuel</strong> en production à tout moment. (Develop→Test→Version Control→Build→Deploy Stage = AUTO ; Deploy Prod = MANUEL.)</li>
-<li><strong>Continuous Deployment</strong> : chaque changement qui passe les tests est <strong>immédiatement</strong> déployé en production. (Deploy Prod = AUTO.)</li>
+<li><strong>Continuous Integration (CI)</strong> : automatise et fluidifie le développement ; améliore qualité, vitesse et fiabilité du code.</li>
+<li><strong>Continuous Deployment (CD)</strong> : le code est déployé en production via un processus automatisé ; permet de livrer en cycles courts et fréquents, avec des pipelines automatisés pour rapidité et cohérence.</li>
+<li><strong>Adoption :</strong> pratique courante en développement logiciel, dont l'importance croît en data engineering et data science.</li>
+</ul>
+<h4>CI — vue détaillée</h4>
+<p>La CI consiste à <strong>fusionner régulièrement</strong> les changements de plusieurs contributeurs dans un dépôt central et à lancer des <strong>tests automatisés</strong> pour garantir la qualité. Bénéfices : <strong>détection précoce des problèmes, cycle de développement plus rapide, meilleure collaboration et qualité, tests et validation automatisés</strong>. Elle s'appuie sur le version control et une stratégie de branches.</p>
+<h4>Niveaux de tests (du plus rapide au plus lent)</h4>
+<div class="cards-3">
+<div class="mini-card"><strong>Unit Tests</strong><br/>Fonctions/méthodes isolées. <strong>Rapides</strong>, faible coût, haute couverture, automatisés. Ex. : fonctions PySpark custom.</div>
+<div class="mini-card"><strong>Integration Tests</strong><br/>Interaction entre composants ou systèmes. Ex. : interactions Notebooks / SDP / Jobs.</div>
+<div class="mini-card"><strong>System Tests</strong><br/>Toute l'application en conditions réelles. <strong>Lents</strong>. Ex. : pipeline data end-to-end dans un Job.</div>
+</div>
+<h4>CD — Delivery vs Deployment</h4>
+<ul>
+<li><strong>Continuous Delivery :</strong> push <strong>automatique</strong> vers staging/pré-prod, avec capacité de déployer <strong>manuellement</strong> en production à tout moment.<br/><em>Develop → Test → Version Control → Build → Deploy to Stage = AUTO ; Deploy to Production = MANUEL.</em></li>
+<li><strong>Continuous Deployment :</strong> processus entièrement automatisé où chaque changement qui passe les tests est <strong>immédiatement déployé en production</strong>.<br/><em>… Deploy to Production = AUTO.</em></li>
 </ul>`
       },
       {
         id: "w4l6", title: "Planifier le projet & isoler les environnements",
         html: `
-<p><strong>Exemple de projet :</strong> visualiser des données santé — ingérer des CSV incrémentaux quotidiens en Bronze, créer une table Silver propre, des tables Gold pour les consommateurs. Assets : Workspace, notebooks, SDP, Lakeflow Jobs, compute.</p>
+<h4>Planifier le projet (exemple fil rouge)</h4>
+<ul>
+<li><strong>Livrable :</strong> visualiser des données santé.</li>
+<li><strong>Tâches :</strong> ingérer des fichiers CSV incrémentaux quotidiens vers une table Bronze ; créer une table Silver propre ; créer des tables Gold à partager avec les consommateurs.</li>
+<li><strong>Assets Databricks :</strong> Workspace, Notebooks, SDP, Lakeflow Jobs, Compute.</li>
+</ul>
+<h4>Configurer les environnements de données</h4>
 <table class="tbl">
-<thead><tr><th>Environnement</th><th>Données</th></tr></thead>
+<thead><tr><th>Environnement</th><th>Caractéristiques</th></tr></thead>
 <tbody>
-<tr><td><strong>Dev</strong></td><td>Petit sous-ensemble statique de la prod ; anonymisé ou synthétique ; pour développer/tester vite tout en préservant la confidentialité.</td></tr>
-<tr><td><strong>Stage</strong></td><td>Reflète la structure et le volume de la prod (souvent statique) ; peut être anonymisé/nettoyé ; pour des tests réalistes.</td></tr>
-<tr><td><strong>Prod</strong></td><td>Données réelles, vivantes, continuellement mises à jour ; haute sécurité, confidentialité et conformité.</td></tr>
+<tr><td><strong>Dev Data</strong></td><td>Souvent un <strong>petit sous-ensemble statique</strong> de la prod ; peut être anonymisé ou synthétique ; supporte un développement/test rapide ; préserve confidentialité et intégrité.</td></tr>
+<tr><td><strong>Stage Data</strong></td><td>Reflète la <strong>structure et le volume</strong> de la prod (typiquement statique) ; peut être anonymisé/nettoyé des informations sensibles ; assure des tests et validations réalistes.</td></tr>
+<tr><td><strong>Prod Data</strong></td><td>Données <strong>vivantes et pleinement opérationnelles</strong> ; contiennent de vraies données utilisateur ; continuellement mises à jour ; exigent de hauts standards de sécurité, confidentialité et conformité.</td></tr>
 </tbody>
 </table>
-<p><strong>Isolation</strong> au niveau <strong>workspaces</strong> (un par environnement) et/ou <strong>catalogues</strong> Unity Catalog (DEV/STG/PRD), avec stockage séparé et contrôle d'accès UC : les utilisateurs n'accèdent qu'aux données/métadonnées autorisées.</p>`
+<h4>Isoler les environnements</h4>
+<ul>
+<li>Au niveau <strong>Workspaces</strong> : utiliser plusieurs workspaces (un par environnement DEV/STG/PRD) avec stockage cloud séparé sous Unity Catalog.</li>
+<li>Au niveau <strong>Catalogues</strong> : un catalogue UC par environnement (DEV/STG/PRD catalog), avec un même <em>Metastore</em> et un administrateur de metastore.</li>
+<li><strong>UC Access Control :</strong> les utilisateurs n'accèdent aux données/métadonnées que selon les règles d'accès convenues.</li>
+</ul>
+<p><strong>Architecture du projet :</strong> fichiers CSV quotidiens → Spark Declarative Pipeline → catalogues Dev (petit sous-ensemble) / Stage (sous-ensemble plus large) / Prod ; orchestration par Workflow ; <strong>tests unitaires + tests d'intégration</strong> ; puis livrable de visualisation.</p>`
       },
       {
         id: "w4l7", title: "Tests unitaires PySpark",
         html: `
-<p><strong>Bénéfices :</strong> tester une fonction sur peu de données, attraper les bugs avant déploiement, faciliter le refactoring et le débogage.</p>
-<p><code>pyspark.testing.utils</code> fournit des aides : <code>assertDataFrameEqual(actual, expected[, …])</code> et <code>assertSchemaEqual(actual, expected)</code>.</p>
-<p><strong>Exemple</strong> — tester une fonction qui crée une colonne :</p>
+<h4>Bénéfices des tests unitaires</h4>
+<ul>
+<li>Tester <strong>une seule fonction</strong> spécifique, sur un petit volume de données.</li>
+<li><strong>Attraper les bugs</strong> avant de les déployer.</li>
+<li>Refactoring plus facile ; débogage facilité.</li>
+</ul>
+<h4>pyspark.testing.utils</h4>
+<p>Fournit des fonctions utilitaires pour faciliter les tests unitaires PySpark :</p>
+<ul>
+<li><code>assertDataFrameEqual(actual, expected[, …])</code></li>
+<li><code>assertSchemaEqual(actual, expected)</code></li>
+</ul>
+<h4>Exemple — tester une fonction qui crée une colonne</h4>
+<p>But du test : comparer le résultat <em>réel</em> de la fonction au résultat <em>attendu</em>.</p>
 <pre><code>from pyspark.sql.functions import col, when
 
 def add_new_col(df, new, s_col):
@@ -2055,56 +2483,100 @@ def add_new_col(df, new, s_col):
              when(col(s_col) == 0, 'Normal').otherwise('Unknown'))
 
 def test_add_new_col():
+    # 1) DataFrame d'échantillon couvrant les cas
     data = [(0,), (1,), (-1,), (None,)]
     df = spark.createDataFrame(data, ["value"])
+
+    # 2) Exécuter la fonction et stocker le résultat
     actual_df = add_new_col(df, "new_value", "value")
+
+    # 3) Construire le résultat attendu
     expected_data = [(0,'Normal'), (1,'Unknown'), (-1,'Unknown'), (None,'Unknown')]
     expected_df = spark.createDataFrame(expected_data, ["value","new_value"])
+
+    # 4) Comparer : si différent, une erreur est renvoyée
     assertDataFrameEqual(actual_df, expected_df)</code></pre>
-<p><strong>pytest</strong> — framework de test Python populaire : syntaxe minimale (fonctions préfixées <code>test_</code>), assertions détaillées, découverte automatique des tests, riche écosystème de plugins (couverture, parallélisme…).</p>`
+<h4>pytest</h4>
+<p>Framework de test Python populaire pour écrire des cas simples et scalables :</p>
+<ul>
+<li><strong>Syntaxe simple</strong> — définir des fonctions commençant par <code>test_</code>.</li>
+<li><strong>Assertions</strong> — instructions <code>assert</code> avec messages d'erreur détaillés.</li>
+<li><strong>Découverte automatique</strong> — trouve et exécute tous les tests avec une config minimale.</li>
+<li><strong>Riche écosystème</strong> — plugins pour couverture, tests parallèles, etc.</li>
+</ul>`
       },
       {
         id: "w4l8", title: "Tests d'intégration (SDP & Jobs)",
         html: `
-<p>Deux approches pour valider le bon fonctionnement du pipeline :</p>
-<p><strong>Méthode 1 — Expectations SDP :</strong> utiliser les expectations pour vérifier les résultats du pipeline (valider le nombre de lignes, les valeurs distinctes de nouvelles colonnes…). Le même code SDP (notebooks de transformation avec fonctions custom) sert en dev, stage et prod.</p>
-<p><strong>Méthode 2 — Tâches de Job :</strong> implémenter les tests comme un Databricks Job multi-tâches :</p>
+<p>Deux méthodes pour valider le bon fonctionnement du pipeline.</p>
+<h4>Méthode 1 — Expectations SDP</h4>
 <ul>
-<li><strong>Tests unitaires</strong> d'abord (confirmer que les fonctions marchent) ; si ça passe, on continue ;</li>
-<li>exécuter un pipeline SDP pour créer les tables (sans expectations) ;</li>
-<li><strong>tests d'intégration</strong> : valider le nombre de lignes, la création des tables, les valeurs distinctes correctes, les plages de valeurs, l'absence de doublons.</li>
+<li>Utiliser les <strong>expectations SDP</strong> pour vérifier les résultats du pipeline (technique de démonstration).</li>
+<li>Exemples de vérifications : <strong>valider le nombre de lignes</strong>, valider les <strong>valeurs distinctes</strong> dans les nouvelles colonnes.</li>
+<li>Le <strong>même code SDP</strong> (notebooks définissant la logique de transformation via des fonctions custom) est utilisé en dev, stage et prod.</li>
+</ul>
+<h4>Méthode 2 — Tâches de Lakeflow Job</h4>
+<p>Implémenter les tests d'intégration comme un <strong>Databricks Job multi-tâches</strong> (comme on le fait habituellement pour du code non-SDP). On ajoute des notebooks/fichiers dans des tâches :</p>
+<ul>
+<li><strong>Tests unitaires</strong> d'abord — confirmer que toutes les fonctions créées marchent ; si les tests passent, on continue dans le job.</li>
+<li>Exécuter un <strong>Spark Declarative Pipeline</strong> pour créer les tables nécessaires (sans expectations).</li>
+<li><strong>Tests d'intégration</strong> pouvant inclure : valider le nombre de lignes, vérifier que les tables ont été créées, que les colonnes contiennent les bonnes valeurs distinctes, des valeurs dans une plage donnée, et l'absence de doublons.</li>
 </ul>`
       },
       {
         id: "w4l9", title: "Version control avec Git",
         html: `
-<p><strong>Défis sans version control :</strong> silos, duplication, standards incohérents, versionnage instable (difficile à tracer/auditer/annuler), scaling du développement entravé.</p>
-<p>Sécuriser les changements via le <strong>branching</strong> (ex. Gitflow) : versionner et passer le contrôle qualité avant de fusionner dans <code>main</code> et de déployer.</p>
-<p><strong>Git sur Databricks :</strong> client Git visuel + API, opérations courantes, diff visuel, support des principaux fournisseurs (GitHub, GitLab, Azure DevOps, AWS CodeCommit…). Authentification GitHub via un <strong>Personal Access Token (PAT)</strong>.</p>
-<p><strong>Git Folders</strong> : cloner des dépôts distants, committer/pousser depuis l'UI, tirer les mises à jour de branche, gérer les branches, validation visuelle au commit.</p>
-<p><strong>Repos API</strong> : gérer les Repos programmatiquement, faire des opérations Git, spécifier branche/tag/hash pour les jobs — pour automatiser le CI/CD (ex. maintenir un dossier de prod à une version donnée).</p>
-<p><strong>Fichiers arbitraires</strong> dans les Repos : portabilité du code, fichiers de librairie (packages Python/R), spécification d'environnement, imports relatifs, petites données (.txt, .yml, .py, .csv…).</p>`
+<h4>Difficultés organisationnelles sans version control</h4>
+<ul>
+<li>Des <strong>silos</strong> se forment et isolent le développement et les opérations.</li>
+<li>Le développement indépendant abaisse la qualité (code dupliqué, standards incohérents, revue absente…).</li>
+<li><strong>Versionnage instable</strong> : difficile de tracer, annuler et auditer les changements.</li>
+<li>Sans version control, gérer des mises à jour fréquentes <strong>augmente le risque</strong>.</li>
+<li>Branching, merging et intégration CI/CD deviennent difficiles → scalabilité du développement réduite.</li>
+</ul>
+<h4>Sécuriser les changements par le branching</h4>
+<p>Concept complémentaire au CI/CD qui <strong>permet une CI efficace</strong> : versionner les changements et les passer au contrôle qualité <strong>avant de fusionner dans <code>main</code></strong> et de déployer (ex. <strong>Gitflow</strong>).</p>
+<h4>Git avec Databricks</h4>
+<p><strong>Git</strong> est un framework libre et open-source pour suivre les changements de code source. Bénéfices : collaboration, version control, branching & merging, nature distribuée, open-source largement adopté. Intégration Databricks : <strong>client Git visuel + API</strong>, support des opérations courantes, support des principaux fournisseurs (GitHub, GitLab, <strong>Azure DevOps</strong>, AWS CodeCommit…), <strong>diff visuel</strong>, conçu pour l'authoring collaboratif.</p>
+<p><strong>Authentification GitHub :</strong> générer un <strong>Personal Access Token (PAT)</strong> et connecter Databricks avec ce token.</p>
+<h4>Databricks Git Folders</h4>
+<p>Permettent de : cloner des dépôts distants, committer & pousser via l'UI, tirer les mises à jour de branche, gérer les branches, valider visuellement au commit.</p>
+<h4>Repos API & fichiers arbitraires</h4>
+<ul>
+<li><strong>Repos API</strong> : gérer les Repos programmatiquement, effectuer des opérations Git, spécifier branche/tag/hash pour les jobs — par ex. automatiser la création de Repos, maintenir un dossier de prod à une version donnée, mettre à jour vers une branche/commit et exécuter des jobs.</li>
+<li><strong>Fichiers arbitraires</strong> dans les Repos : portabilité du code, fichiers de librairie (packages Python/R), portabilité de la spécification d'environnement, build de packages depuis le même repo, petites données, <strong>imports relatifs</strong> (.txt, .yml, .py, .csv…).</li>
+</ul>`
       },
       {
         id: "w4l10", title: "Déploiement continu : API, CLI, SDK, DABs",
         html: `
-<p><strong>Options de déploiement d'assets Databricks :</strong></p>
+<h4>Options de déploiement d'assets Databricks</h4>
 <table class="tbl">
 <thead><tr><th>Option</th><th>Usage</th></tr></thead>
 <tbody>
-<tr><td><strong>REST API</strong></td><td>Manière programmatique d'interagir avec les ressources Databricks.</td></tr>
-<tr><td><strong>Databricks CLI</strong></td><td>Interface en ligne de commande qui enveloppe la REST API ; idéale pour les tâches ponctuelles, l'expérimentation, le scripting shell.</td></tr>
-<tr><td><strong>Databricks SDK</strong></td><td>Disponible pour plusieurs langages (Python, Java, Go, R) ; pour développer des applications, des jobs custom, avec une gestion d'erreurs robuste.</td></tr>
+<tr><td><strong>REST API</strong></td><td>Manière <strong>programmatique</strong> d'interagir avec les ressources Databricks.</td></tr>
+<tr><td><strong>Databricks CLI</strong></td><td>Interface en ligne de commande qui <strong>enveloppe la REST API</strong> ; idéale pour les tâches ponctuelles, l'expérimentation et le scripting shell.</td></tr>
+<tr><td><strong>Databricks SDK</strong></td><td>Disponible pour plusieurs langages (<strong>Python, Java, Go, R</strong>) ; permet de développer des applications et des jobs custom avec une gestion d'erreurs robuste.</td></tr>
 </tbody>
 </table>
-<p><strong>Declarative Automation Bundles (DABs)</strong> — <em>recommandés par Databricks</em> pour créer, développer, déployer et tester jobs et autres ressources.</p>
+<h4>Declarative Automation Bundles (DABs)</h4>
+<p>Databricks <strong>recommande les DABs</strong> pour créer, développer, déployer et tester les jobs et autres ressources Databricks. Ils supportent les pratiques de génie logiciel : <strong>version control, code review, testing, continuous integration</strong>.</p>
+<p><strong>Que sont les DABs ?</strong></p>
 <ul>
-<li>Ce sont des <strong>fichiers YAML</strong> qui spécifient artefacts, ressources et configurations d'un projet Databricks → configuration aisée d'interactions complexes notebooks/pipelines et <strong>reproductibilité</strong>.</li>
-<li>Ils <strong>encapsulent</strong> toutes les configurations et artefacts nécessaires, avec support de la <strong>validation</strong> et des instructions de déploiement.</li>
-<li>Principe : <strong>« write code once, deploy everywhere »</strong> (dev → staging → production).</li>
-<li>Supportent les pratiques de génie logiciel : version control, code review, testing, intégration continue.</li>
+<li>Ce sont des <strong>fichiers YAML</strong> qui spécifient les artefacts, ressources et configurations d'un projet Databricks → configuration aisée d'interactions complexes notebooks/pipelines et <strong>reproductibilité</strong> des jobs.</li>
+<li>Ils <strong>encapsulent</strong> toutes les configurations et artefacts nécessaires.</li>
+<li>Ils fournissent une <strong>définition exacte</strong> des ressources Databricks utilisées dans le projet, avec support de la <strong>validation</strong> et des instructions de déploiement.</li>
+<li>Principe : <strong>« Write code once, deploy everywhere »</strong>.</li>
 </ul>
-<div class="callout"><strong>Renommage examen :</strong> les <em>Databricks Asset Bundles</em> sont désignés dans cet examen sous le nom <strong>Declarative Automation Bundles (DABs)</strong>. Flux CI/CD typique : développement local + bundle → commit en version control → déploiement auto en staging avec tests d'intégration → déploiement en production après revue et approbation.</div>`
+<h4>Développement et CI/CD avec DABs</h4>
+<p>Depuis un environnement de développement local, le <strong>Project Bundle</strong> se déploie vers les workspaces de <strong>développement, staging et production</strong> :</p>
+<ul>
+<li>Les utilisateurs <strong>committent</strong> les changements dans le <em>Project Repository</em> (version control) et peuvent <strong>déployer manuellement</strong> en dev pour voir/tester.</li>
+<li>Des <strong>notifications déclenchent le CI/CD</strong> : le code et les tests d'intégration sont déployés en <strong>staging</strong>.</li>
+<li>Le code est déployé en <strong>production après revue et approbation</strong>.</li>
+<li>On peut configurer des <strong>service principals</strong>, lancer des jobs, et faire des éditions directes pour les éléments non sous source control.</li>
+</ul>
+<div class="callout"><strong>Renommage examen :</strong> les <em>Databricks Asset Bundles</em> sont désignés dans cet examen sous le nom <strong>Declarative Automation Bundles (DABs)</strong>.</div>`
       }
     ]
   }
