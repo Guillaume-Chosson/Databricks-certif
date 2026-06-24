@@ -132,6 +132,16 @@ h2.section-title{font-family:var(--display);font-size:30px;font-weight:600;margi
   border:1px solid rgba(255,74,46,.28);border-left:3px solid var(--lava);
   border-radius:var(--radius-sm);padding:13px 16px;margin:4px 0 14px;font-size:14px}
 
+/* ---------- Demo / lab code example ---------- */
+.demo{background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--gold);
+  border-radius:var(--radius-sm);padding:12px 15px 4px;margin:0 0 14px}
+.demo > .demo-label{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);
+  font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--gold);margin:0 0 9px}
+.demo > .demo-label::before{content:"\003C\002F\003E";font-weight:600;opacity:.8}
+.demo p{margin:0 0 9px;font-size:14px}
+.demo pre{margin:0 0 10px}
+.demo .demo-note{font-size:12.8px;color:var(--muted);margin:0 0 10px;border-left:2px solid var(--line);padding-left:10px}
+
 .tbl{width:100%;border-collapse:collapse;margin:0 0 14px;font-size:13.6px}
 .tbl th,.tbl td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
 .tbl th{background:var(--surface-3);font-family:var(--display);font-weight:600;font-size:13px}
@@ -1487,7 +1497,35 @@ FROM read_files(
 <li>Permet de spécifier des <strong>options propres au format</strong> source pour adapter la lecture.</li>
 <li>Peut être utilisée dans des <strong>streaming tables</strong> pour ingérer de façon incrémentale des fichiers dans Delta Lake via <strong>Auto Loader</strong>.</li>
 </ul>
-<div class="callout"><strong>Résumé d'usage :</strong> idéal pour une ingestion ponctuelle, ad hoc, ou sur de plus petits jeux de données. Peut être planifié, mais relit alors et retraite toutes les données à chaque exécution (<strong>pas d'idempotence</strong>, latence élevée).</div>`
+<div class="callout"><strong>Résumé d'usage :</strong> idéal pour une ingestion ponctuelle, ad hoc, ou sur de plus petits jeux de données. Peut être planifié, mais relit alors et retraite toutes les données à chaque exécution (<strong>pas d'idempotence</strong>, latence élevée).</div><div class="demo"><span class="demo-label">Exemple — notebook (SQL)</span><p>Les fichiers <strong>Parquet</strong> embarquent leur schéma (noms + types) : <code>read_files()</code> l'infère automatiquement, sans définition manuelle.</p><pre><code>-- Supprime la table si elle existe (démo)
+DROP TABLE IF EXISTS historical_users_bronze_ctas_rf;
+
+-- Crée la table Delta directement depuis des fichiers Parquet
+CREATE TABLE historical_users_bronze_ctas_rf
+AS
+SELECT *
+FROM read_files(
+  '/Volumes/dbacademy_ecommerce/v01/raw/users-historical',
+  format =&gt; 'parquet'
+);
+
+-- Aperçu
+SELECT * FROM historical_users_bronze_ctas_rf LIMIT 10;</code></pre><p>Équivalent en <strong>Python</strong> (<code>spark.read</code> + <code>saveAsTable</code>) :</p><pre><code># 1. Lire les fichiers Parquet dans un DataFrame
+df = (spark.read
+        .format("parquet")
+        .load("/Volumes/dbacademy_ecommerce/v01/raw/users-historical"))
+
+# 2. Écrire dans une table Delta (écrase si elle existe)
+(df.write
+   .mode("overwrite")
+   .saveAsTable(f"dbacademy.{DA.schema_name}.historical_users_bronze_python"))
+
+# 3. Lire et afficher
+spark.table(f"dbacademy.{DA.schema_name}.historical_users_bronze_python").display()</code></pre></div><div class="demo"><span class="demo-label">À retenir — Managed vs External</span><p>CTAS crée par défaut une table <strong>managée</strong>. La différence porte sur qui gère les données et ce qui se passe au <code>DROP</code> :</p><table class="tbl"><thead><tr><th>Type</th><th>Données</th><th>DROP TABLE</th><th>Usage</th></tr></thead>
+<tbody>
+<tr><td><strong>Managed</strong></td><td>Databricks gère données <em>et</em> métadonnées (stockage managé)</td><td>Supprime aussi les données</td><td>Recommandé pour les nouvelles tables</td></tr>
+<tr><td><strong>External</strong></td><td>Databricks ne gère que les métadonnées</td><td>Ne supprime pas les données</td><td>Partage entre plateformes / données externes existantes ; multi-formats</td></tr>
+</tbody></table></div>`
       },
       {
         id: "w1l8", title: "Méthode 2 — COPY INTO (batch incrémental, legacy)",
@@ -1512,7 +1550,18 @@ COPY_OPTIONS (&lt;options&gt;);</code></pre>
 <li><code>FORMAT_OPTIONS()</code> contrôle la façon dont les fichiers sources sont <strong>analysés et interprétés</strong> ; les options disponibles dépendent du format de fichier.</li>
 <li><code>COPY_OPTIONS()</code> contrôle le comportement de l'opération <code>COPY INTO</code> elle-même — par ex. l'<strong>évolution de schéma</strong> (<code>mergeSchema</code>) et l'<strong>idempotence</strong> (<code>force</code>).</li>
 </ul>
-<div class="callout"><strong>Résumé d'usage :</strong> simple et répétable pour l'ingestion incrémentale de fichiers, parfait pour des jobs/pipelines planifiés. Désigné « legacy » : pour de gros volumes, Databricks recommande désormais <strong>Auto Loader + streaming tables</strong>.</div>`
+<div class="callout"><strong>Résumé d'usage :</strong> simple et répétable pour l'ingestion incrémentale de fichiers, parfait pour des jobs/pipelines planifiés. Désigné « legacy » : pour de gros volumes, Databricks recommande désormais <strong>Auto Loader + streaming tables</strong>.</div><div class="demo"><span class="demo-label">Exemple — notebook (SQL)</span><p>On crée une table avec un <strong>schéma explicite</strong> (ici 2 colonnes sur 3), puis on charge avec <code>COPY INTO</code> en autorisant l'évolution de schéma :</p><pre><code>DROP TABLE IF EXISTS historical_users_bronze_ci;
+
+-- Table vide avec schéma défini (2 colonnes sur 3)
+CREATE TABLE historical_users_bronze_ci (
+  user_id STRING,
+  user_first_touch_timestamp BIGINT
+);
+
+COPY INTO historical_users_bronze_ci
+  FROM '/Volumes/dbacademy_ecommerce/v01/raw/users-historical'
+  FILEFORMAT = parquet
+  COPY_OPTIONS ('mergeSchema' = 'true');   -- fusionne le schéma de chaque fichier</code></pre><p class="demo-note">Idempotence — relancer le même <code>COPY INTO</code> ré-ingère 0 ligne : <code>num_affected_rows</code>, <code>num_inserted_rows</code> et <code>num_skipped_corrupt_files</code> valent 0 tant que les fichiers source n'ont pas changé. Seuls les <strong>nouveaux fichiers</strong> sont chargés.</p></div>`
       },
       {
         id: "w1l9", title: "Méthode 3 — Auto Loader",
@@ -1546,7 +1595,16 @@ FROM STREAM read_files(
   format =&gt; '&lt;file_type&gt;'
 );</code></pre>
 <p>Pour utiliser Auto Loader en Databricks SQL, on emploie <code>read_files</code> avec le mot-clé <strong><code>STREAM</code></strong> dans la clause <code>FROM</code>. Une <strong>streaming table</strong> est enregistrée dans Unity Catalog et génère automatiquement un pipeline ; Databricks recommande les streaming tables (plutôt que <code>COPY INTO</code>) pour ingérer en SQL.</p>
-<div class="callout">Un approfondissement d'Auto Loader dépasse le périmètre du cours ; voir « Stream Processing and Analysis with Apache Spark », « Build Data Pipelines with Lakeflow Declarative Pipelines » et « Databricks Streaming and DLT (Advanced) ». <strong>Résumé d'usage :</strong> le meilleur choix pour le quasi temps réel ou l'incrémental à grande échelle, avec forte automatisation et détection/évolution automatiques de schéma.</div>`
+<div class="callout">Un approfondissement d'Auto Loader dépasse le périmètre du cours ; voir « Stream Processing and Analysis with Apache Spark », « Build Data Pipelines with Lakeflow Declarative Pipelines » et « Databricks Streaming and DLT (Advanced) ». <strong>Résumé d'usage :</strong> le meilleur choix pour le quasi temps réel ou l'incrémental à grande échelle, avec forte automatisation et détection/évolution automatiques de schéma.</div><div class="demo"><span class="demo-label">Exemple — Streaming Table en Databricks SQL</span><p>Créer une <strong>streaming table</strong> qui ingère incrémentalement des CSV via Auto Loader. La table s'appuie sur un <strong>pipeline DLT serverless</strong> créé et géré automatiquement (la création et le refresh ne consomment pas de warehouse DBSQL) :</p><pre><code>CREATE OR REFRESH STREAMING TABLE sql_csv_autoloader
+SCHEDULE EVERY 1 WEEK            -- planification du refresh (optionnel)
+AS
+SELECT *
+FROM STREAM read_files(
+  '/Volumes/dbacademy/labuser.../csv_files_autoloader_source',
+  format =&gt; 'CSV',
+  sep    =&gt; '|',
+  header =&gt; true
+);</code></pre><p class="demo-note">Rafraîchir manuellement : <code>REFRESH STREAMING TABLE sql_csv_autoloader;</code>. Le mot-clé <code>STREAM</code> devant <code>read_files()</code> est ce qui active l'ingestion incrémentale Auto Loader.</p></div>`
       },
       {
         id: "w1l10", title: "Comparatif : CTAS vs COPY INTO vs Auto Loader",
@@ -1592,7 +1650,21 @@ FROM STREAM read_files(
   _metadata.file_name              AS source,
   _metadata.file_modification_time AS last_mod_time
 FROM read_files('&lt;dir_path&gt;', format =&gt; 'csv');</code></pre>
-<p>Doc : <code>docs.databricks.com/.../ingestion/file-metadata-column</code></p>`
+<p>Doc : <code>docs.databricks.com/.../ingestion/file-metadata-column</code></p><div class="demo"><span class="demo-label">Exemple — notebook (SQL)</span><p>Ingestion enrichie : conversion d'un timestamp Unix en <code>DATE</code>, ajout des métadonnées fichier et de l'horodatage d'ingestion :</p><pre><code>DROP TABLE IF EXISTS historical_users_bronze;
+
+CREATE TABLE historical_users_bronze AS
+SELECT
+  *,
+  cast(from_unixtime(user_first_touch_timestamp / 1000000) AS DATE) AS first_touch_date,
+  _metadata.file_modification_time AS file_modification_time,  -- dernière modif du fichier source
+  _metadata.file_name              AS source_file,             -- nom du fichier source
+  current_timestamp()              AS ingestion_time           -- horodatage d'ingestion
+FROM read_files(
+  '/Volumes/dbacademy_ecommerce/v01/raw/users-historical',
+  format =&gt; 'parquet'
+);
+
+SELECT * FROM historical_users_bronze LIMIT 10;</code></pre></div>`
       },
       {
         id: "w1l12", title: "La colonne _rescued_data (lignes malformées)",
@@ -1615,7 +1687,41 @@ FROM read_files('&lt;dir_path&gt;', format =&gt; 'csv');</code></pre>
 <li><code>$100</code> n'est pas un BIGINT valide → la valeur est placée dans <code>_rescued_data</code> (JSON) et <code>cost</code> passe à <code>null</code> pour cette ligne.</li>
 <li>Pour la ligne valide (<code>300</code>, conforme au type), <code>_rescued_data</code> vaut <code>null</code>.</li>
 </ul>
-<div class="callout"><strong>À retenir :</strong> <code>_rescued_data</code> = filet de sécurité contre la perte de données. Les champs qui ne matchent pas le schéma ne sont pas droppés, ils sont capturés en JSON.</div>`
+<div class="callout"><strong>À retenir :</strong> <code>_rescued_data</code> = filet de sécurité contre la perte de données. Les champs qui ne matchent pas le schéma ne sont pas droppés, ils sont capturés en JSON.</div><div class="demo"><span class="demo-label">Exemple — schéma explicite + _rescued_data</span><p>Définir un schéma explicite accélère la lecture (pas d'inférence) et fiabilise le parsing. La colonne <code>_rescued_data</code> est créée via l'option <code>rescueddatacolumn</code> :</p><pre><code>SELECT *
+FROM read_files(
+  DA.paths_working_dir || '/csv_demo_files/malformed_example_1_data.csv',
+  format =&gt; 'csv',
+  sep    =&gt; '|',
+  header =&gt; true,
+  schema =&gt; '''
+      order_id INT,
+      email STRING,
+      transactions_timestamp BIGINT''',
+  rescueddatacolumn =&gt; '_rescued_data'   -- crée la colonne _rescued_data
+);</code></pre><p class="demo-note">La colonne <code>_rescued_data</code> capture toute donnée non parsée pour 3 raisons : <strong>colonne absente</strong> du schéma, <strong>type mismatch</strong>, ou <strong>case mismatch</strong> (casse différente).</p><p>Sans schéma, les colonnes inconnues atterrissent dans <code>_rescued_data</code> sous les clés <code>_c0</code>, <code>_c1</code>… qu'on peut récupérer et caster :</p><pre><code>SELECT
+  cast(_rescued_data:_c0 AS BIGINT) AS order_id,
+  *
+FROM read_files(
+  DA.paths_working_dir || '/csv_demo_files/malformed_example_2_data.csv',
+  format =&gt; 'csv', sep =&gt; '|', header =&gt; true
+);</code></pre></div><div class="demo"><span class="demo-label">Lab (challenge) — nettoyer _rescued_data</span><p>Récupérer une valeur secourue (prix au format <code>$xx</code>), la nettoyer et la recaster en numérique avec <code>coalesce()</code> + <code>replace()</code> :</p><pre><code>DROP TABLE IF EXISTS 05_lab_challenge;
+
+CREATE TABLE 05_lab_challenge AS
+SELECT
+  item_id,
+  name,
+  price,
+  cast(coalesce(price, replace(_rescued_data:price,'$','')) AS double) AS price_fixed,
+  _rescued_data,
+  _metadata.file_modification_time AS file_modification_time,
+  _metadata.file_name              AS source_file,
+  current_timestamp()              AS ingestion_timestamp
+FROM read_files(
+  DA.paths_working_dir || '/csv_demo_files/lab_malformed_data.csv',
+  format =&gt; 'csv', sep =&gt; ',', header =&gt; true,
+  schema =&gt; 'item_id STRING, name STRING, price DOUBLE',
+  rescueddatacolumn =&gt; '_rescued_data'
+);</code></pre></div>`
       },
       {
         id: "w1l13", title: "Ingestion de JSON semi-structuré",
@@ -1674,7 +1780,85 @@ SELECT schema_of_json('sample-json-string');
 -- 2) Convertir une colonne JSON en colonne STRUCT à partir du schéma obtenu
 SELECT from_json(json_col, 'json-struct-schema') AS struct_column
 FROM table;</code></pre>
-<div class="callout"><strong>Question type :</strong> « accéder à un sous-champ d'une colonne JSON stockée en STRING » → syntaxe <strong>deux-points</strong> (<code>col:champ:sous_champ</code>). « Convertir une colonne JSON STRING en colonne typée » → <code>schema_of_json()</code> puis <code>from_json()</code>.</div>`
+<div class="callout"><strong>Question type :</strong> « accéder à un sous-champ d'une colonne JSON stockée en STRING » → syntaxe <strong>deux-points</strong> (<code>col:champ:sous_champ</code>). « Convertir une colonne JSON STRING en colonne typée » → <code>schema_of_json()</code> puis <code>from_json()</code>.</div><div class="demo"><span class="demo-label">Exemple complet — JSON Kafka (notebook)</span><p><strong>1) Bronze brut</strong> — ingérer les fichiers JSON tels quels :</p><pre><code>DROP TABLE IF EXISTS kafka_events_bronze_raw;
+
+CREATE TABLE kafka_events_bronze_raw AS
+SELECT *
+FROM read_files(
+  '/Volumes/dbacademy_ecommerce/v01/raw/events-kafka',
+  format =&gt; 'json'
+);</code></pre><p><strong>2) Décoder du base64</strong> — <code>unbase64()</code> renvoie du BINARY, qu'on caste en STRING. La <code>value</code> décodée est une chaîne JSON :</p><pre><code>CREATE OR REPLACE TABLE kafka_events_bronze_decoded AS
+SELECT
+  cast(unbase64(key)   AS STRING) AS decoded_key,
+  offset, partition, timestamp, topic,
+  cast(unbase64(value) AS STRING) AS decoded_value   -- chaîne JSON
+FROM kafka_events_bronze_raw;</code></pre><p><strong>3a) Aplatir via la syntaxe deux-points</strong> (colonne STRING, simple et flexible mais moins performante) :</p><pre><code>SELECT
+  decoded_value:device,           -- STRING
+  decoded_value:traffic_source,   -- STRING
+  decoded_value:geo,              -- STRING contenant un JSON
+  decoded_value:items             -- STRING contenant un array JSON
+FROM kafka_events_bronze_decoded;</code></pre><p><strong>3b) Aplatir via conversion STRUCT</strong> (schéma appliqué, plus performant). Étape 1 : déduire le schéma ; étape 2 : <code>from_json()</code> :</p><pre><code>-- 1) Déduire le schéma à partir d'un exemple de ligne
+SELECT schema_of_json('{"device":"Linux","ecommerce":{"purchase_revenue_in_usd":1075.5,"total_item_quantity":1,"unique_items":1},"event_name":"finalize","geo":{"city":"Houston","state":"TX"},"items":[{"coupon":"NEWBED10","item_id":"M_STAN_K","item_name":"Standard King Mattress","price_in_usd":1195.0,"quantity":1}],"traffic_source":"email","user_id":"UA000000106116176"}') AS schema;
+
+-- 2) Convertir la colonne JSON en STRUCT avec le schéma obtenu
+CREATE OR REPLACE TABLE kafka_events_bronze_struct AS
+SELECT
+  * EXCEPT (decoded_value),
+  from_json(
+    decoded_value,
+    'STRUCT&lt;device: STRING, ecommerce: STRUCT&lt;purchase_revenue_in_usd: DOUBLE, total_item_quantity: BIGINT, unique_items: BIGINT&gt;, event_name: STRING, geo: STRUCT&lt;city: STRING, state: STRING&gt;, items: ARRAY&lt;STRUCT&lt;coupon: STRING, item_id: STRING, item_name: STRING, price_in_usd: DOUBLE, quantity: BIGINT&gt;&gt;, traffic_source: STRING, user_id: STRING&gt;'
+  ) AS value
+FROM kafka_events_bronze_decoded;</code></pre><p><strong>4) Extraire champs, champs imbriqués et tableaux</strong> avec la notation point :</p><pre><code>SELECT
+  decoded_key,
+  value.device          AS device,                 -- champ
+  value.geo.city        AS city,                    -- champ imbriqué
+  value.items           AS items,
+  array_size(value.items) AS number_elements_in_array
+FROM kafka_events_bronze_struct
+ORDER BY number_elements_in_array DESC;</code></pre><p><strong>5) Exploser un tableau</strong> — <code>explode()</code> crée une ligne par élément. (<code>explode_outer()</code> renvoie une ligne avec NULL si le tableau est NULL, là où <code>explode()</code> n'en produit aucune.)</p><pre><code>CREATE OR REPLACE TABLE bronze_explode_array AS
+SELECT
+  decoded_key,
+  array_size(value.items) AS number_elements_in_array,
+  explode(value.items)    AS item_in_array,   -- 1 ligne par élément
+  value.items
+FROM kafka_events_bronze_struct
+ORDER BY number_elements_in_array DESC;</code></pre></div><div class="demo"><span class="demo-label">Exemple — VARIANT (Public Preview Q2 2025)</span><p>Le type <strong>VARIANT</strong> stocke n'importe quel semi-structuré, sans schéma figé, avec de meilleures performances. <code>parse_json()</code> convertit une chaîne JSON en VARIANT :</p><pre><code>CREATE OR REPLACE TABLE kafka_events_bronze_variant AS
+SELECT
+  decoded_key, offset, partition, timestamp, topic,
+  parse_json(decoded_value) AS json_variant_value   -- chaîne JSON -&gt; VARIANT
+FROM kafka_events_bronze_decoded;
+
+-- On parse ensuite avec la syntaxe deux-points et on caste
+SELECT
+  json_variant_value,
+  json_variant_value:device :: STRING,   -- extrait device et caste en STRING
+  json_variant_value:items
+FROM kafka_events_bronze_variant
+LIMIT 10;</code></pre><p class="demo-note">VARIANT ne fonctionne pas sur Serverless Version 1. Ouvert (open-source), flexible, performant.</p></div><div class="demo"><span class="demo-label">Lab — flatten JSON (3 solutions)</span><p>Ingestion brute avec schéma + <code>_rescued_data</code>, puis aplatissement via STRUCT :</p><pre><code>-- Bronze brut + décodage
+CREATE OR REPLACE TABLE lab7_lab_kafka_events_raw AS
+SELECT
+  *,
+  cast(unbase64(value) AS STRING) AS decoded_value
+FROM read_files(
+  DA.paths_working_dir || '/json_demo_files/lab_kafka_events.json',
+  format =&gt; 'json',
+  schema =&gt; '''key STRING, timestamp DOUBLE, value STRING''',
+  rescueddatacolumn =&gt; '_rescued_data'
+);
+
+-- Solution STRUCT : from_json + projection des champs
+CREATE OR REPLACE TABLE lab7_flattened AS
+SELECT key, timestamp,
+  value1.user_id        AS user_id,
+  value1.event_type     AS event_type,
+  value1.event_timestamp AS event_timestamp,
+  value1.items          AS items
+FROM (
+  SELECT * EXCEPT(decoded_value),
+    from_json(decoded_value,
+      'STRUCT&lt;event_timestamp: TIMESTAMP, event_type: STRING, items: ARRAY&lt;STRUCT&lt;item_id: STRING, price_usd: DOUBLE, quantity: BIGINT&gt;&gt;, user_id: STRING&gt;') AS value1
+  FROM lab7_lab_kafka_events_raw
+);</code></pre><p class="demo-note">Trois techniques possibles au choix : syntaxe deux-points (le plus simple), conversion VARIANT (<code>parse_json</code>), ou conversion STRUCT (<code>schema_of_json</code> + <code>from_json</code>).</p></div>`
       },
       {
         id: "w1l14", title: "Connecteurs managés (données d'entreprise)",
@@ -1737,7 +1921,18 @@ WHEN NOT MATCHED THEN
   INSERT (id, first_name, email, sign_up_date, status)
   VALUES (source.id, source.first_name, source.email, source.sign_up_date, source.status);</code></pre>
 <p>Mécanique : <code>MERGE INTO … target</code> déclare la cible (alias <code>target</code>) ; <code>USING … source</code> déclare la source (alias <code>source</code>) ; <code>ON</code> fixe la <strong>condition de fusion</strong> (souvent une clé unique <code>id</code>) ; puis on enchaîne les clauses <code>WHEN MATCHED …</code> (UPDATE/DELETE selon le statut) et <code>WHEN NOT MATCHED THEN INSERT …</code> pour insérer les nouvelles lignes.</p>
-<div class="callout"><strong>Question type :</strong> « appliquer en une opération atomique des updates + inserts + deletes pour du CDC ou du SCD Type 1 » → <strong>MERGE INTO</strong>. « Partager des données entre régions/clouds sans copie propriétaire » → <strong>Delta Sharing</strong>. « Requêter une base externe sans la migrer » → <strong>Lakehouse Federation</strong>.</div>`
+<div class="callout"><strong>Question type :</strong> « appliquer en une opération atomique des updates + inserts + deletes pour du CDC ou du SCD Type 1 » → <strong>MERGE INTO</strong>. « Partager des données entre régions/clouds sans copie propriétaire » → <strong>Delta Sharing</strong>. « Requêter une base externe sans la migrer » → <strong>Lakehouse Federation</strong>.</div><div class="demo"><span class="demo-label">Exemple — MERGE WITH SCHEMA EVOLUTION</span><p>Quand la table <strong>source</strong> possède une colonne absente de la <strong>cible</strong> (ici <code>country</code>), <code>MERGE WITH SCHEMA EVOLUTION INTO</code> fait évoluer automatiquement le schéma de la cible :</p><pre><code>MERGE WITH SCHEMA EVOLUTION INTO main_users_target target
+USING new_users_source source
+ON target.id = source.id
+WHEN MATCHED AND source.status = 'update' THEN
+  UPDATE SET
+    target.email  = source.email,
+    target.status = source.status
+WHEN MATCHED AND source.status = 'delete' THEN
+  DELETE
+WHEN NOT MATCHED AND source.status = 'new' THEN
+  INSERT (id, first_name, email, sign_up_date, status, country)  -- 'country' nouvelle colonne
+  VALUES (source.id, source.first_name, source.email, source.sign_up_date, source.status, source.country);</code></pre><p class="demo-note">Sans évolution de schéma, <code>MERGE INTO</code> applique l'<strong>enforcement</strong> : insérer une colonne inconnue échouerait. <code>WITH SCHEMA EVOLUTION</code> ajoute la nouvelle colonne à la cible.</p></div>`
       }
     ]
   },
@@ -2143,7 +2338,32 @@ SELECT date(order_timestamp) AS order_date,
 FROM 2_silver_db.orders_silver
 GROUP BY date(order_timestamp);</code></pre>
 <p>On référence la table source <strong>sans le mot-clé <code>STREAM</code></strong> ; quand c'est possible, la MV est rafraîchie de façon incrémentale.</p>
-<div class="callout"><strong>Dépendances automatiques :</strong> SDP parse les dépendances seul — l'<strong>ordre du code n'a pas d'importance</strong>. Il construit le graphe : Raw JSON → <code>orders_bronze</code> (ST) → <code>orders_silver</code> (ST) → <code>gold_orders_by_date</code> (MV).</div>`
+<div class="callout"><strong>Dépendances automatiques :</strong> SDP parse les dépendances seul — l'<strong>ordre du code n'a pas d'importance</strong>. Il construit le graphe : Raw JSON → <code>orders_bronze</code> (ST) → <code>orders_silver</code> (ST) → <code>gold_orders_by_date</code> (MV).</div><div class="demo"><span class="demo-label">Exemple — pipeline Bronze→Silver→Gold (SQL)</span><p><strong>Bronze</strong> — ingestion incrémentale de JSON via Auto Loader, avec métadonnées et propriétés de table. <code>pipelines.reset.allowed = false</code> empêche un full refresh destructeur du bronze :</p><pre><code>CREATE OR REFRESH STREAMING TABLE 1_bronze_db.status_bronze_demo5
+  COMMENT "Ingest raw JSON order status files from cloud storage"
+  TBLPROPERTIES (
+    "quality" = "bronze",
+    "pipelines.reset.allowed" = false
+  )
+AS
+SELECT
+  *,
+  current_timestamp() AS processing_time,
+  _metadata.file_name AS source_file
+FROM STREAM read_files("$\{source}/status", format =&gt; "json");</code></pre><p><strong>Silver</strong> — transformation + contraintes qualité (voir leçon Expectations) :</p><pre><code>CREATE OR REFRESH STREAMING TABLE 2_silver_db.status_silver_demo5
+(
+  CONSTRAINT valid_timestamp   EXPECT (order_status_timestamp &gt; "2021-12-25") ON VIOLATION DROP ROW,
+  CONSTRAINT valid_order_status EXPECT (
+    order_status IN ('on the way','canceled','return canceled','delivered',
+                     'return processed','placed','preparing'))
+)
+COMMENT "Order with each status and timestamp"
+TBLPROPERTIES ("quality" = "silver")
+AS
+SELECT
+  order_id,
+  order_status,
+  timestamp(status_timestamp) AS order_status_timestamp
+FROM STREAM 1_bronze_db.status_silver_demo5;</code></pre></div>`
       },
       {
         id: "w3l5", title: "Développement simplifié & paramètres de pipeline",
@@ -2198,7 +2418,19 @@ SELECT order_id,
        notifications
 FROM STREAM 1_bronze_db.orders_bronze;</code></pre>
 <p>Pour chaque ligne, l'expectation décide : <strong>Pass</strong> → garder la ligne et continuer ; <strong>WARN</strong> → consigner en métrique ; <strong>DROP</strong> → écarter la ligne ; <strong>FAIL</strong> → faire échouer le flow.</p>
-<div class="callout">Depuis le Q2 2025, les <strong>materialized views</strong> qui utilisent des expectations sont <strong>toujours entièrement rafraîchies</strong>.</div>`
+<div class="callout">Depuis le Q2 2025, les <strong>materialized views</strong> qui utilisent des expectations sont <strong>toujours entièrement rafraîchies</strong>.</div><div class="demo"><span class="demo-label">Exemple — Expectations (3 niveaux d'action)</span><p>Les contraintes <code>EXPECT</code> définissent la politique sur violation : <strong>warn</strong> (par défaut, on garde la ligne), <strong>DROP ROW</strong> (on rejette la ligne), <strong>FAIL UPDATE</strong> (on échoue le flow) :</p><pre><code>CREATE STREAMING TABLE 1_bronze_db.customers_bronze_clean_demo6
+(
+  CONSTRAINT valid_id        EXPECT (customer_id IS NOT NULL) ON VIOLATION FAIL UPDATE,
+  CONSTRAINT valid_operation EXPECT (operation  IS NOT NULL) ON VIOLATION DROP ROW,
+  CONSTRAINT valid_name      EXPECT (name IS NOT NULL OR operation = "DELETE"),   -- warn seulement
+  CONSTRAINT valid_address   EXPECT (
+    (address IS NOT NULL AND city IS NOT NULL AND state IS NOT NULL AND zip_code IS NOT NULL)
+    OR operation = "DELETE")
+)
+COMMENT "Clean raw bronze + data quality constraints"
+AS
+SELECT *, CAST(from_unixtime(timestamp) AS timestamp) AS timestamp_datetime
+FROM STREAM 1_bronze_db.customers_bronze_raw_demo6;</code></pre></div>`
       },
       {
         id: "w3l7", title: "Jointures en streaming",
@@ -2218,7 +2450,22 @@ FROM STREAM 1_bronze_db.orders_bronze;</code></pre>
 <ul>
 <li>Objectif : joindre de façon <strong>incrémentale</strong> les nouvelles données de <strong>deux flux</strong> ; les données passées ne sont pas utilisées.</li>
 <li><em>Hors périmètre du cours</em> (voir le cours « Databricks Streaming and DLT (Advanced) »).</li>
-</ul>`
+</ul><div class="demo"><span class="demo-label">Exemple — joindre deux ST via une Materialized View</span><p>Une façon de joindre deux streaming tables : une <strong>materialized view</strong> qui exécute un inner join complet. Noter que <strong>le mot-clé <code>STREAM</code> n'est pas utilisé</strong> quand on référence les ST dans la MV :</p><pre><code>CREATE OR REFRESH MATERIALIZED VIEW 3_gold_db.full_order_info_gold_demo5
+  COMMENT "Join orders + order status (tous les statuts par commande)"
+  TBLPROPERTIES ("quality" = "gold")
+AS
+SELECT
+  orders.order_id, orders.order_timestamp,
+  status.order_status, status.order_status_timestamp
+FROM 2_silver_db.status_silver_demo5 status
+INNER JOIN 2_silver_db.orders_silver_demo5 orders
+  ON orders.order_id = status.order_id;</code></pre><p>Puis des MV Gold dérivées, p.ex. les commandes annulées avec délai calculé via <code>datediff()</code> :</p><pre><code>CREATE OR REFRESH MATERIALIZED VIEW 3_gold_db.cancelled_orders_gold_demo5
+  TBLPROPERTIES ("quality" = "gold")
+AS
+SELECT order_id, order_timestamp, order_status, order_status_timestamp,
+  datediff(DAY, order_timestamp, order_status_timestamp) AS days_to_cancel
+FROM 3_gold_db.full_order_info_gold_demo5
+WHERE order_status = 'canceled';</code></pre></div>`
       },
       {
         id: "w3l8", title: "Déployer un pipeline en production",
@@ -2240,7 +2487,22 @@ FROM STREAM 1_bronze_db.orders_bronze;</code></pre>
 <li><strong>Data lineage</strong></li>
 </ul>
 <p>Par <strong>défaut</strong>, l'event log est écrit comme <strong>table Delta cachée</strong>, située dans le catalogue/schéma par défaut du pipeline. Via les paramètres avancés, on peut le <strong>publier</strong> comme table Delta (spécifier catalogue, schéma, nom de table), puis l'interroger :</p>
-<pre><code>SELECT * FROM &lt;catalog&gt;.&lt;schema&gt;.&lt;event_log_table_name&gt;;</code></pre>`
+<pre><code>SELECT * FROM &lt;catalog&gt;.&lt;schema&gt;.&lt;event_log_table_name&gt;;</code></pre><div class="demo"><span class="demo-label">Exemple — analyser la qualité via l'event log</span><p>L'event log expose les résultats des expectations. On explose le JSON <code>flow_progress</code> pour compter lignes passées/échouées par dataset et par contrainte :</p><pre><code>CREATE OR REPLACE TEMPORARY VIEW dq_source_vw AS
+SELECT explode(
+    from_json(details:flow_progress:data_quality:expectations,
+      "array&lt;struct&lt;name: string, dataset: string, passed_records: int, failed_records: int&gt;&gt;")
+  ) AS row_expectations
+FROM default.event_log_demo_5
+WHERE event_type = 'flow_progress';
+
+SELECT
+  row_expectations.dataset AS dataset,
+  row_expectations.name    AS expectation,
+  SUM(row_expectations.passed_records) AS passing_records,
+  SUM(row_expectations.failed_records) AS warnings_records
+FROM dq_source_vw
+GROUP BY row_expectations.dataset, row_expectations.name
+ORDER BY dataset;</code></pre></div>`
       },
       {
         id: "w3l9", title: "Change Data Capture (CDC) & SCD",
@@ -2285,7 +2547,63 @@ STORED AS SCD TYPE 1;</code></pre>
 <li><code>COLUMNS * EXCEPT (operation)</code> : sous-ensemble de colonnes à inclure dans la cible.</li>
 <li><code>STORED AS SCD TYPE 1</code> (défaut) ou <code>TYPE 2</code>.</li>
 </ul>
-<div class="callout"><strong>AUTO CDC FROM SNAPSHOT</strong> (Public Preview au Q2 2025) traite les changements à partir de <em>snapshots</em> de base de données.</div>`
+<div class="callout"><strong>AUTO CDC FROM SNAPSHOT</strong> (Public Preview au Q2 2025) traite les changements à partir de <em>snapshots</em> de base de données.</div><div class="demo"><span class="demo-label">Exemple — AUTO CDC INTO (SCD Type 1)</span><p>On crée la table cible, puis un <strong>flow</strong> <code>AUTO CDC INTO</code> qui applique les changements (updates/deletes/inserts) en ordonnant par une colonne de séquence :</p><pre><code>-- Table cible
+CREATE OR REFRESH STREAMING TABLE 2_silver_db.scd_type_1_customers_silver_demo6
+  COMMENT 'SCD Type 1 Historical Customer Data';
+
+-- Flow CDC
+CREATE FLOW scd_type_1_flow AS
+AUTO CDC INTO 2_silver_db.scd_type_1_customers_silver_demo6   -- table cible
+FROM STREAM 1_bronze_db.customers_bronze_clean_demo6          -- source des changements
+  KEYS (customer_id)                              -- clé primaire d'identification
+  APPLY AS DELETE WHEN operation = "DELETE"       -- gestion des suppressions
+  SEQUENCE BY timestamp_datetime                  -- ordre d'application des changements
+  COLUMNS * EXCEPT (timestamp, _rescued_data, operation)
+  STORED AS SCD TYPE 1;                           -- SCD Type 1 (pas d'historique)</code></pre><p class="demo-note">Passer <code>STORED AS SCD TYPE 2</code> pour conserver l'historique des versions. La cible doit exister avant le <code>CREATE FLOW</code>.</p></div><h4>Pipeline complet — CDC clients (synthèse)</h4><p>Ce pipeline de bout en bout réunit la plupart des notions vues jusqu’ici : ingestion incrémentale par <strong>Auto Loader</strong>, <strong>colonnes de métadonnées</strong>, <strong>expectations</strong> de qualité, et application des changements via <strong>AUTO CDC INTO</strong> en <strong>SCD Type 1</strong>.</p><div class="demo"><span class="demo-label">STEP 1 — JSON → Bronze (ingestion Auto Loader)</span><p>Ingestion incrémentale des fichiers JSON du flux CDC vers une streaming table, en capturant l’horodatage de traitement et le fichier source :</p><pre><code>CREATE OR REFRESH STREAMING TABLE 1_bronze_db.customers_bronze_raw_demo6
+  COMMENT "Raw data from customers CDC feed"
+  TBLPROPERTIES (
+    "quality" = "bronze",
+    "pipelines.reset.allowed" = false   -- empêche un full refresh du bronze
+  )
+AS
+SELECT
+  *,
+  current_timestamp()  AS processing_time,  -- horodatage d'ingestion des lignes
+  _metadata.file_name  AS source_file       -- nom du fichier source
+FROM STREAM read_files(
+  "$\{source}/customers",
+  format =&gt; "json"
+);</code></pre></div><div class="demo"><span class="demo-label">STEP 2 — Bronze clean (enforcement qualité)</span><p>Table bronze nettoyée avec contraintes <code>EXPECT</code> : id non nul (<code>FAIL UPDATE</code>), opération non nulle et email valide (<code>DROP ROW</code>), nom/adresse en warn — sauf pour les suppressions :</p><pre><code>CREATE STREAMING TABLE 1_bronze_db.customers_bronze_clean_demo6
+(
+  CONSTRAINT valid_id        EXPECT (customer_id IS NOT NULL) ON VIOLATION FAIL UPDATE,
+  CONSTRAINT valid_operation EXPECT (operation  IS NOT NULL) ON VIOLATION DROP ROW,
+  CONSTRAINT valid_name      EXPECT (name IS NOT NULL OR operation = "DELETE"),
+  CONSTRAINT valid_address   EXPECT (
+    (address IS NOT NULL AND city IS NOT NULL AND
+     state IS NOT NULL AND zip_code IS NOT NULL)
+    OR operation = "DELETE"),
+  CONSTRAINT valid_email     EXPECT (
+    rlike(email, '^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$')
+    OR operation = "DELETE") ON VIOLATION DROP ROW
+)
+COMMENT "Clean raw bronze timestamp column and add data quality constraints"
+AS
+SELECT
+  *,
+  CAST(from_unixtime(timestamp) AS timestamp) AS timestamp_datetime
+FROM STREAM 1_bronze_db.customers_bronze_raw_demo6;</code></pre></div><div class="demo"><span class="demo-label">STEP 3 — Bronze clean → Silver (AUTO CDC INTO, SCD Type 1)</span><p>On crée la table cible, puis un <code>CREATE FLOW</code> avec <code>AUTO CDC INTO</code> qui applique updates / deletes / inserts en ordonnant par <code>timestamp_datetime</code> :</p><pre><code>-- Créer la table cible si elle n'existe pas
+CREATE OR REFRESH STREAMING TABLE 2_silver_db.scd_type_1_customers_silver_demo6
+  COMMENT 'SCD Type 1 Historical Customer Data';
+
+-- Appliquer le SCD Type 1
+CREATE FLOW scd_type_1_flow AS
+AUTO CDC INTO 2_silver_db.scd_type_1_customers_silver_demo6  -- table cible (SCD Type 1 ou 2)
+FROM STREAM 1_bronze_db.customers_bronze_clean_demo6         -- source des changements
+  KEYS (customer_id)                              -- clé primaire d'identification
+  APPLY AS DELETE WHEN operation = "DELETE"       -- gestion des suppressions source -&gt; cible
+  SEQUENCE BY timestamp_datetime                  -- ordre d'application des changements
+  COLUMNS * EXCEPT (timestamp, _rescued_data, operation)   -- exclut les champs techniques
+  STORED AS SCD TYPE 1;                           -- SCD Type 1 (pas d'historique)</code></pre><p class="demo-note">Remplacer par <code>STORED AS SCD TYPE 2</code> pour conserver l’historique des versions. La table cible doit exister <em>avant</em> le <code>CREATE FLOW</code>.</p></div>`
       },
       {
         id: "w3l10", title: "Fonctionnalités additionnelles",
