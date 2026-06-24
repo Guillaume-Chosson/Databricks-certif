@@ -128,6 +128,14 @@ h2.section-title{font-family:var(--display);font-size:30px;font-weight:600;margi
 .lesson :not(pre) > code{background:var(--surface-3);border:1px solid var(--line);
   border-radius:5px;padding:1px 6px;color:#f0d8a8}
 
+/* ---------- Syntax highlighting (SQL / Python) ---------- */
+.lesson pre code .hl-kw{color:#569cd6}                       /* mots-clés */
+.lesson pre code .hl-type{color:#4ec9b0}                     /* types */
+.lesson pre code .hl-str{color:#ce9178}                      /* chaînes */
+.lesson pre code .hl-com{color:#6a9955;font-style:italic}    /* commentaires */
+.lesson pre code .hl-num{color:#b5cea8}                      /* nombres */
+.lesson pre code .hl-fn{color:#dcdcaa}                       /* fonctions */
+
 .callout{background:linear-gradient(180deg, rgba(255,74,46,.09), rgba(255,74,46,.03));
   border:1px solid rgba(255,74,46,.28);border-left:3px solid var(--lava);
   border-radius:var(--radius-sm);padding:13px 16px;margin:4px 0 14px;font-size:14px}
@@ -2995,6 +3003,52 @@ def test_add_new_col():
     content.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  /* ---------------- Coloration syntaxique (SQL / Python) ---------------- */
+  const HL_KW = new Set([
+    "SELECT","FROM","WHERE","AS","CREATE","OR","REFRESH","REPLACE","TABLE","STREAMING",
+    "MATERIALIZED","VIEW","TEMPORARY","DROP","IF","EXISTS","INTO","USING","ON","WHEN",
+    "MATCHED","NOT","THEN","UPDATE","SET","DELETE","INSERT","VALUES","MERGE","WITH",
+    "SCHEMA","EVOLUTION","AND","COPY","FILEFORMAT","FORMAT_OPTIONS","COPY_OPTIONS",
+    "COMMENT","TBLPROPERTIES","CONSTRAINT","EXPECT","VIOLATION","ROW","FAIL","GROUP",
+    "BY","ORDER","DESC","ASC","INNER","JOIN","LEFT","RIGHT","OUTER","FULL","LIMIT",
+    "EXCEPT","DISTINCT","IS","NULL","IN","LIKE","CAST","FLOW","AUTO","CDC","KEYS",
+    "APPLY","SEQUENCE","COLUMNS","STORED","SCD","SCHEDULE","EVERY","WEEK","HOUR","DAY",
+    "STREAM","CONSTRAINTS","TRUE","FALSE","IMPORT","DEF","RETURN","NONE",
+  ]);
+  const HL_TYPES = new Set([
+    "STRING","INT","BIGINT","DOUBLE","FLOAT","BOOLEAN","TIMESTAMP","DATE","STRUCT",
+    "ARRAY","MAP","VARIANT","BINARY","LONG","SMALLINT","DECIMAL","INTEGER",
+  ]);
+  function escHtml(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function hlCode(text){
+    const re = /(\/\*[\s\S]*?\*\/)|(--[^\n]*|#[^\n]*)|('''[\s\S]*?'''|"""[\s\S]*?""")|('(?:[^'\\]|\\.|'')*'|"(?:[^"\\]|\\.)*")|((?<![A-Za-z0-9_])\d+(?:\.\d+)?(?![A-Za-z0-9_.]))|([A-Za-z_][A-Za-z0-9_]*)/g;
+    let out = "", last = 0, m;
+    while ((m = re.exec(text))) {
+      out += escHtml(text.slice(last, m.index));
+      last = re.lastIndex;
+      if (m[1] || m[2]) out += '<span class="hl-com">' + escHtml(m[1] || m[2]) + '</span>';
+      else if (m[3] || m[4]) out += '<span class="hl-str">' + escHtml(m[3] || m[4]) + '</span>';
+      else if (m[5]) out += '<span class="hl-num">' + escHtml(m[5]) + '</span>';
+      else if (m[6]) {
+        const w = m[6], up = w.toUpperCase();
+        const isCall = /^\s*\(/.test(text.slice(re.lastIndex));
+        if (HL_KW.has(up)) out += '<span class="hl-kw">' + escHtml(w) + '</span>';
+        else if (HL_TYPES.has(up) && w === up) out += '<span class="hl-type">' + escHtml(w) + '</span>';
+        else if (isCall) out += '<span class="hl-fn">' + escHtml(w) + '</span>';
+        else out += escHtml(w);
+      }
+    }
+    out += escHtml(text.slice(last));
+    return out;
+  }
+  function highlightIn(root){
+    root.querySelectorAll("pre code").forEach((c) => {
+      if (c.dataset.hl) return;
+      c.innerHTML = hlCode(c.textContent);
+      c.dataset.hl = "1";
+    });
+  }
+
   function renderModule(id) {
     const mod = MODULES.find((m) => m.id === id);
     if (!mod) return;
@@ -3010,6 +3064,7 @@ def test_add_new_col():
       card.appendChild(el("h3", null, les.title));
       const body = el("div");
       body.innerHTML = les.html;
+      highlightIn(body);
       card.appendChild(body);
       content.appendChild(card);
     });
@@ -3032,6 +3087,7 @@ def test_add_new_col():
       card.appendChild(el("h3", null, les.title));
       const body = el("div");
       body.innerHTML = les.html;
+      highlightIn(body);
       card.appendChild(body);
       content.appendChild(card);
     });
