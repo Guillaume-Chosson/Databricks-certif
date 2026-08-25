@@ -1966,266 +1966,1131 @@ WHEN NOT MATCHED AND source.status = 'new' THEN
 </ul>
 <p><strong>Prérequis requis :</strong></p>
 <ul>
-<li><strong>Connaissance fondamentale de la plateforme :</strong> Workspaces, Apache Spark, Delta Lake & architecture Médaillon, Unity Catalog.</li>
+<li><strong>Connaissance fondamentale de la plateforme :</strong> Workspaces, Apache Spark, Delta Lake &amp; architecture Médaillon, Unity Catalog.</li>
 <li><strong>Python intermédiaire :</strong> créer des fonctions et manipuler des variables, lire des données dans des DataFrames, appliquer des transformations de base (select, filter, groupBy, etc.).</li>
 <li><strong>SQL intermédiaire :</strong> écrire des requêtes de niveau intermédiaire, créer et manipuler des colonnes, agréger, filtrer.</li>
 </ul>
 <p><strong>Plan du cours (4 sections) :</strong> Introduction au Data Engineering dans Databricks ; Concepts fondamentaux de Lakeflow Jobs ; Création et planification de jobs ; Fonctionnalités avancées de Lakeflow Jobs.</p>`
       },
       {
-        id: "w2l2", title: "Qu'est-ce que Lakeflow Jobs ?",
+        id: "w2l2", title: "Le Data Engineering dans Databricks — la pile Lakeflow",
         html: `
-<p>Il existe de nombreuses façons d'orchestrer des charges de travail (clics, sessions, commandes… qu'on joint, <em>featurize</em>, agrège, analyse, entraîne…). La question est : <em>comment orchestrer de façon fiable ?</em></p>
-<h4>Les orchestrateurs externes créent des difficultés</h4>
-<p>Quand l'outil d'orchestration <strong>n'est pas unifié avec le lakehouse</strong> :</p>
+<p>Commençons par explorer les bases du data engineering dans Databricks.</p>
+<p>Tout commence par le <strong>stockage optimisé</strong> (<em>optimized storage</em>) utilisant <strong>Delta Lake</strong>, <strong>Parquet</strong> ou <strong>Iceberg</strong>. Au-dessus de cette couche de stockage se trouve la <strong>gouvernance unifiée</strong> avec <strong>Unity Catalog</strong> — un catalogue de données centralisé qui fournit le contrôle d'accès, l'audit, le lignage des données (<em>data lineage</em>), le monitoring de la qualité et la découverte des données à travers les workspaces Databricks.</p>
+<p>Databricks propose ensuite <strong>Lakeflow</strong>, une solution de data engineering <strong>de bout en bout</strong> qui permet aux data engineers, développeurs logiciels, développeurs SQL, analystes et data scientists de livrer des données de haute qualité pour l'analytique, l'IA et les applications opérationnelles en aval. Lakeflow fournit une plateforme unifiée d'<strong>ingestion</strong>, de <strong>transformation</strong> et d'<strong>orchestration</strong> des données.</p>
+
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:16px;margin:0 0 14px">
+<div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.4px;color:#ff6a52;text-transform:uppercase;margin-bottom:4px">Lakeflow</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.8px;color:#8a97a8;text-transform:uppercase;margin-bottom:12px">Unified data engineering for the Data Intelligence Platform</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:9px">
+  <div style="background:#232c38;border:1px solid #2b3542;border-top:3px solid #ff4a2e;border-radius:7px;padding:11px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12.5px;color:#e8ecf2">CONNECT</div>
+    <div style="font-size:12px;color:#8a97a8;margin-top:5px">Efficient ingestion connectors</div>
+  </div>
+  <div style="background:#232c38;border:1px solid #2b3542;border-top:3px solid #ff4a2e;border-radius:7px;padding:11px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12.5px;color:#e8ecf2">DECLARATIVE PIPELINES</div>
+    <div style="font-size:11px;color:#6b7686;margin-top:2px">(Previously DLT)</div>
+    <div style="font-size:12px;color:#8a97a8;margin-top:5px">Accelerated ETL development</div>
+  </div>
+  <div style="background:#232c38;border:1px solid #2b3542;border-top:3px solid #e3b23c;border-radius:7px;padding:11px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12.5px;color:#e3b23c">JOBS</div>
+    <div style="font-size:11px;color:#6b7686;margin-top:2px">(Previously Workflows)</div>
+    <div style="font-size:12px;color:#8a97a8;margin-top:5px">Reliable orchestration for analytics and AI</div>
+  </div>
+</div>
+<div style="background:#232c38;border:1px solid #2b3542;border-radius:7px;padding:9px 12px;text-align:center;font-size:12.5px;color:#aeb9c7;margin-bottom:9px">
+  <strong style="color:#e8ecf2">INDUSTRY LEADING DATA PROCESSING ENGINE</strong><br/><span style="font-size:11.5px;color:#8a97a8">(Apache Spark + Structured Streaming)</span>
+</div>
+<div style="background:#232c38;border:1px solid #2b3542;border-radius:7px;padding:8px 12px;text-align:center;font-size:12.5px;color:#aeb9c7;margin-bottom:7px">UNIFIED GOVERNANCE</div>
+<div style="background:#232c38;border:1px solid #2b3542;border-radius:7px;padding:8px 12px;text-align:center;font-size:12.5px;color:#aeb9c7">OPTIMIZED STORAGE</div>
+</div>
+
+<h4>Les trois composants de Lakeflow</h4>
 <ul>
-<li>les équipes data sont <strong>moins productives</strong> ; l'outil est <strong>difficile à utiliser</strong> pour de nombreux profils ;</li>
-<li>les <strong>mauvaises données</strong> diminuent la valeur des applications en aval ;</li>
-<li><strong>coût de possession plus élevé</strong> et <strong>fiabilité moindre</strong> ;</li>
-<li><strong>cause racine difficile à comprendre</strong> en cas d'incident ; <strong>architecture complexe</strong> à gérer et maintenir.</li>
+<li><strong>Lakeflow Connect</strong> — un ensemble de connecteurs d'ingestion efficaces qui simplifient l'ingestion depuis des applications d'entreprise populaires, des bases de données, du stockage cloud, des bus de messages et des fichiers locaux.</li>
+<li><strong>Lakeflow Declarative Pipelines</strong> — un framework pour construire des pipelines de données <strong>batch et streaming</strong> en SQL et Python, conçu pour accélérer le développement ETL.</li>
+<li><strong>Lakeflow Jobs</strong> — un outil d'automatisation de workflows pour Databricks qui orchestre les charges de traitement de données. Il permet la coordination de plusieurs tâches au sein de workflows complexes, autorisant la <strong>planification</strong>, l'<strong>optimisation</strong> et la <strong>gestion</strong> de processus répétables.</li>
 </ul>
-<h4>Lakeflow Jobs : orchestration unifiée</h4>
-<p>Orchestration unifiée pour la data, l'analytique et l'IA sur la Data Intelligence Platform, avec trois promesses :</p>
-<ul>
-<li><strong>Simple authoring</strong> (authoring simple) ;</li>
-<li><strong>Actionable insights</strong> (insights actionnables) ;</li>
-<li><strong>Proven reliability</strong> (fiabilité éprouvée).</li>
-</ul>
-<p>Elle s'appuie sur le moteur de traitement <strong>Photon</strong>, la gouvernance <strong>Unity Catalog</strong> et le stockage <strong>Delta Lake / Iceberg</strong>, et orchestre les charges <strong>data warehousing</strong> et <strong>machine learning</strong>.</p>
-<p>Un workflow Jobs combine : <strong>déclencheurs</strong> (Scheduled, Continuous, File Arrival, Table Updates), <strong>compute</strong>, <strong>control flow</strong> et <strong>observabilité</strong>, au service de charges ETL, ML/IA et Analytics/BI.</p>`
+<div class="callout"><strong>Périmètre de ce cours :</strong> nous nous concentrons spécifiquement sur <strong>Jobs</strong> — le composant d'orchestration. Jobs permet d'orchestrer <em>tout type de charge de travail</em> dans Databricks : notebooks, requêtes SQL, dashboards, pipelines et bien plus. C'est cette approche unifiée qui rend Lakeflow Jobs si puissant.</div>`
       },
       {
-        id: "w2l3", title: "Blocs de base : Jobs & Tâches",
+        id: "w2l3", title: "Qu'est-ce que Lakeflow Jobs ?",
         html: `
-<h4>Job et Task</h4>
+<h4>Il existe de nombreuses façons d'orchestrer ses charges de travail</h4>
+<p>Le choix de l'approche d'orchestration pour les charges lakehouse est un défi fondamental de l'architecture data moderne. Les options possibles incluent :</p>
 <ul>
-<li>Un <strong>Job</strong> est la ressource principale pour <strong>planifier, coordonner et exécuter</strong> des opérations : traitement de données, ETL, analytique, charges de machine learning dans l'environnement Databricks.</li>
-<li>Une <strong>tâche (task)</strong> est une <strong>unité de travail unique</strong> au sein d'un job qui exécute une charge spécifique : notebook, script, requête, etc.</li>
+<li>les solutions <strong>open source</strong> — Apache Airflow, Prefect, Dagster, dbt ;</li>
+<li>les services <strong>cloud-natifs</strong> — AWS, Azure, Google Cloud ;</li>
+<li>les <strong>frameworks maison</strong> développés en interne.</li>
+</ul>
+<p>En face, un workflow data typique enchaîne plusieurs étapes : ingérer les données de <em>sessions</em> et de <em>clics</em>, les <strong>joindre</strong>, réaliser la <strong>featurization</strong> et l'<strong>agrégation</strong>, l'<strong>analyse</strong>, puis l'<strong>entraînement</strong> de modèles. En aval viennent les usages : <strong>BI &amp; Data Warehousing</strong>, <strong>Data Engineering</strong>, <strong>Data Streaming</strong> et <strong>Data Science &amp; ML</strong>. Le point d'interrogation représente le défi central : il existe de nombreuses façons d'orchestrer ces charges — mais laquelle est la meilleure ?</p>
+
+<h4>Les orchestrateurs externes créent des difficultés</h4>
+<p>De nombreuses organisations utilisent des outils d'orchestration externes, ce qui engendre des difficultés significatives :</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>Difficiles à utiliser</h4><p>Hard to use for many practitioners → les équipes data sont <strong>moins productives</strong>.</p></div>
+  <div class="mini-card"><h4>Cause racine difficile</h4><p>Difficult to understand root cause when issues occur → les <strong>mauvaises données</strong> diminuent la valeur des applications en aval.</p></div>
+  <div class="mini-card"><h4>Architecture complexe</h4><p>Complex architecture to manage and maintain → <strong>coût de possession plus élevé</strong> et <strong>fiabilité moindre</strong>.</p></div>
+</div>
+<div class="callout">Le point le plus important : <strong>ces outils ne sont pas unifiés avec votre Lakehouse</strong>, ce qui crée des difficultés d'intégration et des silos de données.</div>
+
+<h4>Lakeflow Jobs : l'orchestration unifiée</h4>
+<p>C'est là qu'intervient Lakeflow Jobs : <strong>orchestration unifiée pour la data, l'analytique et l'IA sur la Data Intelligence Platform</strong>. Trois bénéfices clés :</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>Simple authoring</h4><p>Création simple des workflows.</p></div>
+  <div class="mini-card"><h4>Actionable insights</h4><p>Des informations exploitables.</p></div>
+  <div class="mini-card"><h4>Proven reliability</h4><p>Une fiabilité éprouvée.</p></div>
+</div>
+<p>Parce qu'il est <strong>natif à la plateforme</strong>, Jobs s'intègre sans couture avec l'ingestion &amp; transformation de données, le moteur de traitement (<strong>Photon</strong>), la gouvernance (<strong>Unity Catalog</strong>), le stockage (<strong>Delta Lake et Iceberg</strong>), le <strong>data warehousing</strong> et le <strong>machine learning</strong>. Le workflow présenté — de <em>sessions</em> et <em>clics</em> jusqu'à <em>join</em>, <em>featurize</em>, <em>aggregate</em>, <em>analyze</em> et <em>train</em> — s'exécute nativement au sein de la même plateforme, éliminant les problèmes d'intégration des outils externes.</p>
+
+<h4>Architecture complète de Lakeflow Jobs</h4>
+<p>Au centre se trouve le moteur <strong>Workflow</strong> qui coordonne l'ensemble.</p>
+<svg viewBox="0 0 700 300" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .lbl{font-family:'Inter',sans-serif;font-size:11px;fill:#8a97a8}
+    .ttl{font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:600;fill:#ff6a52}
+    .box{fill:#232c38;stroke:#2b3542}
+    .wtxt{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e8ecf2}
+  </style>
+  <rect x="12" y="10" width="676" height="30" rx="7" fill="#ff4a2e"/>
+  <text x="350" y="30" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;fill:#fff">Lakeflow Jobs</text>
+
+  <rect x="20" y="56" width="112" height="228" rx="7" class="box" stroke-dasharray="4 3"/>
+  <text x="76" y="74" text-anchor="middle" class="ttl">Triggers</text>
+  <rect x="32" y="84" width="88" height="42" rx="5" fill="#1c232d" stroke="#2b3542"/><text x="76" y="110" text-anchor="middle" class="lbl">Scheduled</text>
+  <rect x="32" y="132" width="88" height="42" rx="5" fill="#1c232d" stroke="#2b3542"/><text x="76" y="158" text-anchor="middle" class="lbl">Continuous</text>
+  <rect x="32" y="180" width="88" height="42" rx="5" fill="#1c232d" stroke="#2b3542"/><text x="76" y="206" text-anchor="middle" class="lbl">File Arrival</text>
+  <rect x="32" y="228" width="88" height="42" rx="5" fill="#1c232d" stroke="#2b3542"/><text x="76" y="254" text-anchor="middle" class="lbl">Table Updates</text>
+
+  <path d="M136 170 L 166 170" stroke="#8a97a8" stroke-width="2" marker-end="url(#ar1)"/>
+  <defs><marker id="ar1" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker>
+  <marker id="ar2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+
+  <rect x="172" y="56" width="130" height="52" rx="7" class="box" stroke-dasharray="4 3"/>
+  <text x="237" y="74" text-anchor="middle" class="ttl">Control Flow</text>
+  <text x="237" y="94" text-anchor="middle" class="lbl">dépendances / ordre</text>
+  <rect x="316" y="56" width="130" height="52" rx="7" class="box" stroke-dasharray="4 3"/>
+  <text x="381" y="74" text-anchor="middle" class="ttl">Observability</text>
+  <text x="381" y="94" text-anchor="middle" class="lbl">monitoring / debug</text>
+  <path d="M237 112 L 237 130" stroke="#8a97a8" stroke-width="2" marker-end="url(#ar1)"/>
+  <path d="M381 112 L 381 130" stroke="#8a97a8" stroke-width="2" marker-end="url(#ar1)"/>
+
+  <rect x="172" y="134" width="274" height="82" rx="7" fill="#1c232d" stroke="#ff4a2e"/>
+  <rect x="188" y="168" width="52" height="20" rx="4" fill="#232c38" stroke="#ff6a52"/>
+  <rect x="262" y="146" width="52" height="20" rx="4" fill="#232c38" stroke="#ff6a52"/>
+  <rect x="262" y="190" width="52" height="20" rx="4" fill="#232c38" stroke="#ff6a52"/>
+  <rect x="336" y="168" width="52" height="20" rx="4" fill="#232c38" stroke="#ff6a52"/>
+  <path d="M240 178 L 262 158 M240 178 L262 198 M314 156 L336 176 M314 198 L336 180" stroke="#ff6a52" stroke-width="1.4" fill="none"/>
+  <text x="309" y="234" text-anchor="middle" class="wtxt">Workflow</text>
+
+  <path d="M309 262 L 309 244" stroke="#8a97a8" stroke-width="2" marker-end="url(#ar1)"/>
+  <rect x="172" y="252" width="274" height="32" rx="7" class="box"/>
+  <text x="309" y="272" text-anchor="middle" class="wtxt">Compute</text>
+
+  <path d="M452 175 L 470 175 L 470 78 L 500 78" stroke="#ff6a52" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#ar2)"/>
+  <path d="M470 175 L 500 175" stroke="#ff6a52" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#ar2)"/>
+  <path d="M470 175 L 470 262 L 500 262" stroke="#ff6a52" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#ar2)"/>
+  <rect x="506" y="60" width="170" height="36" rx="6" class="box"/><text x="591" y="83" text-anchor="middle" class="wtxt">ETL</text>
+  <rect x="506" y="157" width="170" height="36" rx="6" class="box"/><text x="591" y="180" text-anchor="middle" class="wtxt">ML / AI</text>
+  <rect x="506" y="244" width="170" height="36" rx="6" class="box"/><text x="591" y="267" text-anchor="middle" class="wtxt">Analytics / BI</text>
+</svg>
+<ul>
+<li>La couche <strong>compute</strong> supporte différents types de charges : <strong>ETL</strong>, <strong>ML/IA</strong> et <strong>Analytics/BI</strong>.</li>
+<li>Plusieurs types de <strong>déclencheurs</strong> : Scheduled (basé sur le temps), Continuous (toujours actif), File Arrival (événementiel) et Table Updates.</li>
+<li>Deux composants critiques soutiennent tout le système : l'<strong>Observability</strong> pour le monitoring et le dépannage, et le <strong>Control Flow</strong> pour gérer les dépendances entre tâches et l'ordre d'exécution.</li>
+</ul>`
+      },
+      {
+        id: "w2l4", title: "Blocs de base : Jobs, Tâches et types de tâches",
+        html: `
+<h4>Job et Task — les deux concepts fondamentaux</h4>
+<div style="display:grid;grid-template-columns:1.4fr 1fr;gap:14px;align-items:start;margin-bottom:14px">
+<div>
+<ul style="margin-bottom:0">
+<li>Un <strong>Job</strong> est la ressource principale pour :
+  <ul><li><strong>planifier</strong> (scheduling) ;</li><li><strong>coordonner</strong> (coordinating) ;</li><li><strong>exécuter</strong> des opérations telles que le traitement de données, l'ETL, l'analytique et les charges de machine learning au sein de l'environnement Databricks.</li></ul>
+</li>
+<li>Une <strong>tâche (task)</strong> est une <strong>unité de travail unique</strong> au sein d'un job, qui exécute une charge spécifique : notebook, script, requête, etc.</li>
 <li>Chaque job est constitué d'<strong>une ou plusieurs tâches</strong> — les unités de travail individuelles qui composent le job.</li>
 </ul>
+</div>
+<svg viewBox="0 0 240 190" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px" xmlns="http://www.w3.org/2000/svg">
+  <rect x="14" y="14" width="212" height="162" rx="9" fill="#232c38" stroke="#ff4a2e" stroke-width="1.5"/>
+  <text x="120" y="38" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;fill:#ff6a52">Job</text>
+  <rect x="42" y="52" width="156" height="32" rx="6" fill="#1c232d" stroke="#e3b23c"/><text x="120" y="73" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#e8ecf2">Task</text>
+  <rect x="42" y="94" width="156" height="32" rx="6" fill="#1c232d" stroke="#e3b23c"/><text x="120" y="115" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#e8ecf2">Task</text>
+  <rect x="42" y="136" width="156" height="32" rx="6" fill="#1c232d" stroke="#e3b23c"/><text x="120" y="157" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#e8ecf2">Task</text>
+</svg>
+</div>
+<div class="callout">La relation est <strong>hiérarchique</strong> : le job est le conteneur qui abrite l'ensemble de votre workflow ; les tâches sont les blocs individuels qui effectuent le travail réel.</div>
+
 <h4>Types de tâches disponibles</h4>
-<p>Une tâche peut être : <strong>Databricks Notebooks</strong>, <strong>scripts Python</strong>, <strong>Python Wheels</strong>, <strong>fichiers/requêtes SQL</strong>, <strong>Spark Declarative Pipelines</strong>, <strong>dbt</strong>, <strong>JAR Java</strong>, <strong>Spark Submit</strong>, <strong>dashboards AI/BI</strong>, <strong>Power BI</strong>.</p>
-<h4>Options de tâche</h4>
-<p>Pour chaque tâche on règle des options, <strong>spécifiques au type de tâche</strong> : définir le chemin, ajouter des librairies, ajouter des paramètres, activer les notifications, etc.</p>
-<ul>
-<li><strong>Tâche Notebook</strong> — par ex. : source, chemin (path), options de compute, et plus.</li>
-<li><strong>Tâche SQL</strong> — par ex. : nom de la tâche, requête SQL, SQL warehouse.</li>
-</ul>
-<h4>Langages supportés</h4>
-<p>Python, SQL, Scala, R, Java (via un fichier JAR).</p>`
-      },
-      {
-        id: "w2l4", title: "Control flow & déclencheurs (vue d'ensemble)",
-        html: `
-<p>Les jobs combinent des tâches, des flux de contrôle entre tâches, et des déclencheurs.</p>
-<h4>Control flow entre tâches</h4>
-<ul>
-<li><strong>Sequential</strong> (séquentiel)</li>
-<li><strong>Parallel</strong> (parallèle)</li>
-<li><strong>Conditionals (If/else)</strong></li>
-<li><strong>Run Job (Modular)</strong> — un job appelle un autre job</li>
-<li><strong>For each</strong> (boucle)</li>
-</ul>
-<h4>Déclencheurs supportés (vue d'ensemble)</h4>
-<ul>
-<li><strong>Manual Trigger</strong></li>
-<li><strong>Scheduled (Cron)</strong></li>
-<li><strong>API Trigger</strong></li>
-<li><strong>File Arrival Triggers</strong></li>
-<li><strong>Table Triggers</strong></li>
-<li><strong>Continuous (Streaming)</strong></li>
-</ul>
-<p>Les jobs s'exécutent par ailleurs sur différents types de <strong>compute</strong> (voir leçon suivante).</p>`
-      },
-      {
-        id: "w2l5", title: "Options de compute",
-        html: `
-<p>Un job peut s'exécuter sur différents types de compute, et chaque tâche peut en avoir un propre.</p>
+<p>Un job est constitué d'une ou plusieurs tâches, et de nombreux types de tâches sont disponibles :</p>
 <table class="tbl">
-<thead><tr><th>Compute</th><th>Détail</th></tr></thead>
+<thead><tr><th>Type de tâche</th><th>Usage</th></tr></thead>
 <tbody>
-<tr><td><strong>Clusters interactifs</strong> (all-purpose)</td><td>Partageables par plusieurs utilisateurs. Idéaux pour l'analyse ad-hoc, l'exploration de données, le développement. <strong>À ne pas utiliser en production</strong> car peu économes.</td></tr>
-<tr><td><strong>Job clusters</strong></td><td>Environ <strong>50 % moins chers</strong> car ils se terminent à la fin du job, réduisant l'usage des ressources et les coûts. Mais soumis aux <strong>temps de démarrage</strong> du fournisseur cloud. On peut <strong>réutiliser le même cluster</strong> entre les tâches pour un meilleur rapport prix/performance.</td></tr>
-<tr><td><strong>Serverless</strong></td><td>« Simple, Fast, Reliable, Cost Efficient ! » Service <strong>entièrement managé</strong>, plus simple opérationnellement et plus fiable. Clusters rapides et capacités d'<strong>auto-scaling</strong>, meilleure expérience pour un coût plus bas. Optimisations de performance prêtes à l'emploi → <strong>TCO global plus bas</strong>.</td></tr>
-<tr><td><strong>SQL Warehouse</strong></td><td>Compute pour les requêtes SQL et la BI, <strong>serverless par défaut</strong>. Conçu pour les requêtes SQL, dashboards et BI ; attachable à un notebook. <strong>Haute concurrence + autoscaling</strong> via Intelligent Workload Management pour une latence basse constante. Auto-start/auto-stop, taille et nombre max de clusters ajustables pour gérer les pics et maîtriser les coûts.</td></tr>
+<tr><td><strong>Databricks Notebooks</strong></td><td>Notebooks dans n'importe quel langage supporté.</td></tr>
+<tr><td><strong>DLT / Declarative Pipelines</strong></td><td>Pipelines déclaratifs (Spark Declarative Pipelines).</td></tr>
+<tr><td><strong>SQL Files / Queries</strong></td><td>Fichiers et requêtes SQL pour les transformations de données.</td></tr>
+<tr><td><strong>Python Scripts</strong></td><td>Scripts Python.</td></tr>
+<tr><td><strong>Python Wheels</strong></td><td>Code packagé sous forme de wheel.</td></tr>
+<tr><td><strong>AI/BI Dashboards</strong></td><td>Visualisation.</td></tr>
+<tr><td><strong>Spark Submit</strong></td><td>Applications Spark historiques (<em>legacy</em>).</td></tr>
+<tr><td><strong>dbt</strong></td><td>Transformation de données.</td></tr>
+<tr><td><strong>Java JAR file</strong></td><td>Fichiers JAR Java.</td></tr>
+<tr><td><strong>Power BI</strong></td><td>Intégration Power BI.</td></tr>
 </tbody>
 </table>
-<h4>Serverless — Performance Mode</h4>
-<p>Réglage « Performance optimized » dans la page de détails du job :</p>
+<p>Cette variété garantit que vous pouvez orchestrer <strong>virtuellement n'importe quel type de charge</strong> au sein d'un job.</p>
+
+<h4>Options de tâche</h4>
+<p>Avec Jobs, on définit une tâche particulière, et différentes options sont disponibles <strong>en fonction du type de tâche</strong> :</p>
 <ul>
-<li><strong>Off</strong> : mode standard axé sur le coût ; démarrage plus long (typiquement <strong>4–6 minutes</strong>) ; pour charges non urgentes au timing flexible.</li>
-<li><strong>On</strong> : démarrage et exécution plus rapides ; pour charges sensibles au temps ; ne s'applique qu'aux tâches en compute serverless du job.</li>
+<li>définir le <strong>chemin</strong> (path) ;</li>
+<li>ajouter des <strong>librairies</strong> ;</li>
+<li>ajouter des <strong>paramètres</strong> ;</li>
+<li>activer les <strong>notifications</strong> ;</li>
+<li>configurer les politiques de <em>retry</em> ;</li>
+<li><strong>toutes les options sont spécifiques à la tâche concernée</strong>.</li>
 </ul>
-<div class="callout"><strong>Sélection du compute :</strong> un job peut contenir une ou plusieurs tâches ; chaque tâche peut recevoir son propre compute ; les tâches d'un même job peuvent <strong>partager le même</strong> compute ou en <strong>utiliser des différents</strong> selon le besoin.</div>`
+<div class="cards-3">
+  <div class="mini-card"><h4>Exemple — tâche Notebook</h4><p>Source · Path · Compute options · <em>And More</em></p></div>
+  <div class="mini-card"><h4>Exemple — tâche SQL</h4><p>Task name · SQL query · SQL warehouse</p></div>
+  <div class="mini-card"><h4>Interface adaptative</h4><p>L'interface s'adapte au type de tâche sélectionné et propose les options de configuration pertinentes.</p></div>
+</div>
+
+<h4>Langages supportés</h4>
+<p>Lakeflow Jobs supporte plusieurs langages de programmation : <strong>Python</strong>, <strong>SQL</strong>, <strong>Scala</strong>, <strong>R</strong> et <strong>Java</strong> (via un fichier JAR). Ce large support garantit que les équipes peuvent utiliser leurs langages préférés et leurs actifs de code existants.</p>`
       },
       {
-        id: "w2l6", title: "Orchestration des tâches & DAG",
+        id: "w2l5", title: "Blocs de base : control flow, déclencheurs et compute",
+        html: `
+<h4>Vue d'ensemble : la structure complète d'un job</h4>
+<svg viewBox="0 0 700 250" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .rowlbl{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;fill:#fff}
+    .cell{font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0}
+    .cellsub{font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8}
+  </style>
+  <rect x="10" y="10" width="120" height="60" rx="6" fill="#ff4a2e"/>
+  <text x="22" y="32" class="rowlbl">Jobs consist of</text><text x="22" y="46" class="rowlbl">one or more</text><text x="22" y="60" class="rowlbl">Tasks</text>
+  <rect x="136" y="10" width="554" height="60" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="176" y="36" text-anchor="middle" class="cell">Databricks</text><text x="176" y="49" text-anchor="middle" class="cell">Notebooks</text>
+  <text x="243" y="43" text-anchor="middle" class="cell">DLT</text>
+  <text x="310" y="36" text-anchor="middle" class="cell">SQL Files/</text><text x="310" y="49" text-anchor="middle" class="cell">Queries</text>
+  <text x="377" y="36" text-anchor="middle" class="cell">Python</text><text x="377" y="49" text-anchor="middle" class="cell">Scripts</text>
+  <text x="444" y="36" text-anchor="middle" class="cell">Python</text><text x="444" y="49" text-anchor="middle" class="cell">Wheels</text>
+  <text x="511" y="36" text-anchor="middle" class="cell">AI/BI</text><text x="511" y="49" text-anchor="middle" class="cell">Dashboards</text>
+  <text x="578" y="36" text-anchor="middle" class="cell">Spark</text><text x="578" y="49" text-anchor="middle" class="cell">Submit</text>
+  <text x="628" y="43" text-anchor="middle" class="cell">dbt</text>
+  <text x="668" y="36" text-anchor="middle" class="cell">Java JAR</text><text x="668" y="49" text-anchor="middle" class="cell">/ Power BI</text>
+
+  <rect x="10" y="78" width="120" height="60" rx="6" fill="#ff4a2e"/>
+  <text x="22" y="96" class="rowlbl">Control flows</text><text x="22" y="110" class="rowlbl">can be established</text><text x="22" y="124" class="rowlbl">between Tasks</text>
+  <rect x="136" y="78" width="554" height="60" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="215" y="113" text-anchor="middle" class="cell">Sequential</text>
+  <text x="325" y="113" text-anchor="middle" class="cell">Parallel</text>
+  <text x="435" y="106" text-anchor="middle" class="cell">Conditionals</text><text x="435" y="119" text-anchor="middle" class="cellsub">(If/else)</text>
+  <text x="540" y="106" text-anchor="middle" class="cell">Run Job</text><text x="540" y="119" text-anchor="middle" class="cellsub">(Modular)</text>
+  <text x="638" y="113" text-anchor="middle" class="cell">For each</text>
+
+  <rect x="10" y="146" width="120" height="60" rx="6" fill="#ff4a2e"/>
+  <text x="22" y="170" class="rowlbl">Jobs supports</text><text x="22" y="184" class="rowlbl">different Triggers</text>
+  <rect x="136" y="146" width="554" height="60" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="196" y="174" text-anchor="middle" class="cell">Scheduled</text><text x="196" y="187" text-anchor="middle" class="cellsub">(Cron)</text>
+  <text x="288" y="174" text-anchor="middle" class="cell">API</text><text x="288" y="187" text-anchor="middle" class="cellsub">Trigger</text>
+  <text x="380" y="174" text-anchor="middle" class="cell">File Arrival</text><text x="380" y="187" text-anchor="middle" class="cellsub">Triggers</text>
+  <text x="472" y="174" text-anchor="middle" class="cell">Table Triggers</text><text x="472" y="187" text-anchor="middle" class="cellsub">(Coming Soon)</text>
+  <text x="564" y="174" text-anchor="middle" class="cell">Continuous</text><text x="564" y="187" text-anchor="middle" class="cellsub">(Streaming)</text>
+  <text x="650" y="174" text-anchor="middle" class="cell">Manual</text><text x="650" y="187" text-anchor="middle" class="cellsub">Trigger</text>
+
+  <rect x="10" y="214" width="680" height="28" rx="6" fill="#ff4a2e"/>
+  <text x="350" y="233" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;fill:#fff">COMPUTE</text>
+</svg>
+
+<h4>Control flow entre tâches</h4>
+<ul>
+<li><strong>Sequential</strong> — exécution l'une après l'autre.</li>
+<li><strong>Parallel</strong> — plusieurs tâches en même temps.</li>
+<li><strong>Conditionals (If/else)</strong> — exécution conditionnelle avec logique If/else.</li>
+<li><strong>Run Job (Modular)</strong> — tâches « Run Job » pour un design modulaire.</li>
+<li><strong>For each</strong> — boucles pour le traitement itératif.</li>
+</ul>
+
+<h4>Déclencheurs supportés</h4>
+<ul>
+<li><strong>Manual Trigger</strong> — exécution à la demande.</li>
+<li><strong>Scheduled (Cron)</strong> — déclencheurs planifiés via expressions cron.</li>
+<li><strong>API Trigger</strong> — exécution programmatique.</li>
+<li><strong>File Arrival Triggers</strong> — traitement événementiel.</li>
+<li><strong>Table Triggers</strong> — événements de changement de données.</li>
+<li><strong>Continuous (Streaming)</strong> — charges de travail streaming.</li>
+</ul>
+<p>La couche <strong>compute</strong> supporte tous ces différents patterns d'orchestration.</p>`
+      },
+      {
+        id: "w2l6", title: "Blocs de base : choisir le compute",
+        html: `
+<p>Les jobs peuvent s'exécuter sur différents types de compute, et choisir le bon compute est crucial à la fois pour la <strong>performance</strong> et pour le <strong>coût</strong>.</p>
+<table class="tbl">
+<thead><tr><th style="width:20%">Compute</th><th>Positionnement &amp; détail</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>Interactive Clusters</strong><br/><span style="color:#8a97a8;font-size:12px">Development, Ad-Hoc Analysis &amp; Exploration Use-Cases</span></td>
+  <td>Les clusters interactifs (ou <em>all-purpose</em>) peuvent être <strong>partagés par plusieurs utilisateurs</strong>. Ils sont les meilleurs pour l'<strong>analyse ad-hoc</strong>, l'<strong>exploration de données</strong> ou le <strong>développement</strong>. <strong>L'interactif ne doit pas être utilisé en production</strong> car il n'est pas rentable (<em>not cost-efficient</em>).</td>
+</tr>
+<tr>
+  <td><strong>Job Clusters</strong><br/><span style="color:#8a97a8;font-size:12px">Production Grade &amp; Operational</span></td>
+  <td>Les job clusters sont environ <strong>50 % moins chers</strong> car ils se terminent à la fin du job, réduisant l'utilisation des ressources et les coûts. Cependant, ils sont soumis aux <strong>temps de démarrage</strong> des fournisseurs cloud. Avec Databricks Jobs, vous pouvez <strong>réutiliser le même cluster entre les tâches</strong> pour un meilleur rapport prix/performance.</td>
+</tr>
+<tr>
+  <td><strong>Serverless</strong><br/><span style="color:#8a97a8;font-size:12px">Simple, Fast, Reliable, Cost Efficient !</span></td>
+  <td>Les workflows serverless sont un <strong>service entièrement managé</strong>, opérationnellement plus simple et plus fiable. Ils fournissent des <strong>clusters plus rapides</strong> et des capacités d'<strong>auto-scaling</strong>, offrant une meilleure expérience utilisateur pour un coût plus bas. Avec des optimisations de performance prêtes à l'emploi, le serverless offre un <strong>TCO global plus bas</strong>.</td>
+</tr>
+<tr>
+  <td><strong>SQL Warehouse</strong><br/><span style="color:#8a97a8;font-size:12px">Compute for SQL Queries and BI, Serverless by default</span></td>
+  <td>Conçu spécifiquement pour les <strong>requêtes SQL, dashboards et BI</strong> ; peut également être attaché à un notebook. <strong>Haute concurrence + autoscaling</strong> via <strong>Intelligent Workload Management</strong> pour une latence basse constante. <strong>Auto-start / auto-stop</strong>, taille de cluster ajustable et nombre maximal de clusters pour les pics de charge, ce qui aide à maîtriser les coûts.</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Serverless — Performance Mode</h4>
+<p>Utilisez le réglage <strong>Performance optimized</strong> dans la page de détails du job pour arbitrer entre <strong>coût plus bas</strong> et <strong>exécution plus rapide</strong> pour les tâches serverless.</p>
+<div class="medallion-row">
+  <div class="med-tier silver"><span class="badge">Performance Optimized (Off)</span><p>Le mode standard privilégie l'<strong>efficacité de coût</strong>.<br/>Temps de démarrage plus long (<strong>typiquement 4–6 minutes</strong>).<br/>Idéal pour les charges non urgentes au <strong>timing flexible</strong>.</p></div>
+  <div class="med-tier gold"><span class="badge">Performance Optimized (On)</span><p>Active un <strong>démarrage et une exécution plus rapides</strong>.<br/>Idéal pour les charges <strong>sensibles au temps</strong>.<br/>Ne s'applique qu'aux tâches utilisant du <strong>compute serverless</strong> dans le job.</p></div>
+</div>
+
+<h4>Sélection du compute : un compute par tâche</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;margin-bottom:14px">
+<svg viewBox="0 0 340 200" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar3" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <rect x="14" y="14" width="312" height="72" rx="9" fill="#232c38" stroke="#ff4a2e"/>
+  <text x="170" y="34" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:600;fill:#ff6a52">Job Configuration</text>
+  <rect x="28" y="46" width="56" height="26" rx="5" fill="#1c232d" stroke="#8a97a8"/><text x="56" y="63" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Task-1</text>
+  <rect x="94" y="46" width="56" height="26" rx="5" fill="#1c232d" stroke="#8a97a8"/><text x="122" y="63" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Task-2</text>
+  <rect x="160" y="46" width="56" height="26" rx="5" fill="#1c232d" stroke="#8a97a8"/><text x="188" y="63" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Task-3</text>
+  <rect x="254" y="46" width="58" height="26" rx="5" fill="#1c232d" stroke="#8a97a8"/><text x="283" y="63" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">..Task-N</text>
+  <path d="M56 90 L 56 130" stroke="#ff6a52" stroke-width="1.4" marker-end="url(#ar3)"/>
+  <path d="M122 90 L 160 130" stroke="#ff6a52" stroke-width="1.4" marker-end="url(#ar3)"/>
+  <path d="M188 90 L 268 130" stroke="#ff6a52" stroke-width="1.4" marker-end="url(#ar3)"/>
+  <path d="M283 90 L 283 130" stroke="#ff6a52" stroke-width="1.4" marker-end="url(#ar3)"/>
+  <rect x="12" y="136" width="92" height="40" rx="6" fill="#232c38" stroke="#2b3542"/><text x="58" y="153" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">All Purpose</text><text x="58" y="166" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">Cluster</text>
+  <rect x="122" y="136" width="92" height="40" rx="6" fill="#232c38" stroke="#2b3542"/><text x="168" y="160" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">Serverless</text>
+  <rect x="232" y="136" width="92" height="40" rx="6" fill="#232c38" stroke="#2b3542"/><text x="278" y="153" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">Job</text><text x="278" y="166" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">Cluster</text>
+</svg>
+<div>
+<ul style="margin-bottom:0">
+<li>Un Job peut avoir <strong>une ou plusieurs tâches</strong> à l'intérieur.</li>
+<li>Chaque tâche peut se voir attribuer <strong>sa propre ressource de compute</strong>.</li>
+<li>Les tâches d'un même job peuvent soit :
+  <ul><li><strong>partager le même compute</strong>, soit</li><li><strong>utiliser un compute différent</strong> selon le besoin.</li></ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="callout">Vous pourriez avoir Task-1 sur un <strong>All Purpose Cluster</strong>, Task-2 sur du <strong>Serverless</strong>, Task-3 sur un <strong>Job Cluster</strong>, etc. Cette flexibilité permet d'optimiser à la fois la performance et le coût pour chaque tâche spécifique.</div>`
+      },
+      {
+        id: "w2l7", title: "Orchestration des tâches & DAG",
         html: `
 <h4>Qu'est-ce qu'un DAG ?</h4>
-<p>Un <strong>DAG</strong> (Directed Acyclic Graph) est une représentation conceptuelle d'une série d'activités, dont les flux de traitement de données :</p>
-<ul>
-<li><strong>Directed</strong> — direction non ambiguë pour chaque arête ;</li>
-<li><strong>Acyclic</strong> — ne contient aucun cycle ;</li>
-<li><strong>Graph</strong> — une collection de sommets (<em>vertices</em>) reliés par des arêtes (<em>edges</em>).</li>
+<p>Un <strong>DAG</strong> est une représentation conceptuelle d'une <strong>série d'activités</strong>, y compris les flux de traitement de données. Décomposons l'acronyme :</p>
+<div style="display:grid;grid-template-columns:1.5fr 1fr;gap:14px;align-items:center;margin-bottom:14px">
+<div>
+<ul style="margin-bottom:0">
+<li><strong>Directed</strong> (dirigé) — une direction <strong>non ambiguë</strong> pour chaque arête : les tâches s'écoulent dans une direction spécifique.</li>
+<li><strong>Acyclic</strong> (acyclique) — ne contient <strong>aucun cycle</strong> : on ne peut pas avoir de dépendances circulaires où Task A dépend de Task B qui dépend de Task A.</li>
+<li><strong>Graph</strong> (graphe) — une collection de <strong>sommets</strong> (<em>vertices</em>) reliés par des <strong>arêtes</strong> (<em>edges</em>). Dans notre cas, les sommets représentent les <strong>tâches</strong> et les arêtes représentent les <strong>dépendances</strong>.</li>
 </ul>
-<p>Les <strong>sommets</strong> sont les tâches, les <strong>arêtes</strong> sont les dépendances.</p>
-<h4>Orchestration des tâches</h4>
+</div>
+<svg viewBox="0 0 260 150" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar4" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <rect x="18" y="60" width="72" height="30" rx="6" fill="#232c38" stroke="#ff4a2e"/><text x="54" y="80" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Task-1</text>
+  <rect x="152" y="16" width="72" height="30" rx="6" fill="#232c38" stroke="#ff4a2e"/><text x="188" y="36" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Task-2</text>
+  <rect x="152" y="104" width="72" height="30" rx="6" fill="#232c38" stroke="#ff4a2e"/><text x="188" y="124" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Task-3</text>
+  <path d="M94 70 L 148 36" stroke="#ff6a52" stroke-width="1.6" marker-end="url(#ar4)"/>
+  <path d="M94 80 L 148 114" stroke="#ff6a52" stroke-width="1.6" marker-end="url(#ar4)"/>
+  <text x="124" y="146" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">vertices = tâches · edges = dépendances</text>
+</svg>
+</div>
+<p>Le diagramme montre un DAG simple où <strong>Task-1</strong> mène à la fois à <strong>Task-2</strong> et <strong>Task-3</strong>, représentant le flux d'exécution.</p>
+
+<h4>Vue d'ensemble de l'orchestration de tâches</h4>
 <ul>
-<li>Databricks Jobs supporte l'orchestration de tâches : exécuter plusieurs tâches en tant que DAG.</li>
-<li>Orchestration via l'<strong>UI</strong>, l'<strong>API</strong>, le <strong>SDK</strong> ou les <strong>Databricks Asset Bundles</strong>.</li>
-<li>On définit l'ordre d'exécution en configurant les <strong>dépendances de tâches</strong> (<em>Depends On</em>), ce qui crée le DAG. Exemple : Task-4 dépend de Task-2 et Task-3, qui dépendent elles-mêmes de Task-1.</li>
+<li>Databricks Jobs supporte l'<strong>orchestration de tâches</strong>.</li>
+<li>C'est la capacité d'exécuter <strong>plusieurs tâches sous forme de DAG</strong> (Directed Acyclic Graph).</li>
+<li>On orchestre les tâches via l'<strong>UI Databricks</strong>, l'<strong>API</strong>, le <strong>SDK</strong> ou les <strong>Databricks Asset Bundles</strong>.</li>
+<li>On définit l'<strong>ordre d'exécution</strong> des tâches d'un job en configurant les <strong>dépendances de tâches</strong> (<em>Depends On</em>), ce qui crée un DAG d'exécution.</li>
 </ul>
-<h4>Patterns de charges courants</h4>
+<svg viewBox="0 0 620 170" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar5" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <rect x="20" y="66" width="90" height="34" rx="6" fill="#232c38" stroke="#ff4a2e"/><text x="65" y="88" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#e8ecf2">Task-1</text>
+  <rect x="240" y="16" width="90" height="34" rx="6" fill="#232c38" stroke="#ff4a2e"/><text x="285" y="38" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#e8ecf2">Task-2</text>
+  <rect x="240" y="116" width="90" height="34" rx="6" fill="#232c38" stroke="#ff4a2e"/><text x="285" y="138" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#e8ecf2">Task-3</text>
+  <rect x="460" y="66" width="90" height="34" rx="6" fill="#232c38" stroke="#e3b23c"/><text x="505" y="88" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#e8ecf2">Task-4</text>
+  <path d="M114 76 L 236 38" stroke="#ff6a52" stroke-width="1.6" marker-end="url(#ar5)"/>
+  <path d="M114 90 L 236 132" stroke="#ff6a52" stroke-width="1.6" marker-end="url(#ar5)"/>
+  <path d="M334 38 L 456 76" stroke="#ff6a52" stroke-width="1.6" marker-end="url(#ar5)"/>
+  <path d="M334 132 L 456 90" stroke="#ff6a52" stroke-width="1.6" marker-end="url(#ar5)"/>
+  <text x="285" y="10" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">Depends On: Task-1</text>
+  <text x="285" y="164" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">Depends On: Task-1</text>
+  <text x="560" y="118" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">Depends On:</text>
+  <text x="560" y="130" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">· Task-2</text>
+  <text x="560" y="142" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">· Task-3</text>
+</svg>
+<p>L'exemple montre que <strong>Task-2 dépend de Task-1</strong>, <strong>Task-3 dépend aussi de Task-1</strong>, et <strong>Task-4 dépend à la fois de Task-2 et Task-3</strong>. Cette approche permet de construire des workflows complexes tout en maintenant un ordre d'exécution et des dépendances clairs.</p>
+
+<h4>Patterns de charges de travail courants</h4>
+<p>Trois patterns de workflow que vous rencontrerez :</p>
+<svg viewBox="0 0 700 175" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>.pt{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e8ecf2}</style>
+  <rect x="10" y="10" width="220" height="155" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <text x="120" y="30" text-anchor="middle" class="pt">Sequence</text>
+  <rect x="98" y="48" width="44" height="20" rx="4" fill="#ff4a2e"/>
+  <rect x="98" y="82" width="44" height="20" rx="4" fill="#ff4a2e"/>
+  <rect x="98" y="116" width="44" height="20" rx="4" fill="#ff4a2e"/>
+  <path d="M120 68 L120 82 M120 102 L120 116" stroke="#8a97a8" stroke-width="1.4"/>
+  <text x="120" y="155" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Bronze → Silver → Gold</text>
+
+  <rect x="240" y="10" width="220" height="155" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <text x="350" y="30" text-anchor="middle" class="pt">Funnel</text>
+  <rect x="272" y="55" width="44" height="20" rx="4" fill="#ff4a2e"/>
+  <rect x="328" y="55" width="44" height="20" rx="4" fill="#ff4a2e"/>
+  <rect x="384" y="55" width="44" height="20" rx="4" fill="#ff4a2e"/>
+  <rect x="328" y="105" width="44" height="20" rx="4" fill="#ff4a2e"/>
+  <path d="M294 75 L294 90 L406 90 L406 75 M350 75 L350 105 M350 90 L350 105" stroke="#8a97a8" stroke-width="1.4" fill="none"/>
+  <text x="350" y="150" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Plusieurs sources → une cible</text>
+
+  <rect x="470" y="10" width="220" height="155" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <text x="580" y="30" text-anchor="middle" class="pt">Fan-out</text>
+  <rect x="558" y="55" width="44" height="20" rx="4" fill="#ff4a2e"/>
+  <rect x="502" y="105" width="44" height="20" rx="4" fill="#ff4a2e"/>
+  <rect x="558" y="105" width="44" height="20" rx="4" fill="#ff4a2e"/>
+  <rect x="614" y="105" width="44" height="20" rx="4" fill="#ff4a2e"/>
+  <path d="M580 75 L580 90 M524 90 L636 90 M524 90 L524 105 M580 90 L580 105 M636 90 L636 105" stroke="#8a97a8" stroke-width="1.4" fill="none"/>
+  <text x="580" y="150" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Une source → plusieurs cibles</text>
+</svg>
 <div class="cards-3">
-<div class="mini-card"><strong>Sequence</strong><br/>Transformation/traitement/nettoyage en chaîne ; tables Bronze/Silver/Gold.</div>
-<div class="mini-card"><strong>Funnel</strong><br/>Plusieurs sources de données qui convergent ; collecte de données.</div>
-<div class="mini-card"><strong>Fan-out (star)</strong><br/>Une source unique ; ingestion puis distribution.</div>
+  <div class="mini-card"><h4>Sequence</h4><p>Transformation / traitement / nettoyage des données.<br/>Tables <strong>Bronze/Silver/Gold</strong> (architecture Médaillon).</p></div>
+  <div class="mini-card"><h4>Funnel</h4><p><strong>Multiples sources de données</strong>.<br/><strong>Collecte de données</strong> et consolidation.</p></div>
+  <div class="mini-card"><h4>Fan-out (star pattern)</h4><p><strong>Source de données unique</strong>.<br/><strong>Ingestion et distribution</strong> vers plusieurs systèmes en aval.</p></div>
+</div>
+<p>Comprendre ces patterns aide à concevoir des workflows efficaces pour vos cas d'usage spécifiques.</p>`
+      },
+      {
+        id: "w2l8", title: "Vue d'ensemble du projet du cours (retail pipeline)",
+        html: `
+<p>Dans ce projet, vous construisez un <strong>pipeline retail</strong> à partir d'un jeu de données retail en utilisant les différents types de tâches disponibles dans Lakeflow Jobs. Ce diagramme montre l'architecture complète du projet.</p>
+<svg viewBox="0 0 720 300" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .tt{font-family:'Inter',sans-serif;font-size:8.5px;fill:#fff}
+    .cap{font-family:'JetBrains Mono',monospace;font-size:8px;fill:#8a97a8}
+    .grp{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:600;fill:#c9d3e0}
+  </style>
+  <defs><marker id="ar6" markerWidth="6" markerHeight="6" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="#8a97a8"/></marker></defs>
+
+  <text x="14" y="20" class="cap">Cloud Storage</text>
+  <rect x="14" y="26" width="60" height="250" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <text x="44" y="155" text-anchor="middle" class="cap">Retail Data</text>
+
+  <text x="86" y="52" class="cap">Notebook Task</text>
+  <rect x="86" y="58" width="104" height="22" rx="4" fill="#ff4a2e"/><text x="138" y="73" text-anchor="middle" class="tt">Ingesting Orders</text>
+  <text x="86" y="112" class="cap">SQL Task</text>
+  <rect x="86" y="118" width="104" height="22" rx="4" fill="#ff4a2e"/><text x="138" y="133" text-anchor="middle" class="tt">Ingesting Customers</text>
+  <text x="86" y="192" class="cap">Notebook Task</text>
+  <rect x="86" y="198" width="104" height="22" rx="4" fill="#ff4a2e"/><text x="138" y="213" text-anchor="middle" class="tt">Ingesting Sales</text>
+  <path d="M76 100 L 82 69 M76 140 L82 129 M76 170 L82 209" stroke="#8a97a8" stroke-width="1.2" fill="none" marker-end="url(#ar6)"/>
+
+  <text x="204" y="52" class="cap">Notebook Task</text>
+  <rect x="204" y="58" width="112" height="26" rx="4" fill="#ff4a2e"/><text x="260" y="69" text-anchor="middle" class="tt">Joining Customers</text><text x="260" y="79" text-anchor="middle" class="tt">&amp; Orders</text>
+  <text x="204" y="192" class="cap">Notebook Task</text>
+  <rect x="204" y="198" width="112" height="26" rx="4" fill="#ff4a2e"/><text x="260" y="209" text-anchor="middle" class="tt">Joining Customers</text><text x="260" y="219" text-anchor="middle" class="tt">&amp; Sales</text>
+  <path d="M192 69 L 200 70 M192 129 L200 78 M192 209 L200 210 M192 129 L200 205" stroke="#8a97a8" stroke-width="1.2" fill="none" marker-end="url(#ar6)"/>
+
+  <text x="392" y="34" text-anchor="middle" class="grp">For Each Task</text>
+  <rect x="330" y="40" width="124" height="56" rx="6" fill="#232c38" stroke="#2b3542" stroke-dasharray="4 3"/>
+  <text x="360" y="53" class="cap">Iterator</text>
+  <rect x="336" y="57" width="54" height="30" rx="4" fill="#ff4a2e"/><text x="363" y="69" text-anchor="middle" class="tt">Iterator for</text><text x="363" y="79" text-anchor="middle" class="tt">customers_orders</text>
+  <text x="420" y="53" class="cap">Loop Condition</text>
+  <rect x="396" y="57" width="54" height="30" rx="4" fill="#ff4a2e"/><text x="423" y="69" text-anchor="middle" class="tt">State wise iteration</text><text x="423" y="79" text-anchor="middle" class="tt">on customers_orders</text>
+  <path d="M320 70 L 328 68" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#ar6)"/>
+
+  <text x="392" y="166" text-anchor="middle" class="grp">If/Else Block</text>
+  <rect x="330" y="172" width="180" height="82" rx="6" fill="#232c38" stroke="#2b3542" stroke-dasharray="4 3"/>
+  <rect x="338" y="182" width="76" height="26" rx="4" fill="#ff4a2e"/><text x="376" y="193" text-anchor="middle" class="tt">Checking for duplicates</text><text x="376" y="203" text-anchor="middle" class="tt">on customers_sales</text>
+  <rect x="424" y="182" width="78" height="26" rx="4" fill="#ff4a2e"/><text x="463" y="193" text-anchor="middle" class="tt">Applying Transformation</text><text x="463" y="203" text-anchor="middle" class="tt">logic (False)</text>
+  <rect x="382" y="220" width="76" height="26" rx="4" fill="#3fcf8e"/><text x="420" y="231" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#0d1014">Dropping Duplicates</text><text x="420" y="241" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#0d1014">(True)</text>
+  <path d="M414 195 L 422 195" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#ar6)"/>
+  <path d="M376 208 L 376 233 L 380 233" stroke="#3fcf8e" stroke-width="1.2" fill="none" marker-end="url(#ar6)"/>
+  <path d="M458 233 L 476 233 L 476 210" stroke="#8a97a8" stroke-width="1.2" fill="none" marker-end="url(#ar6)"/>
+  <text x="376" y="266" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:8px;fill:#3fcf8e">True Condition</text>
+  <text x="470" y="266" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:8px;fill:#ff6a52">False Condition</text>
+  <path d="M320 210 L 334 195" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#ar6)"/>
+
+  <text x="524" y="52" class="cap">Notebook Task</text>
+  <rect x="524" y="58" width="104" height="26" rx="4" fill="#ff4a2e"/><text x="576" y="69" text-anchor="middle" class="tt">Transforming</text><text x="576" y="79" text-anchor="middle" class="tt">customers_orders</text>
+  <path d="M458 70 L 520 70" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#ar6)"/>
+
+  <text x="640" y="52" class="cap">Dashboard Task</text>
+  <rect x="638" y="58" width="74" height="26" rx="4" fill="#ff4a2e"/><text x="675" y="75" text-anchor="middle" class="tt">Retail Dashboard</text>
+  <path d="M632 70 L 634 70" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#ar6)"/>
+  <path d="M510 210 Q 600 210 660 92" stroke="#8a97a8" stroke-width="1.2" fill="none" marker-end="url(#ar6)"/>
+</svg>
+<p>En partant des données retail dans le <strong>cloud storage</strong>, on ingère les données <strong>customers</strong>, <strong>sales</strong> et <strong>orders</strong> en utilisant <strong>différents types de tâches</strong>. On joint ensuite <em>customers &amp; orders</em> et <em>customers &amp; sales</em> à l'aide de tâches notebook. Le workflow inclut un <strong>bloc If/Else</strong> pour la vérification des doublons, avec des conditions vraie et fausse.</p>
+<p>On implémente une <strong>tâche For Each</strong> pour une itération par état (<em>state-wise</em>) sur les données <code>customers_orders</code>. Enfin, on crée un <strong>dashboard retail</strong> via une tâche de type dashboard.</p>
+<div class="callout">Ce projet incorpore <strong>tâches SQL</strong>, <strong>tâches notebook</strong>, <strong>logique conditionnelle</strong>, <strong>traitement itératif</strong> et <strong>création de dashboard</strong> — vous donnant une expérience pratique de toutes les fonctionnalités majeures de Lakeflow Jobs.</div>`
+      },
+      {
+        id: "w2l9", title: "Options de configuration : paramètres & valeurs dynamiques",
+        html: `
+<h4>Vue d'ensemble des options de configuration</h4>
+<p>Trois grandes catégories d'options de configuration de tâche :</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>Parameters &amp; Dynamic Value References</h4><p>Le socle de workflows flexibles : créer des tâches réutilisables et adaptables, qui se comportent différemment selon les valeurs d'entrée ou le contexte d'exécution.</p></div>
+  <div class="mini-card"><h4>Retries</h4><p>La première ligne de défense contre les défaillances transitoires. Stratégies de retry différenciées selon la criticité et les modes de panne attendus.</p></div>
+  <div class="mini-card"><h4>Notification Alerts</h4><p>Tenir l'équipe informée et permettre une réaction rapide aux incidents. Contrôle granulaire de qui est notifié de quoi.</p></div>
+</div>
+<div class="callout"><strong>Tous peuvent être définis au niveau du Job ou au niveau individuel de la Task.</strong></div>
+
+<h4>Hiérarchie des paramètres : Task vs Job</h4>
+<svg viewBox="0 0 640 210" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar7" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <rect x="50" y="12" width="200" height="26" rx="5" fill="#ff4a2e"/>
+  <text x="150" y="30" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#fff">Task Parameters</text>
+  <text x="150" y="56" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">A key-value pair defined at the</text>
+  <text x="150" y="70" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;fill:#e8ecf2">task level</text>
+  <text x="150" y="108" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:22px;fill:#ff6a52">{ : }</text>
+  <path d="M150 118 L 150 148" stroke="#ff6a52" stroke-width="1.4" marker-end="url(#ar7)"/>
+  <rect x="118" y="152" width="64" height="24" rx="4" fill="#ff4a2e"/><text x="150" y="168" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#fff">Task</text>
+
+  <rect x="380" y="12" width="200" height="26" rx="5" fill="#ff4a2e"/>
+  <text x="480" y="30" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#fff">Job Parameters</text>
+  <text x="480" y="56" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">A key-value pair defined at the <tspan font-weight="600" fill="#e8ecf2">job</tspan></text>
+  <text x="480" y="70" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;fill:#e8ecf2">level</text><text x="530" y="70" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0"> and pushed to all tasks</text>
+  <text x="480" y="108" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:22px;fill:#ff6a52">{ : }</text>
+  <path d="M480 118 L 480 132 L 410 132 L 410 148" stroke="#ff6a52" stroke-width="1.4" fill="none" marker-end="url(#ar7)"/>
+  <path d="M480 118 L 480 148" stroke="#ff6a52" stroke-width="1.4" fill="none" marker-end="url(#ar7)"/>
+  <path d="M480 118 L 480 132 L 550 132 L 550 148" stroke="#ff6a52" stroke-width="1.4" fill="none" marker-end="url(#ar7)"/>
+  <rect x="382" y="152" width="56" height="22" rx="4" fill="#ff4a2e"/><text x="410" y="167" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;fill:#fff">Task 1</text>
+  <rect x="452" y="152" width="56" height="22" rx="4" fill="#ff4a2e"/><text x="480" y="167" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;fill:#fff">Task 2</text>
+  <rect x="522" y="152" width="56" height="22" rx="4" fill="#ff4a2e"/><text x="550" y="167" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;fill:#fff">Task 3</text>
+
+  <rect x="90" y="182" width="460" height="24" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="320" y="198" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Job Parameters <tspan font-weight="700" fill="#e3b23c">override</tspan> Task Parameters when same <tspan font-weight="700">key</tspan> exists</text>
+</svg>
+<ul>
+<li><strong>Task Parameters</strong> — des paires <strong>clé-valeur</strong> ou des <strong>tableaux JSON</strong> définis au <strong>niveau de la tâche individuelle</strong>. Ils sont spécifiques à chaque tâche et permettent un contrôle fin du comportement de la tâche.</li>
+<li><strong>Job Parameters</strong> — définis au <strong>niveau du job</strong> et propagés automatiquement à <strong>toutes les tâches</strong> du job. Cela crée un modèle d'héritage puissant : on définit des valeurs par défaut communes tout en autorisant des surcharges spécifiques.</li>
+</ul>
+<div class="callout"><strong>Règle de priorité (critique) :</strong> les <strong>Job Parameters écrasent toujours les Task Parameters</strong> lorsque la même clé existe. Ce pattern permet d'établir des valeurs par défaut sensées au niveau job tout en gardant la flexibilité de personnaliser les tâches individuelles.</div>
+
+<h4>Task Parameters — ce qu'ils permettent</h4>
+<p>Les paramètres de tâche sont bien plus que de simples valeurs de configuration : ce sont les briques de workflows intelligents. Ces paires clé-valeur permettent l'orchestration avancée :</p>
+<ul>
+<li><strong>Conditional execution</strong> (exécution conditionnelle) — contrôler quelles branches du workflow s'exécutent selon des conditions sur les données, des réglages d'environnement ou des règles métier.</li>
+<li><strong>Looping</strong> (boucles) — contrôler les compteurs d'itérations, définir les tableaux pour les boucles <em>for each</em>, gérer des scénarios de traitement complexes.</li>
+<li><strong>Passing context between tasks</strong> (passage de contexte) — partager de l'information entre tâches en définissant des paramètres que les tâches aval peuvent lire, créant un flux de données parallèle au flux de contrôle.</li>
+</ul>
+<p>La vraie puissance vient de la <strong>combinaison des paramètres avec les dynamic value references</strong>, permettant aux workflows de s'adapter intelligemment aux conditions et caractéristiques des données.</p>
+
+<h4>Job Parameters — ce qu'ils permettent</h4>
+<p>Les Job Parameters sont des paires clé-valeur définies au niveau du job qui fournissent des <strong>valeurs par défaut pour l'ensemble du workflow</strong> :</p>
+<ul>
+<li><strong>Application automatique</strong> — chaque tâche du job reçoit automatiquement ces paramètres, ce qui évite de configurer manuellement des réglages communs sur plusieurs tâches.</li>
+<li><strong>Capacité de surcharge</strong> — les tâches peuvent définir leurs propres paramètres avec les mêmes noms de clés, mais les job parameters ont la priorité, ce qui donne un contrôle centralisé.</li>
+<li><strong>Flexibilité à l'exécution</strong> — on peut surcharger les job parameters au <strong>lancement d'un run</strong>, permettant à la même définition de job de se comporter différemment selon les scénarios (environnements, plages de dates, modes de traitement).</li>
+</ul>
+
+<h4>Définir et accéder aux paramètres (UI)</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e3b23c;margin-bottom:8px">Setting Parameter Values (UI)</div>
+<p style="font-size:13px;margin:0 0 6px"><strong>Setting Job Parameters :</strong></p>
+<ul style="font-size:13px;margin:0 0 10px;padding-left:18px"><li>Dans votre job, allez dans la section <em>Parameters</em>, et ajoutez les paires clé–valeur au <strong>niveau job</strong>.</li></ul>
+<p style="font-size:13px;margin:0 0 6px"><strong>Setting Task Parameters :</strong></p>
+<ul style="font-size:13px;margin:0;padding-left:18px">
+<li>Allez sur la tâche spécifique dans le job ;</li>
+<li>allez dans <em>parameters</em> au sein de la configuration de la tâche (à côté du nom, du type et du chemin de la tâche) ;</li>
+<li>ajoutez les paires clé–valeur.</li>
+</ul>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e3b23c;margin-bottom:8px">Accessing Parameter Values in a Task</div>
+<pre style="margin-bottom:10px"><code>catalog = dbutils.widgets.get("catalog_name")
+schema  = dbutils.widgets.get("schema_name")</code></pre>
+<ul style="font-size:13px;margin:0;padding-left:18px">
+<li>Accédez aux paramètres de <strong>tâche et de job</strong> dans les tâches notebook avec <code>dbutils.widgets.get</code>.</li>
+<li>Les <strong>méthodes de récupération varient selon le type de tâche</strong> (notebook vs SQL vs Python wheel).</li>
+</ul>
+</div>
+</div>
+<p>Le système gère automatiquement la précédence : si un job parameter et un task parameter existent avec la <strong>même clé</strong>, vous obtiendrez la valeur du <strong>job parameter</strong>. Exemples courants de job parameters : noms de catalogue, noms de schéma, réglages d'environnement, dates de traitement.</p>
+
+<h4>Task Values — définir et lire dynamiquement</h4>
+<p>Les <strong>Task Values</strong> sont des paires clé-valeur <strong>dynamiques</strong> que les tâches créent et partagent <strong>pendant l'exécution</strong> du workflow. Vous référencez les valeurs de paramètres d'une tâche <strong>amont</strong> spécifique dans les tâches <strong>aval</strong>.</p>
+<div class="demo"><span class="demo-label">Task Values — set / get</span>
+<pre><code># Dynamically Set Task Values with Code
+dbutils.jobs.taskValues.set(
+    key = "catalog_name",
+    value = "dbacademy")
+
+# Accessing a Parameter from another Task
+dbutils.jobs.taskValues.get(
+    taskKey = "task-name",
+    key = "catalog_name")</code></pre>
+<p class="demo-note"><strong>Contexte d'exécution :</strong> contrairement aux paramètres qui sont définis <em>avant</em> l'exécution, les task values sont créées <em>pendant</em> l'exécution, ce qui les rend idéales pour les décisions qui dépendent des résultats de traitement.</p>
+</div>
+<p><strong>Cas d'usage typiques :</strong> partage de résultats calculés comme les <strong>comptages d'enregistrements</strong> pour des contrôles qualité, des <strong>chemins de fichiers</strong> pour des sorties générées dynamiquement, des <strong>statistiques de traitement</strong> pour le monitoring, ou des <strong>critères de décision</strong> pour la logique conditionnelle. Cela crée des dépendances explicites entre tâches basées sur les <em>données</em>, et non seulement sur l'ordre d'exécution.</p>
+
+<h4>Dynamic Value References</h4>
+<p>Les <strong>Dynamic Value References</strong> permettent de référencer des valeurs <strong>à l'exécution</strong> depuis le contexte du job et de la tâche (sorties de tâches, paramètres, task values, task values enregistrées, métadonnées de run). Ces références utilisent la notation <code>{{ }}</code> et permettent aux workflows de s'adapter à différentes exécutions.</p>
+<table class="tbl">
+<thead><tr><th style="width:44%">Référence</th><th>Usage</th></tr></thead>
+<tbody>
+<tr><td colspan="2" style="background:#232c38"><strong>Job Context References</strong></td></tr>
+<tr><td><code>{{job.start_time.day}}</code></td><td>Accéder au jour — timing d'exécution pour les traitements basés sur la date.</td></tr>
+<tr><td><code>{{job.run_id}}</code></td><td>Identifiant unique pour le suivi et la journalisation.</td></tr>
+<tr><td><code>{{job.parameters.environment}}</code></td><td>Accéder dynamiquement aux paramètres de niveau job.</td></tr>
+<tr><td colspan="2" style="background:#232c38"><strong>Task Context References</strong></td></tr>
+<tr><td><code>{{task.name}}</code></td><td>Nom de la tâche — utile pour le logging et la génération de chemins dynamiques.</td></tr>
+<tr><td><code>{{task.retry_count}}</code></td><td>Suivre le nombre de tentatives pour le débogage.</td></tr>
+<tr><td colspan="2" style="background:#232c38"><strong>Inter-Task Communication</strong></td></tr>
+<tr><td><code>{{tasks.&lt;task-name&gt;.values.my_value}}</code></td><td>Accéder à la sortie d'une tâche amont.</td></tr>
+<tr><td><code>{{tasks.data-validation.values.record_count}}</code></td><td>Accéder à des résultats calculés depuis des tâches amont.</td></tr>
+<tr><td><code>{{tasks.file-processor.values.output_path}}</code></td><td>Utiliser des chemins dynamiques générés par d'autres tâches.</td></tr>
+</tbody>
+</table>
+<p><strong>Patterns avancés :</strong> ces références permettent des workflows qui s'adaptent à différents environnements d'exécution, traitent des volumes de données variables et prennent des décisions intelligentes basées sur les résultats amont.</p>`
+      },
+      {
+        id: "w2l10", title: "Notifications & politique de retry",
+        html: `
+<h4>Configuration des notifications</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #ff4a2e;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#ff6a52;margin-bottom:8px">Job Level Notifications</div>
+<ul style="font-size:13px;margin:0;padding-left:18px">
+<li>Une alerte de notification est envoyée après la <strong>complétion réussie du job</strong>.</li>
+<li>Ce réglage se modifie dans la section <strong>Job Details</strong> (panneau de droite).</li>
+</ul>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #e3b23c;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e3b23c;margin-bottom:8px">Task Level Notifications</div>
+<ul style="font-size:13px;margin:0;padding-left:18px">
+<li>Une alerte est envoyée quand la <strong>tâche</strong> est complétée avec succès.</li>
+<li>Ce réglage de notification est <strong>personnalisable au niveau de la tâche</strong>.</li>
+</ul>
+</div>
+</div>
+<p>Les alertes de niveau job sont parfaites pour les parties prenantes qui doivent savoir quand un workflow complet se termine (utilisateurs métier attendant un rapport quotidien, systèmes aval dépendant des sorties du job). Les notifications de niveau tâche permettent des stratégies d'alerte <strong>granulaires</strong> — essentiel quand différentes tâches ont différentes parties prenantes ou quand certaines tâches sont plus critiques que d'autres.</p>
+
+<h4>Capacités détaillées des notifications</h4>
+<ul>
+<li><strong>Destinations multiples supportées</strong> : <strong>Emails</strong>, <strong>Teams</strong>, <strong>PagerDuty</strong>, <strong>Slack</strong> et <strong>Webhook</strong>.</li>
+<li><strong>Chaque tâche d'un job</strong> peut être configurée différemment pour envoyer des notifications.</li>
+<li>Jobs déclenche des notifications quand la tâche <strong>commence</strong>, <strong>se termine</strong> ou <strong>échoue</strong>.</li>
+<li>Ces notifications peuvent aussi être déclenchées dans le cas de <strong>jobs en retard</strong> :
+  <ul>
+    <li>alertes de <strong>seuil de durée</strong> (duration threshold warning) / <strong>timeout</strong> ;</li>
+    <li><strong>streaming backlog</strong> (problème de récupération des données streaming).</li>
+  </ul>
+</li>
+<li>Le <strong>Webhook</strong> permet une intégration personnalisée avec des services d'API tierces.</li>
+</ul>
+<div class="callout"><strong>Considérations stratégiques :</strong> concevez votre stratégie de notification en fonction des <strong>besoins opérationnels</strong>, pas de la commodité technique. Demandez-vous : qui a besoin de savoir quoi, quand, et quelles actions peuvent-ils entreprendre sur la base de la notification ? Par exemple, on peut vouloir des alertes immédiates pour les échecs de validation de données mais seulement des notifications de synthèse pour les tâches de nettoyage de routine.</div>
+
+<h4>Retry Policy</h4>
+<p>Une <strong>politique qui détermine quand et combien de fois les exécutions échouées sont ré-essayées</strong>. Une politique de retry bien conçue est essentielle pour des workflows résilients : elle détermine non seulement le <em>nombre</em> de tentatives, mais aussi <em>sous quelles conditions</em> et avec <em>quels rythmes</em>.</p>
+<table class="tbl">
+<thead><tr><th style="width:28%">Facteur</th><th>À considérer</th></tr></thead>
+<tbody>
+<tr><td><strong>Failure Type</strong></td><td>Des problèmes réseau transitoires peuvent justifier des retries immédiats, alors que des problèmes de qualité de données non.</td></tr>
+<tr><td><strong>Resource Impact</strong></td><td>Ré-essayer trop agressivement des tâches gourmandes en ressources peut provoquer de la contention sur le cluster.</td></tr>
+<tr><td><strong>Downstream Dependencies</strong></td><td>Les tâches échouées peuvent impacter d'autres workflows, ce qui rend le <em>timing</em> des retries critique.</td></tr>
+<tr><td><strong>Business SLA</strong></td><td>Certains processus ont des exigences de délai strictes qui limitent les fenêtres de retry.</td></tr>
+</tbody>
+</table>`
+      },
+      {
+        id: "w2l11", title: "Planifications & déclencheurs (triggers)",
+        html: `
+<p>Un <strong>trigger</strong> est une <strong>règle qui démarre automatiquement une exécution de job</strong> selon une condition ou une planification spécifique. C'est en réalité un moteur de règles qui permet de construire des systèmes data fiables et réactifs, capables de fonctionner de manière autonome. Les triggers permettent l'<strong>automatisation</strong>, si bien que les jobs peuvent s'exécuter <strong>sans intervention manuelle</strong>.</p>
+<p><strong>Les types de triggers courants incluent :</strong></p>
+<ol>
+<li><strong>Time-based schedules</strong> — planification de type cron pour des charges récurrentes prévisibles ;</li>
+<li><strong>Continuous (always-on) execution</strong> — traitement permanent pour les scénarios de streaming ;</li>
+<li><strong>File arrival events</strong> — traitement événementiel qui réagit immédiatement aux nouvelles données ;</li>
+<li><strong>Manual trigger</strong> — exécution à la demande pour le développement, les tests et l'analyse ad-hoc ;</li>
+<li><strong>Table Update</strong> — exécution automatique du job dès que les tables spécifiées sont mises à jour.</li>
+</ol>
+<div class="callout"><strong>Bénéfices de l'automatisation :</strong> les triggers éliminent les points d'intervention humaine qui peuvent causer des retards, des erreurs ou des exécutions manquées. Ils permettent un fonctionnement 24/7 et garantissent une exécution cohérente indépendamment de la disponibilité de l'équipe.<br/><br/><strong>Fiabilité :</strong> chaque type de trigger a des caractéristiques de fiabilité et des modes de panne différents. Par exemple, pour lancer un job quotidiennement à intervalle planifié, un <em>scheduled trigger</em> est le meilleur choix ; pour lancer un job quand un fichier arrive, un <em>file trigger</em> est le plus approprié.</div>
+
+<h4>1. Scheduled Trigger</h4>
+<ul>
+<li>Exécuter automatiquement les jobs à des <strong>heures ou intervalles définis</strong>, par exemple horaire ou quotidien, via l'<strong>UI</strong>.</li>
+<li>Possibilité de planifier les jobs en utilisant des <strong>expressions cron</strong> pour une exécution automatisée.</li>
+<li>Aide à automatiser les jobs récurrents, garantissant des exécutions cohérentes sans intervention manuelle.</li>
+</ul>
+<p><strong>UI-Based Scheduling :</strong> l'interface Databricks propose des options de planification intuitives pour les patterns courants — horaire, quotidien, hebdomadaire, mensuel. Parfait pour les utilisateurs métier, cela réduit la courbe d'apprentissage de la syntaxe cron.</p>
+<p><strong>Puissance des expressions cron :</strong> pour des besoins de timing plus complexes, le support complet des expressions cron permet des planifications sophistiquées comme « toutes les 15 minutes pendant les heures ouvrées » ou « le premier lundi de chaque mois ».</p>
+<p><strong>Patterns de cas d'usage :</strong></p>
+<ul>
+<li><strong>Daily ETL</strong> — traiter les données de la veille chaque matin à 6 h.</li>
+<li><strong>Weekly Reports</strong> — générer les dashboards exécutifs chaque lundi matin.</li>
+<li><strong>Monthly Aggregations</strong> — calculer les KPI mensuels le premier jour de chaque mois.</li>
+<li><strong>Hourly Streaming Checkpoints</strong> — maintenance régulière pour les jobs streaming.</li>
+</ul>
+<p><strong>Fuseaux horaires :</strong> spécifiez toujours le fuseau approprié à votre contexte métier, en particulier pour les organisations opérant sur plusieurs régions.</p>
+
+<h4>2. File Arrival Trigger</h4>
+<ul>
+<li>Déclenche automatiquement les jobs quand de <strong>nouveaux fichiers sont détectés</strong> dans un emplacement de stockage spécifié, avec support de :
+  <ul><li><strong>AWS S3</strong>, <strong>Azure Storage</strong>, <strong>GCP GS</strong> et <strong>Databricks Volumes</strong>.</li></ul>
+</li>
+<li>Permet le <strong>traitement événementiel</strong> (<em>event-driven</em>) pour démarrer les workflows data à l'arrivée d'un fichier.</li>
+<li>Idéal pour automatiser des jobs avec des patterns d'ingestion de données <strong>imprévisibles ou irréguliers</strong>.</li>
+</ul>
+<p>Ce type de trigger représente un changement de paradigme du traitement <em>basé sur le temps</em> vers le traitement <em>événementiel</em> : le traitement commence immédiatement quand la donnée devient disponible, plutôt que d'attendre la prochaine exécution planifiée.</p>
+<p><strong>Scénarios réels :</strong></p>
+<ul>
+<li><strong>Partner Data Feeds</strong> — traiter les fichiers dès que des partenaires externes les déposent.</li>
+<li><strong>IoT Data Processing</strong> — gérer des fichiers de données capteurs déposés irrégulièrement dans la journée.</li>
+<li><strong>Financial Data</strong> — traiter des fichiers de données de trading arrivant à intervalles imprévisibles.</li>
+<li><strong>Log File Processing</strong> — traiter les logs applicatifs déposés par divers systèmes.</li>
+</ul>
+<p><strong>Pattern Matching :</strong> configurez un filtrage de motifs de fichiers sophistiqué pour ne traiter que les fichiers pertinents et ignorer les dépôts temporaires ou incomplets.</p>
+
+<h4>3. Continuous Trigger</h4>
+<ul>
+<li>Exécute les jobs en continu en démarrant un <strong>nouveau run dès que le précédent se termine ou échoue</strong>.</li>
+<li>La <strong>logique de retry intégrée</strong> est automatiquement gérée par Databricks.</li>
+<li>Idéal pour les charges de travail <strong>streaming</strong>.</li>
+</ul>
+<p><strong>Gestion des ressources :</strong> les jobs continus sont gérés automatiquement pour éviter les fuites de ressources et assurer une utilisation optimale du cluster sur de longues périodes.</p>
+<p><strong>Cas d'usage streaming :</strong></p>
+<ul>
+<li><strong>Real-time Analytics</strong> — traitement continu de données de clickstream pour des dashboards temps réel.</li>
+<li><strong>Fraud Detection</strong> — traitement permanent des flux de transactions pour identification immédiate de la fraude.</li>
+<li><strong>IoT Processing</strong> — ingestion et traitement continus de flux de données capteurs.</li>
+<li><strong>Change Data Capture</strong> — traitement temps réel des flux de changements de base de données.</li>
+</ul>
+<p><strong>Monitoring :</strong> les jobs continus requièrent des approches de monitoring différentes puisqu'ils sont conçus pour s'exécuter indéfiniment plutôt que de compléter des tâches discrètes.</p>
+
+<h4>4. Manual Triggers</h4>
+<ul>
+<li>Le trigger <strong>Manual (None)</strong> laisse les jobs s'exécuter <strong>à la demande</strong>, sans planification ni événement.</li>
+<li>Lançable depuis l'<strong>UI</strong> (<em>Run now</em> ou <em>Run now with different settings</em>), l'<strong>API</strong>, la <strong>CLI</strong>, le <strong>SDK</strong>, ou via les <strong>DABs</strong>.</li>
+<li>Idéal pour les <strong>runs ad hoc</strong>, le <strong>débogage</strong> et les <strong>backfills ponctuels</strong>.</li>
+<li>Peut être combiné plus tard avec d'autres types de triggers.</li>
+</ul>
+<p><strong>Options d'exécution :</strong> <em>Run now</em> pour une exécution immédiate avec les réglages courants ; <em>Run now with different settings</em> pour surcharger les paramètres à l'exécution ; exécution programmatique via API, CLI, SDK et Databricks Asset Bundles pour l'intégration avec des systèmes externes.</p>
+<p><strong>Cas d'usage opérationnels :</strong></p>
+<ul>
+<li><strong>Backfill Processing</strong> — traiter des données historiques hors des planifications normales.</li>
+<li><strong>Emergency Processing</strong> — répondre à des besoins métier urgents qui ne peuvent attendre l'exécution planifiée.</li>
+<li><strong>Data Recovery</strong> — retraiter des périodes spécifiques après résolution de problèmes de qualité de données.</li>
+<li><strong>Testing and Validation</strong> — vérifier le comportement d'un job en production avant d'activer l'automatisation.</li>
+</ul>
+
+<h4>5. Table Update Trigger</h4>
+<ul>
+<li>Le <strong>Table Update Trigger</strong> démarre automatiquement un job quand des <strong>tables spécifiées sont mises à jour</strong>.</li>
+<li>Il surveille <strong>une ou plusieurs tables</strong> pour tout changement de données (<strong>insert, update, delete ou merge</strong>).</li>
+<li>Il aide à remplacer la planification temporelle (comme les jobs cron) par une <strong>orchestration temps réel</strong>, garantissant que les jobs s'exécutent dès que de nouvelles données arrivent — ce qui améliore la fraîcheur et réduit le compute gaspillé.</li>
+</ul>
+<div class="demo"><span class="demo-label">Table Update — configuration en 4 étapes</span>
+<p><strong>Step-1 — Selecting trigger type :</strong> sélectionner <em>Table update</em> comme type de déclencheur dans les triggers du job.</p>
+<p><strong>Step-2 — Adding source tables :</strong></p>
+<ul style="font-size:13px">
+<li>Vous pouvez sélectionner <strong>jusqu'à 10 tables par trigger</strong>.</li>
+<li>Fonctionne avec les tables <strong>Delta managées par Unity Catalog</strong>, <strong>Iceberg</strong>, les <strong>tables Delta externes</strong>, les <strong>vues matérialisées</strong> et les <strong>streaming tables</strong>.</li>
+</ul>
+<p><strong>Step-3 — Defining triggering condition :</strong></p>
+<ul style="font-size:13px">
+<li><strong>Any table updated</strong> — déclenche quand la <em>première</em> table surveillée change.</li>
+<li><strong>All tables updated</strong> — déclenche seulement après que <em>toutes</em> les tables sélectionnées ont été mises à jour.</li>
+</ul>
+<p><strong>Step-4 — Advanced functionality (optionnel) :</strong></p>
+<ul style="font-size:13px">
+<li><strong>Min. time between triggers</strong> — évite le sur-déclenchement en imposant un intervalle obligatoire entre deux exécutions consécutives.<br/><em>Exemple :</em> pour une table fréquemment mise à jour, définir un intervalle entre runs consécutifs afin d'éviter des exécutions multiples rapprochées.</li>
+<li><strong>Wait after last change</strong> — retarde l'exécution du job jusqu'à ce que toutes les mises à jour aient atterri dans la table source.<br/><em>Exemple :</em> quand les données arrivent en plusieurs lots, définir une période d'attente pour que le job ne démarre qu'une fois le lot complet livré.</li>
+</ul>
+<p class="demo-note">Ensemble, ces réglages rendent l'orchestration plus intelligente, plus réactive et plus économe en ressources.</p>
 </div>`
       },
       {
-        id: "w2l7", title: "Configuration des tâches : paramètres, valeurs, notifications, retries",
+        id: "w2l12", title: "Tâches conditionnelles & itératives",
         html: `
-<h4>Paramètres — Task vs Job</h4>
+<p>Trois types de tâches avancés permettent des patterns de workflow sophistiqués : <strong>Run if Conditional Task Dependencies</strong>, <strong>If Else Task</strong> et <strong>For Each Task</strong>. Ces tâches transforment vos workflows d'une simple automatisation en systèmes de traitement de données intelligents, capables de <em>brancher</em>, <em>boucler</em> et prendre des décisions selon les données et les résultats de traitement.</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>Run if Conditional Task Dependencies</h4><p>Contrôler l'exécution d'une tâche selon les <strong>résultats des tâches amont</strong>, permettant de gérer les échecs partiels et les scénarios de dépendances complexes.</p></div>
+  <div class="mini-card"><h4>If Else Task</h4><p>Implémenter une <strong>logique conditionnelle booléenne</strong> directement dans le workflow, autorisant des branches selon les conditions de données, résultats de traitement ou règles métier.</p></div>
+  <div class="mini-card"><h4>For Each Task</h4><p>Permettre des patterns de <strong>traitement itératif</strong> où la même logique est appliquée à plusieurs partitions de données ou paramètres, avec un <strong>parallélisme configurable</strong>.</p></div>
+</div>
+
+<h4>1) Run if — dépendances conditionnelles entre tâches</h4>
 <ul>
-<li><strong>Task Parameters</strong> : paires clé-valeur définies au <strong>niveau de la tâche</strong>. Permettent l'orchestration avancée : exécution conditionnelle, boucles, passage de contexte entre tâches.</li>
-<li><strong>Job Parameters</strong> : paires clé-valeur définies au <strong>niveau du job</strong>, qui fournissent des valeurs par défaut à tout le workflow. Appliquées automatiquement à toutes les tâches ; <strong>surchargent les task parameters de même clé</strong> ; surchargables au lancement.</li>
+<li><strong>Contrôle l'exécution d'une tâche selon les résultats des tâches amont</strong> (<em>upstream tasks</em>).</li>
+<li>Supporte une variété de <strong>conditions de dépendance</strong> comme :
+  <ul>
+    <li><strong>All succeeded</strong> — dépendance traditionnelle : toutes les tâches amont doivent se terminer avec succès avant que la tâche suivante puisse s'exécuter.</li>
+    <li><strong>At least one succeeded</strong> — utile quand on a des sources de données ou chemins de traitement <strong>redondants</strong> : le workflow peut avancer si ne serait-ce qu'une des tâches amont requises a réussi.</li>
+    <li><strong>None failed</strong> — permet à une tâche de s'exécuter même si certaines tâches amont ont été <em>skippées</em>, tant qu'aucune n'a explicitement échoué.</li>
+    <li><strong>And more</strong> — combinaisons personnalisées permettant d'implémenter une logique métier complexe nécessitant des combinaisons spécifiques de résultats de tâches.</li>
+  </ul>
+</li>
 </ul>
-<div class="callout"><strong>Règle de priorité :</strong> quand une même clé existe aux deux niveaux, le <strong>Job Parameter écrase le Task Parameter</strong>.</div>
-<h4>Définir et accéder aux paramètres (UI)</h4>
+<p><strong>Exemple — At Least One Succeeded :</strong></p>
+<svg viewBox="0 0 660 190" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar8" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <rect x="180" y="10" width="230" height="22" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="295" y="26" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;fill:#e3b23c">Example – At Least One Succeeded</text>
+  <text x="270" y="52" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:#8a97a8">Depends On: Task-1</text>
+  <rect x="20" y="90" width="86" height="30" rx="6" fill="#3fcf8e"/><text x="63" y="110" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;fill:#0d1014">Task-1</text>
+  <rect x="228" y="58" width="86" height="28" rx="6" fill="#3fcf8e"/><text x="271" y="77" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;fill:#0d1014">Task-2</text>
+  <rect x="228" y="124" width="86" height="28" rx="6" fill="#ff4a2e"/><text x="271" y="143" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;fill:#fff">Task-3</text>
+  <text x="270" y="166" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:#8a97a8">Depends On: Task-1</text>
+  <path d="M110 98 L 224 74" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#ar8)"/>
+  <path d="M110 112 L 224 136" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#ar8)"/>
+  <rect x="418" y="56" width="180" height="86" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <rect x="440" y="64" width="86" height="28" rx="6" fill="#3fcf8e"/><text x="483" y="83" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;fill:#0d1014">Task-4</text>
+  <text x="428" y="108" style="font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:#8a97a8">Depends On: Task-2, Task-3</text>
+  <text x="428" y="126" style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;fill:#e3b23c">At least one succeeded</text>
+  <path d="M318 74 L 436 78" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#ar8)"/>
+  <path d="M318 136 L 436 88" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#ar8)"/>
+  <rect x="330" y="160" width="316" height="24" rx="5" fill="#232c38" stroke="#e3b23c"/>
+  <text x="488" y="176" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2">In this scenario, even if Task-3 Fails, Task-4 still runs</text>
+</svg>
+<p><strong>Bénéfices des dépendances conditionnelles :</strong> si <code>Task-4</code> est configurée pour s'exécuter quand « au moins une » de ses tâches précédentes (<code>Task-2</code> ou <code>Task-3</code>) réussit, elle peut quand même s'exécuter si <code>Task-3</code> échoue tandis que <code>Task-2</code> réussit. Cela <strong>évite les défaillances en cascade</strong> et permet aux workflows de continuer même quand certains composants échouent. Cela reflète aussi les processus métier réels où plusieurs chemins vers le succès existent et où des échecs partiels n'arrêtent pas toute l'opération.</p>
 <ul>
-<li><strong>Job Parameters :</strong> dans le job, section <em>Parameters</em>, ajouter des paires clé-valeur au niveau job.</li>
-<li><strong>Task Parameters :</strong> dans la tâche concernée, section <em>parameters</em> de la configuration (à côté du nom, type, chemin), ajouter les paires.</li>
-<li><strong>Accès dans un notebook :</strong> <code>dbutils.widgets.get("catalog_name")</code>. La méthode de récupération varie selon le type de tâche (notebook vs SQL vs Python wheel).</li>
+<li>Les dépendances de tâches fournissent une <strong>logique de flux de contrôle basée sur le statut des tâches amont</strong>.</li>
+<li>Elles sont <strong>représentées visuellement dans le DAG du job</strong> : différents styles et couleurs de lignes indiquent différents types de dépendances, rendant une logique complexe compréhensible d'un coup d'œil.</li>
 </ul>
-<pre><code>catalog = dbutils.widgets.get("catalog_name")
-schema  = dbutils.widgets.get("schema_name")</code></pre>
-<h4>Task Values (valeurs dynamiques partagées entre tâches)</h4>
-<p>Paires clé-valeur dynamiques que les tâches créent et partagent pendant l'exécution. On référence la valeur d'une tâche <em>amont</em> dans une tâche <em>aval</em> :</p>
-<pre><code>dbutils.jobs.taskValues.set(key="catalog_name", value="dbacademy")
-dbutils.jobs.taskValues.get(taskKey="task-name", key="catalog_name")</code></pre>
-<h4>Dynamic Value References</h4>
-<p>Référencer des valeurs à l'exécution depuis le contexte du job et des tâches (sorties de tâches, paramètres, valeurs de tâche, métadonnées de run). Notation <code>{{ }}</code> :</p>
+<p><strong>Comment configurer :</strong> on sélectionne ces conditions de dépendance dans les <strong>réglages de configuration de la tâche</strong>, sous la section « <em>run-if dependencies</em> ».</p>
+<div class="callout"><strong>Flux d'exécution (3 étapes observées dans l'UI) :</strong><br/>
+<strong>1. Job Initialization</strong> — le système évalue toutes les dépendances et détermine l'ensemble d'exécution initial ; toutes les tâches s'exécutent <em>concurremment</em>.<br/>
+<strong>2. Waiting for all tasks to complete</strong> — à mesure que les tâches se terminent (avec succès ou échec), le système réévalue en continu quelles tâches aval peuvent s'exécuter. Exemple : <code>Ingest_Source_2</code> et <code>Ingest_Source_3</code> sont terminées et attendent que <code>Ingest_Source_1</code> se termine avant de passer à la tâche <code>All_Data_Ingested</code>.<br/>
+<strong>3. Dependent Task Started</strong> — une fois les trois tâches complétées (All succeeded), la tâche finale démarre.</div>
+
+<h4>2) If/Else — tâches conditionnelles</h4>
+<svg viewBox="0 0 660 150" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar9" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <rect x="20" y="56" width="120" height="30" rx="6" fill="#232c38" stroke="#2b3542"/><text x="80" y="76" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c9d3e0">Tâches amont</text>
+  <rect x="196" y="42" width="150" height="58" rx="6" fill="#232c38" stroke="#ff4a2e" stroke-dasharray="4 3"/>
+  <text x="271" y="64" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;fill:#ff6a52">If/else conditional task</text>
+  <text x="271" y="82" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9.5px;fill:#e8ecf2">count == "true"</text>
+  <path d="M144 71 L 192 71" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#ar9)"/>
+  <path d="M350 60 L 400 26" stroke="#3fcf8e" stroke-width="1.5" marker-end="url(#ar9)"/>
+  <path d="M350 84 L 400 112" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#ar9)"/>
+  <rect x="404" y="12" width="120" height="28" rx="6" fill="#3fcf8e"/><text x="464" y="31" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;fill:#0d1014">True Task</text>
+  <rect x="404" y="100" width="120" height="28" rx="6" fill="#ff4a2e"/><text x="464" y="119" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;fill:#fff">False Task</text>
+  <rect x="536" y="52" width="112" height="48" rx="6" fill="#232c38" stroke="#e3b23c"/>
+  <text x="592" y="70" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">If none of dependency</text>
+  <text x="592" y="82" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">failed and at least one</text>
+  <text x="592" y="94" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">task executed</text>
+</svg>
 <ul>
-<li><code>{{job.start_time.day}}</code> — accéder au jour.</li>
-<li><code>{{task.name}}</code> — nom de la tâche.</li>
-<li><code>{{tasks.&lt;task-name&gt;.values.my_value}}</code> — sortie d'une tâche amont.</li>
+<li>Ajoute une <strong>logique conditionnelle booléenne</strong> à votre workflow, basée sur les résultats des tâches.</li>
+<li>Permet le <strong>branching</strong> selon des conditions spécifiques (par ex. contrôles de qualité de données, comptages d'enregistrements).</li>
+<li>Utilise les <strong>opérateurs booléens</strong> <code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code> pour évaluer les expressions.</li>
 </ul>
-<h4>Notifications</h4>
+<p><strong>Exemples de logique métier :</strong></p>
 <ul>
-<li>Configurables au <strong>niveau job</strong> (après complétion réussie, réglage dans Job Details) et/ou <strong>niveau tâche</strong> (personnalisable par tâche).</li>
-<li>Destinations : <strong>Email, Teams, PagerDuty, Slack, Webhook</strong> ; le Webhook permet l'intégration custom avec des API tierces.</li>
-<li>Déclenchées au <strong>début</strong>, à la <strong>complétion</strong> ou à l'<strong>échec</strong> ; aussi sur <strong>seuil de durée</strong> (avertissement/timeout) et <strong>backlog streaming</strong>.</li>
+<li><strong>Data Quality Gates</strong> — brancher selon les comptages d'enregistrements, pourcentages de valeurs nulles ou résultats de validation.</li>
+<li><strong>Processing Volume Decisions</strong> — utiliser des stratégies de traitement différentes pour de gros vs de petits jeux de données.</li>
+<li><strong>Environment-Specific Logic</strong> — exécuter des tâches différentes selon les paramètres d'environnement.</li>
+<li><strong>Business Rule Implementation</strong> — implémenter des règles métier complexes directement dans la logique du workflow.</li>
 </ul>
-<h4>Retry Policy</h4>
-<p>Une politique qui détermine <strong>quand</strong> et <strong>combien de fois</strong> les exécutions échouées sont ré-essayées.</p>`
+<p><strong>Prérequis d'exécution :</strong> la condition « <em>If none of dependency failed and at least one task executed</em> » garantit que l'évaluation conditionnelle n'a lieu que lorsque des résultats amont significatifs sont disponibles. <strong>Branches True/False :</strong> chaque branche peut contenir plusieurs tâches, permettant des chemins de traitement complexes selon les résultats conditionnels.</p>
+
+<h4>3) For Each — tâche itérative</h4>
+<svg viewBox="0 0 700 180" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar10" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <text x="90" y="60" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">For Each Task</text>
+  <rect x="20" y="68" width="140" height="30" rx="6" fill="#ff4a2e"/><text x="90" y="88" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;font-weight:600;fill:#fff">Input Array</text>
+  <text x="90" y="114" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">["A","B","C"]</text>
+  <path d="M166 83 L 208 83" stroke="#ff6a52" stroke-width="1.8" marker-end="url(#ar10)"/>
+  <rect x="214" y="20" width="300" height="130" rx="12" fill="#232c38" stroke="#2b3542"/>
+  <text x="364" y="16" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Nested task to loop over</text>
+  <text x="364" y="42" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:11px;fill:#e3b23c">{{input}}</text>
+  <path d="M356 48 L 262 70 M364 48 L364 70 M372 48 L 466 70" stroke="#8a97a8" stroke-width="1.1" fill="none"/>
+  <text x="300" y="62" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">A</text>
+  <text x="368" y="62" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">B</text>
+  <text x="428" y="62" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">C</text>
+  <rect x="232" y="74" width="60" height="24" rx="5" fill="#ff4a2e"/><text x="262" y="90" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#fff">Task</text>
+  <rect x="334" y="74" width="60" height="24" rx="5" fill="#ff4a2e"/><text x="364" y="90" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#fff">Task</text>
+  <rect x="436" y="74" width="60" height="24" rx="5" fill="#ff4a2e"/><text x="466" y="90" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#fff">Task</text>
+  <path d="M262 98 L262 126 L466 126 L466 98 M364 98 L364 126" stroke="#ff6a52" stroke-width="1.2" fill="none"/>
+  <text x="364" y="144" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">For Each Task (conteneur)</text>
+  <path d="M520 83 L 556 83" stroke="#ff6a52" stroke-width="1.8" marker-end="url(#ar10)"/>
+  <rect x="560" y="68" width="132" height="30" rx="6" fill="#ff4a2e"/><text x="626" y="88" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;fill:#fff">Downstream Task</text>
+</svg>
+<ul>
+<li><strong>For Each</strong> boucle sur un <strong>tableau d'entrée</strong> et exécute la <strong>même tâche imbriquée</strong> pour chaque élément, en le passant sous forme de <code>{{input}}</code>.</li>
+<li>Les itérations peuvent s'exécuter <strong>en parallèle</strong>, avec une <strong>concurrence configurable</strong> pour accélérer l'exécution.</li>
+<li>Les <strong>dépendances aval s'attachent au conteneur For Each</strong>, pas à la tâche imbriquée.</li>
+</ul>
+<p><strong>Le concept de conteneur :</strong> la tâche For Each agit comme une <strong>unité logique unique</strong> dans votre workflow, même si elle exécute plusieurs itérations en interne. Les tâches aval n'ont besoin de dépendre que du conteneur For Each, et non de chaque itération individuelle, ce qui garde les diagrammes de workflow propres et gérables. Le conteneur gère aussi l'<strong>allocation de ressources</strong> entre itérations, optimisant l'utilisation du cluster et prévenant les conflits de ressources.</p>
+<p><strong>Deux composants à définir :</strong></p>
+<ol>
+<li><strong>The For Each task</strong> — la tâche conteneur de haut niveau qui gère la boucle : logique d'itération, traitement du tableau d'entrée, réglages de concurrence et allocation de ressources.</li>
+<li><strong>A nested task</strong> — la tâche réelle qui s'exécute à chaque itération. Elle peut être de n'importe quel type (notebook, SQL, script Python, etc.) ; elle reçoit chaque élément du tableau sous forme de <code>{{input}}</code>.</li>
+</ol>
+<p>Cette séparation permet de configurer le comportement d'itération <strong>indépendamment</strong> de la logique de traitement, rendant les tâches For Each à la fois puissantes et maintenables.</p>
+<p><strong>Exemples de cas d'usage :</strong></p>
+<ul>
+<li><strong>Geographic Processing</strong> — traiter les données de chaque état/région en parallèle.</li>
+<li><strong>Time Period Processing</strong> — gérer différentes plages de dates avec la même logique.</li>
+<li><strong>Customer Segment Processing</strong> — appliquer la même analyse à différents segments clients.</li>
+<li><strong>File Processing</strong> — traiter plusieurs fichiers avec une logique identique.</li>
+</ul>`
       },
       {
-        id: "w2l8", title: "Planifications & déclencheurs",
+        id: "w2l13", title: "Gestion des échecs : Repair & Rerun",
         html: `
-<p>Un <strong>trigger</strong> est une règle qui démarre automatiquement une exécution de job selon une condition ou une planification ; cela permet l'automatisation sans intervention manuelle.</p>
+<p>La gestion des échecs ne consiste pas seulement à relancer des tâches : il s'agit de construire des systèmes <strong>résilients</strong>, capables de récupérer efficacement et de maintenir la cohérence des données même quand des composants tombent.</p>
+<h4>Re-run the failed task</h4>
+<ul>
+<li>La fonctionnalité <strong>Repair</strong> permet de <strong>ré-exécuter et de surcharger les paramètres de tâche</strong>.</li>
+<li>Elle <strong>réduit le temps et les ressources</strong> nécessaires pour récupérer d'exécutions de job infructueuses.</li>
+<li>En cas d'échec de tâche, vous pouvez :
+  <ul>
+    <li><strong>modifier la tâche</strong> et relancer ;</li>
+    <li><strong>modifier les paramètres</strong> et relancer.</li>
+  </ul>
+</li>
+</ul>
+<p><strong>Récupération ciblée :</strong> au lieu de redémarrer des workflows entiers, vous pouvez modifier des tâches échouées spécifiques et ne relancer que ce qui est nécessaire. Cela économise un temps et des ressources de calcul significatifs.</p>
+<p><strong>Scénarios de récupération :</strong></p>
+<ul>
+<li><strong>Configuration Fixes</strong> — corriger des valeurs de paramètres qui ont causé les échecs.</li>
+<li><strong>Resource Adjustments</strong> — augmenter la mémoire ou les ressources de compute pour les tâches ayant échoué par contrainte de ressources.</li>
+<li><strong>Code Updates</strong> — déployer des correctifs d'erreurs de logique et ne relancer que les tâches concernées.</li>
+<li><strong>Data Quality Issues</strong> — ajuster la logique de traitement pour gérer des problèmes de qualité découverts pendant l'exécution.</li>
+</ul>
+
+<h4>Ne relancer que les tâches nécessaires</h4>
+<p>La fonctionnalité permet de n'exécuter que les tâches échouées, ce qui vous <strong>fait gagner du temps et de l'argent</strong> en ne relançant que le nécessaire plutôt que le job entier.</p>
+<ul>
+<li><strong>Resource Optimization</strong> — n'exécuter que les tâches échouées au lieu de workflows entiers peut réduire le temps de récupération de <strong>80–90 %</strong> dans des pipelines complexes.</li>
+<li><strong>Reduced Risk</strong> — des opérations de récupération plus petites ont moins d'impact sur les ressources système et réduisent le risque de défaillances en cascade pendant la récupération.</li>
+<li><strong>Faster Resolution</strong> — les équipes peuvent réagir plus vite aux échecs sans attendre la fin de workflows entiers, améliorant le respect des SLA et la réactivité métier.</li>
+</ul>
+<div class="callout"><strong>Point d'attention important :</strong> réparer une tâche ne veut pas dire réparer le job. Par exemple, si vous passez un mauvais paramètre et le corrigez via la fonctionnalité <em>repair run</em>, vous devez <strong>toujours modifier ce paramètre dans la définition de votre job</strong>.</div>
+
+<h4>Après la réparation</h4>
+<p>Après les opérations de réparation, l'historique des runs du job montre clairement le processus de récupération :</p>
+<ul>
+<li><strong>Audit Trail</strong> — visibilité complète sur ce qui a été réparé, quand et par qui : une information essentielle pour le dépannage et l'amélioration des processus.</li>
+<li><strong>Success Validation</strong> — indication claire des tâches récupérées avec succès, permettant d'avoir confiance dans le processus de réparation.</li>
+<li><strong>Learning Opportunities</strong> — les données historiques de réparation aident les équipes à identifier des patterns d'échec et à améliorer la conception initiale des jobs pour prévenir les problèmes futurs.</li>
+</ul>`
+      },
+      {
+        id: "w2l14", title: "Monitoring des performances des jobs",
+        html: `
+<h4>System Tables — le catalogue system.lakeflow</h4>
+<ul>
+<li><code>system.lakeflow</code> est un catalogue <strong>intégré et en lecture seule</strong> (<em>built-in, read-only</em>) qui journalise <strong>toute l'activité des jobs</strong> à travers tous les workspaces de la région.</li>
+<li>Les <strong>tables timeline</strong> découpent les longues exécutions <strong>par heure</strong> en utilisant <code>period_start_time</code> et <code>period_end_time</code>, permettant des analytiques fiables de <strong>durée</strong>, <strong>concurrence</strong> et <strong>SLA</strong>.</li>
+</ul>
 <table class="tbl">
-<thead><tr><th>Type</th><th>Description</th></tr></thead>
+<thead><tr><th style="width:34%">Table clé</th><th>Contenu</th></tr></thead>
 <tbody>
-<tr><td><strong>1. Scheduled</strong></td><td>Exécute le job à des heures/intervalles définis (horaire, quotidien…) via l'UI. Planification possible par <strong>expressions cron</strong>. Assure des exécutions récurrentes cohérentes sans intervention manuelle.</td></tr>
-<tr><td><strong>2. File Arrival</strong></td><td>Déclenche automatiquement quand de <strong>nouveaux fichiers</strong> sont détectés dans un emplacement de stockage : <strong>AWS S3, Azure Storage, GCP GS, volumes Databricks</strong>. Traitement <em>event-driven</em>. Idéal pour des arrivées de données <strong>imprévisibles ou irrégulières</strong>.</td></tr>
-<tr><td><strong>3. Continuous</strong></td><td>Exécute en continu en démarrant un nouveau run dès que le précédent se termine ou échoue. <strong>Retry géré automatiquement</strong> par Databricks. Idéal pour les charges <strong>streaming</strong>.</td></tr>
-<tr><td><strong>4. Manual (None)</strong></td><td>Exécution à la demande, sans planification ni événement. Lançable via UI (<em>Run now</em> ou <em>Run now with different settings</em>), API, CLI, SDK, ou DABs. Idéal pour les runs ad hoc, le débogage, les backfills ponctuels. Combinable plus tard avec d'autres types de déclencheurs.</td></tr>
-<tr><td><strong>5. Table Update</strong></td><td>Démarre un job quand des <strong>tables spécifiées sont mises à jour</strong>. Surveille une ou plusieurs tables pour les changements (insert, update, delete, merge). Remplace la planification temporelle (cron) par une orchestration temps réel.</td></tr>
+<tr><td><code>jobs</code></td><td>Job basic info — métadonnées et configuration de base des jobs.</td></tr>
+<tr><td><code>job_tasks</code></td><td>Task basic definitions — définitions et détails de configuration des tâches.</td></tr>
+<tr><td><code>job_run_timeline</code></td><td>Each job run over time — historique d'exécution complet de chaque run de job.</td></tr>
+<tr><td><code>job_task_run_timeline</code></td><td>Each task run over time — historique d'exécution détaillé des tâches individuelles.</td></tr>
+<tr><td><code>pipelines</code></td><td>Pipelines basic info — informations sur les pipelines Delta Live Tables.</td></tr>
 </tbody>
 </table>
-<h4>Table Update — étapes de configuration</h4>
-<ol>
-<li>Sélectionner le type de déclencheur.</li>
-<li>Ajouter les tables sources : jusqu'à <strong>10 tables par déclencheur</strong> ; fonctionne avec tables Delta managées UC, Iceberg, Delta externes, vues matérialisées et streaming tables.</li>
-<li>Définir la condition de déclenchement : <strong>Any table updated</strong> (au premier changement) ou <strong>All tables updated</strong> (seulement quand toutes sont mises à jour).</li>
-<li>Fonctionnalités avancées (optionnel) : <strong>durée minimale entre déclenchements</strong> (évite le sur-déclenchement) et <strong>attente après le dernier changement</strong> (laisse toutes les données atterrir avant de lancer).</li>
-</ol>`
-      },
-      {
-        id: "w2l9", title: "Tâches conditionnelles & itératives",
-        html: `
-<p>Trois mécanismes pour rendre les workflows dynamiques et robustes : <strong>Run if</strong>, <strong>If/Else</strong>, <strong>For Each</strong>.</p>
-<h4>1) Run if — dépendances conditionnelles</h4>
-<ul>
-<li>Contrôle l'exécution d'une tâche selon le <strong>statut des tâches amont</strong>.</li>
-<li>Conditions supportées : <strong>All succeeded</strong>, <strong>At least one succeeded</strong>, <strong>None failed</strong>, et d'autres.</li>
-<li>Représenté visuellement dans le DAG du job. Exemple « At least one succeeded » : même si Task-3 échoue, Task-4 s'exécute quand même (dès lors qu'au moins une dépendance a réussi).</li>
-</ul>
-<h4>2) If/Else — tâches conditionnelles</h4>
-<ul>
-<li>Ajoute une <strong>logique booléenne</strong> au workflow selon les résultats des tâches.</li>
-<li>Permet le <em>branching</em> selon des conditions (contrôles qualité, comptages d'enregistrements…).</li>
-<li>Utilise les opérateurs booléens <code>==, !=, &gt;, &gt;=, &lt;, &lt;=</code> pour évaluer des expressions.</li>
-<li>Branche vers une <strong>True Task</strong> ou une <strong>False Task</strong>.</li>
-</ul>
-<h4>3) For Each — tâche itérative</h4>
-<ul>
-<li><strong>For Each</strong> boucle sur un tableau d'entrée et exécute la <strong>même tâche imbriquée</strong> par élément, passé via <code>{{input}}</code>.</li>
-<li>Les itérations peuvent s'exécuter <strong>en parallèle</strong>, avec une <strong>concurrence configurable</strong> pour accélérer.</li>
-<li>Les dépendances aval s'attachent au <strong>conteneur For Each</strong>, pas à la tâche imbriquée.</li>
-<li>Nécessite deux composants : <strong>(1)</strong> la tâche For Each (conteneur de haut niveau qui gère la boucle) et <strong>(2)</strong> la tâche imbriquée (exécutée à chaque itération).</li>
-</ul>`
-      },
-      {
-        id: "w2l10", title: "Gestion des échecs : Repair & Rerun",
-        html: `
-<p>La fonctionnalité <strong>Repair</strong> permet de relancer un job en ré-exécutant <strong>uniquement les tâches échouées</strong>, sans relancer le job entier.</p>
-<ul>
-<li>Permet de <strong>réexécuter et surcharger les paramètres</strong> de tâche.</li>
-<li>Réduit le <strong>temps et les ressources</strong> nécessaires pour récupérer d'une exécution infructueuse.</li>
-<li>En cas d'échec de tâche, on peut : <strong>modifier la tâche et relancer</strong>, ou <strong>modifier les paramètres et relancer</strong>.</li>
-<li>En ne ré-exécutant que les tâches nécessaires (au lieu de tout le job), on <strong>économise temps et argent</strong>.</li>
-</ul>`
-      },
-      {
-        id: "w2l11", title: "Monitoring des performances",
-        html: `
-<h4>Tables système — system.lakeflow</h4>
-<ul>
-<li><code>system.lakeflow</code> est un catalogue <strong>intégré, en lecture seule</strong>, qui journalise toute l'activité des jobs de tous les workspaces de la région.</li>
-<li>Les <strong>tables timeline</strong> découpent les longues exécutions par heure via <code>period_start_time</code> et <code>period_end_time</code>, permettant des analytiques fiables de <strong>durée, concurrence et SLA</strong>.</li>
-<li>Tables clés : <code>jobs</code> (infos de base des jobs), <code>job_tasks</code> (définitions de base des tâches), <code>job_run_timeline</code> (chaque run de job dans le temps), <code>job_task_run_timeline</code> (chaque run de tâche dans le temps), <code>pipelines</code> (infos de base des pipelines).</li>
-</ul>
+<p><strong>Capacités analytiques :</strong> ces données permettent des analyses sophistiquées, notamment l'<strong>analyse de coûts</strong>, les <strong>tendances de performance</strong>, le <strong>suivi de conformité aux SLA</strong> et l'<strong>optimisation de l'utilisation des ressources</strong>.</p>
+
 <h4>Spark UI</h4>
 <ul>
-<li>La <strong>timeline</strong> d'un run de job met en évidence le début/fin, la durée et le chevauchement des tâches pour repérer vite les goulets d'étranglement.</li>
-<li>Cliquer une tâche : statut, horodatages, durée, cluster/runtime, logs, I/O rapides.</li>
-<li>Cliquer une requête/le code : texte complet, run ID, <strong>répartition du temps</strong> (optimizing/pruning vs executing), détails des fichiers lus/écrits, fichiers & partitions, détails de <em>spill</em>.</li>
+<li>La <strong>timeline</strong> dans un run de job met en évidence le <strong>début/fin des tâches, leur durée et leur chevauchement</strong> pour repérer rapidement les goulets d'étranglement.</li>
+<li><strong>Cliquer sur une tâche</strong> permet de voir : statut, horodatages, durée, cluster/runtime, logs et I/O rapides.</li>
+<li><strong>Cliquer sur les détails d'une requête / du code</strong> donne : le texte complet, le run ID, la <strong>répartition du temps d'horloge</strong> (<em>optimizing/pruning</em> vs <em>executing</em>), les détails des fichiers lus/écrits, les fichiers &amp; partitions et les détails de <em>spill</em>.</li>
 </ul>
-<div class="callout"><strong>Agir sur les insights :</strong> temps de planification élevé → améliorer le <em>pruning</em>/partitionnement ; temps d'exécution élevé → optimiser jointures/agrégations (broadcast, corrections de <em>skew</em>).</div>`
+<div class="callout"><strong>Act on insights (agir sur les enseignements) :</strong><br/>
+<strong>Temps de planification élevé</strong> (high planning time) → améliorer le <em>pruning</em> / le partitionnement.<br/>
+<strong>Temps d'exécution élevé</strong> (high execution time) → optimiser les jointures / agrégations (<em>broadcast</em>, corrections de <em>skew</em>).<br/>
+<strong>Goulets de ressources</strong> → identifier les contraintes mémoire, CPU ou I/O qui nécessitent des ajustements de configuration du cluster.</div>`
       },
       {
-        id: "w2l12", title: "Jobs en production & bonnes pratiques",
+        id: "w2l15", title: "Lakeflow Jobs en production",
         html: `
-<h4>Sélection du compute</h4>
+<p>Passer du développement à la production exige de comprendre comment concevoir, déployer et opérer les Lakeflow Jobs à l'échelle de l'entreprise, avec une gouvernance, une sécurité et des pratiques opérationnelles appropriées. Les déploiements de production requièrent de l'attention sur <strong>quatre domaines critiques</strong> :</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>Compute</h4><p>Sélectionner les bonnes options de compute pour la performance, le coût et les exigences opérationnelles.</p></div>
+  <div class="mini-card"><h4>Modular Design</h4><p>Implémenter des patterns d'architecture qui supportent maintenabilité, réutilisabilité et collaboration d'équipe.</p></div>
+  <div class="mini-card"><h4>Git</h4><p>Pratiques de contrôle de version et de déploiement garantissant la cohérence et permettant les workflows CI/CD.</p></div>
+</div>
+<p>À quoi s'ajoute le <strong>Performance Monitoring</strong> : des stratégies de monitoring et d'optimisation proactives qui assurent la conformité aux SLA et l'efficacité de coût.</p>
+
+<h4>Selecting Compute — interactif vs job clusters</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #ff4a2e;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#ff6a52;margin-bottom:6px">Interactive Clusters</div>
+<p style="font-size:13px;margin:0 0 8px">Le mieux pour l'analyse ad-hoc, l'exploration de données ou le développement — <strong>mais pas la production</strong> :</p>
+<ul style="font-size:13px;margin:0;padding-left:18px">
+<li><strong>Costly for Job runs</strong> — les clusters interactifs restent actifs même quand ils n'exécutent pas de job, générant des coûts inutiles.</li>
+<li><strong>Limited Scalability</strong> — les ressources partagées peuvent créer de la contention et une performance imprévisible.</li>
+<li><strong>Availability could be an issue</strong> à cause de l'usage parallèle — plusieurs utilisateurs partageant les clusters peuvent causer des conflits de ressources et des retards.</li>
+</ul>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #e3b23c;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e3b23c;margin-bottom:6px">Job Clusters</div>
+<p style="font-size:13px;margin:0 0 8px">Moins chers car ils se terminent à la fin du job, réduisant l'usage des ressources et les coûts. Mais :</p>
+<ul style="font-size:13px;margin:0;padding-left:18px">
+<li><strong>Start-up Latency</strong> — les temps de démarrage cloud peuvent retarder l'exécution, à prendre en compte dans la planification des SLA.</li>
+<li><strong>Subject to cloud provider start-up time</strong>.</li>
+<li><strong>Maintenance Burden</strong> — davantage de configuration et de gestion que les options serverless.</li>
+<li><em>Avantage :</em> ressources dédiées à chaque job, donc performance prévisible.</li>
+</ul>
+</div>
+</div>
+
+<h4>Selecting Compute — Serverless Compute</h4>
 <table class="tbl">
-<thead><tr><th>Type</th><th>En production</th></tr></thead>
+<thead><tr><th style="width:22%">Atout</th><th>Détail</th></tr></thead>
 <tbody>
-<tr><td><strong>Clusters interactifs</strong></td><td>Pour l'ad-hoc, l'exploration, le développement — <strong>pas la production</strong> : coûteux pour les runs de job, scalabilité limitée, disponibilité incertaine en usage parallèle.</td></tr>
-<tr><td><strong>Job clusters</strong></td><td>Moins chers (se terminent à la fin du job) mais : <strong>latence de démarrage</strong>, soumis au temps de démarrage du cloud, charge de maintenance.</td></tr>
-<tr><td><strong>Serverless</strong></td><td>Simplicité (pas de choix de VM, pas besoin de DevOps dédié), haute efficacité (<strong>Photon activé par défaut</strong>), démarrage plus rapide (VMs dans le compte Databricks, capacité anticipée par ML), fiabilité (protégé des perturbations cloud).</td></tr>
+<tr><td><strong>Simplicity</strong></td><td>Vous n'avez plus besoin de choisir le type de VM. Les clients n'ont pas besoin de personnel DevOps dédié et qualifié.</td></tr>
+<tr><td><strong>High efficiency</strong></td><td><strong>Photon activé par défaut</strong> — gains de performance significatifs sans configuration ni coût supplémentaire.</td></tr>
+<tr><td><strong>Faster startup</strong></td><td>Les VMs tournent dans le compte Databricks. Databricks garantit qu'un nombre suffisant de nœuds est disponible en se basant sur les données historiques et le ML.</td></tr>
+<tr><td><strong>Reliability</strong></td><td>Protégé (<em>shielded</em>) des perturbations du cloud.</td></tr>
 </tbody>
 </table>
-<h4>Structure de coût</h4>
+<p>Le serverless représente le choix optimal pour la plupart des charges de production : il élimine la gestion d'infrastructure, la sélection de type de VM et la planification de capacité, permettant aux équipes de se concentrer sur la logique métier plutôt que sur l'infrastructure.</p>
+
+<h4>Pricing Structure — Classic vs Serverless</h4>
+<svg viewBox="0 0 680 230" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <text x="105" y="20" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e8ecf2">Classic</text>
+  <rect x="30" y="30" width="150" height="34" fill="#3fcf8e"/><text x="105" y="52" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;fill:#0d1014">DBUs</text>
+  <rect x="30" y="64" width="150" height="80" fill="#5b7280"/><text x="105" y="108" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#fff">Infrastructure cost</text>
+  <rect x="30" y="144" width="150" height="60" fill="#ff4a2e"/><text x="105" y="178" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#fff">Operational cost</text>
+
+  <text x="300" y="20" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e8ecf2">Serverless</text>
+  <rect x="225" y="30" width="150" height="42" fill="#232c38" stroke="#ff4a2e" stroke-dasharray="4 3"/>
+  <text x="300" y="56" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c9d3e0">TCO savings</text>
+  <rect x="225" y="72" width="150" height="132" fill="#00a972"/>
+  <text x="300" y="128" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;font-weight:600;fill:#0d1014">DBUs</text>
+  <text x="300" y="146" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;fill:#0d1014">(Single bill that includes</text>
+  <text x="300" y="158" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;fill:#0d1014">infrastructure and operational cost)</text>
+
+  <text x="410" y="52" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#3fcf8e">Value</text>
+  <text x="410" y="82" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">Fully managed service – operationally simpler,</text>
+  <text x="410" y="95" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">more reliable</text>
+  <text x="410" y="126" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">Fast clusters, auto-scaling – better user</text>
+  <text x="410" y="139" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">experience, lower cost</text>
+  <text x="410" y="170" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">Out of the box performance and optimizations –</text>
+  <text x="410" y="183" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">lower overall TCO</text>
+</svg>
 <ul>
-<li><strong>Classique :</strong> on paie les <strong>DBUs</strong> (à Databricks) + le coût <strong>infrastructure</strong> (VMs, réseau FW/NAT, payé au cloud) + le coût <strong>opérationnel</strong> (temps de déploiement, automatisation, maintenance, suivi de coût/efficacité, au niveau de l'organisation).</li>
-<li><strong>Serverless :</strong> une <strong>facture unique</strong> (DBUs incluant infra + opérationnel) → <strong>économies de TCO</strong>. Service managé plus simple et fiable, clusters rapides et autoscaling, optimisations natives.</li>
+<li><strong>Classic</strong> — trois composantes de coût :
+  <ul>
+    <li><strong>DBUs</strong> (payés à Databricks) ;</li>
+    <li><strong>Infrastructure cost</strong> (payé au fournisseur cloud) : coût des VMs pour les clusters, coût du réseau (FW / NAT), coût de la sécurité et du monitoring d'utilisation ;</li>
+    <li><strong>Operational cost</strong> (supporté au niveau de l'organisation) : temps passé à déployer, automatiser, maintenir l'infrastructure ; temps passé à gérer le coût, l'efficacité et l'utilisation.</li>
+  </ul>
+</li>
+<li><strong>Serverless</strong> — <strong>facture unique</strong> (DBUs incluant infrastructure et coût opérationnel) → <strong>économies de TCO</strong>. Cela élimine la nécessité de gérer plusieurs relations fournisseurs et stratégies d'optimisation de coût.</li>
 </ul>
-<h4>Design modulaire</h4>
-<p>L'orchestration modulaire permet de décomposer un DAG complexe en composants plus petits et gérables : un <strong>Job parent</strong> appelant des <strong>jobs enfants</strong> (Child Job 1, 2, 3).</p>
-<h4>Jobs & Git</h4>
+<p><strong>Complexité cachée du modèle classique :</strong> gérer plusieurs relations de facturation, optimiser sur différentes catégories de coûts et maintenir une expertise en gestion d'infrastructure cloud. <strong>Avantage TCO du serverless :</strong> quand on intègre les frais opérationnels, le coût total de possession est typiquement plus bas avec le serverless, en particulier pour les organisations sans équipe plateforme dédiée.</p>
+
+<h4>Modular Design in Databricks Lakeflow Jobs</h4>
+<p>L'<strong>orchestration modulaire</strong> dans les jobs permet de décomposer des DAG complexes en composants plus petits et gérables.</p>
+<svg viewBox="0 0 680 230" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ar11" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <rect x="40" y="14" width="620" height="62" rx="8" fill="#232c38" stroke="#ff4a2e"/>
+  <text x="350" y="30" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e8ecf2">Large Job</text>
+  <g fill="#ff4a2e">
+    <rect x="58" y="38" width="42" height="14" rx="4"/><rect x="58" y="56" width="42" height="14" rx="4"/>
+    <rect x="120" y="46" width="42" height="14" rx="4"/>
+    <rect x="182" y="38" width="42" height="14" rx="4"/><rect x="182" y="56" width="42" height="14" rx="4"/>
+    <rect x="244" y="46" width="42" height="14" rx="4"/>
+    <rect x="306" y="38" width="42" height="14" rx="4"/><rect x="306" y="56" width="42" height="14" rx="4"/>
+    <rect x="368" y="46" width="42" height="14" rx="4"/>
+    <rect x="430" y="38" width="42" height="14" rx="4"/><rect x="430" y="56" width="42" height="14" rx="4"/>
+    <rect x="492" y="46" width="42" height="14" rx="4"/>
+    <rect x="554" y="38" width="42" height="14" rx="4"/><rect x="554" y="56" width="42" height="14" rx="4"/>
+    <rect x="612" y="46" width="36" height="14" rx="4"/>
+  </g>
+  <text x="350" y="94" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Modular orchestration in jobs enables you to break down complex DAGs into smaller, manageable components</text>
+  <path d="M30 45 L 14 45 L 14 128 L 66 128" stroke="#8a97a8" stroke-width="1.6" fill="none" marker-end="url(#ar11)"/>
+  <rect x="70" y="102" width="500" height="52" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <text x="320" y="118" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e8ecf2">Parent Job</text>
+  <rect x="94" y="126" width="112" height="22" rx="5" fill="#3fcf8e"/><text x="150" y="141" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;fill:#0d1014">Child Job 1</text>
+  <rect x="254" y="126" width="112" height="22" rx="5" fill="#2272b4"/><text x="310" y="141" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;fill:#fff">Child Job 2</text>
+  <rect x="414" y="126" width="112" height="22" rx="5" fill="#ff4a2e"/><text x="470" y="141" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;fill:#fff">Child Job 3</text>
+  <path d="M206 137 L 250 137 M366 137 L 410 137" stroke="#ff6a52" stroke-width="1.4" marker-end="url(#ar11)"/>
+  <path d="M150 152 L 150 172" stroke="#3fcf8e" stroke-width="1.4" marker-end="url(#ar11)"/>
+  <path d="M310 152 L 310 172" stroke="#2272b4" stroke-width="1.4" marker-end="url(#ar11)"/>
+  <path d="M470 152 L 470 172" stroke="#ff6a52" stroke-width="1.4" marker-end="url(#ar11)"/>
+  <rect x="86" y="176" width="128" height="44" rx="6" fill="#1c232d" stroke="#2b3542"/>
+  <g fill="#3fcf8e"><rect x="96" y="190" width="30" height="14" rx="4"/><rect x="134" y="190" width="30" height="14" rx="4"/><rect x="172" y="190" width="30" height="14" rx="4"/></g>
+  <rect x="246" y="176" width="128" height="44" rx="6" fill="#1c232d" stroke="#2b3542"/>
+  <g fill="#2272b4"><rect x="256" y="182" width="30" height="12" rx="4"/><rect x="256" y="200" width="30" height="12" rx="4"/><rect x="296" y="182" width="30" height="12" rx="4"/><rect x="296" y="200" width="30" height="12" rx="4"/><rect x="336" y="191" width="30" height="12" rx="4"/></g>
+  <rect x="406" y="176" width="128" height="44" rx="6" fill="#1c232d" stroke="#2b3542"/>
+  <g fill="#ff4a2e"><rect x="416" y="190" width="30" height="14" rx="4"/><rect x="454" y="190" width="30" height="14" rx="4"/><rect x="492" y="190" width="30" height="14" rx="4"/></g>
+</svg>
+<p><strong>Stratégie de décomposition :</strong> décomposer les DAG complexes en <strong>unités métier logiques</strong> plutôt qu'en composants techniques. Chaque module doit représenter une fonction métier cohésive qui peut être développée, testée et déployée indépendamment.</p>
+<p><strong>Relations parent-enfant :</strong> les <strong>Parent Jobs</strong> orchestrent des <strong>Child Jobs</strong>, créant une séparation nette des responsabilités tout en maintenant la coordination globale du workflow.</p>
 <ul>
-<li>Les jobs supportent l'exécution de notebooks <strong>depuis Git</strong>.</li>
-<li>Évite les modifications involontaires de la prod (par ex. quelqu'un fait des éditions locales dans un repo « Prod » ou change de branche).</li>
-<li>Simplifie la définition du job (<strong>source unique de vérité</strong>) ; facilite le déploiement des notebooks via CI/CD.</li>
-<li>Fournisseurs supportés : GitHub, GitLab, AWS CodeCommit et d'autres.</li>
-<li><strong>Configuration :</strong> (1) créer la tâche avec un fournisseur Git comme source ; (2) configurer le chemin du notebook principal sous la racine du dépôt.</li>
+<li><strong>Maintainability</strong> — les jobs plus petits sont plus faciles à comprendre, modifier et dépanner.</li>
+<li><strong>Reusability</strong> — les child jobs peuvent être réutilisés dans plusieurs workflows parents.</li>
+<li><strong>Team Collaboration</strong> — différentes équipes peuvent posséder différents modules tout en collaborant sur le workflow global.</li>
+<li><strong>Testing</strong> — les modules individuels peuvent être testés indépendamment, améliorant la qualité et réduisant le risque de déploiement.</li>
 </ul>
-<h4>Bonnes pratiques (synthèse en 3 axes)</h4>
+
+<h4>Jobs and Git</h4>
+<p>Jobs supporte l'<strong>exécution de notebooks depuis Git</strong> :</p>
 <ul>
-<li><strong>Orchestration & modularité :</strong> casser les pipelines complexes en jobs modulaires / run jobs ; multi-task jobs pour le parallélisme et la scalabilité ; logique conditionnelle (Run If, If/Else, For Each) ; limiter le nombre de tâches pour la maintenabilité (<strong>limite de 1000 tâches</strong>).</li>
-<li><strong>Monitoring & gouvernance :</strong> utiliser des <strong>service principals</strong> pour la propriété des jobs et l'accès aux données ; configurer des <strong>alertes</strong> (échecs, retards, complétions) ; tirer parti de <strong>Repair & Run</strong> ; <strong>paramétrer</strong> les tâches pour la réutilisabilité.</li>
-<li><strong>Compute & coût :</strong> en production, utiliser <strong>job ou serverless</strong> (éviter l'interactif) ; activer <strong>Photon</strong> ; <strong>réutiliser les clusters</strong> pour réduire temps de démarrage et coût.</li>
+<li>Cela <strong>évite les modifications involontaires de votre job de production</strong> — par exemple, quand un autre utilisateur fait des éditions locales dans un repo « Prod » ou change de branche.</li>
+<li>Cela <strong>simplifie le processus de définition du job</strong> en ayant une <strong>source unique de vérité</strong>.</li>
+<li>Cela <strong>facilite le déploiement</strong> des notebooks via <strong>CI/CD</strong>.</li>
+<li>Les utilisateurs peuvent se connecter à diverses plateformes Git : Databricks supporte <strong>GitHub, GitLab, AWS CodeCommit</strong> et d'autres fournisseurs Git.</li>
+</ul>
+<div class="demo"><span class="demo-label">Jobs and Git — étapes de configuration</span>
+<p><strong>1 — Create task with Git provider as Source :</strong> créez les tâches avec un fournisseur Git comme source, en spécifiant le dépôt, la branche/le tag et les identifiants d'authentification. Cela garantit que votre job exécute toujours la version <em>committée</em> de votre code.</p>
+<p><strong>2 — Configure path to main notebook under repository root :</strong> configurez le chemin vers votre notebook principal sous la racine du dépôt, afin que le job puisse localiser et exécuter le bon point d'entrée de votre workflow.</p>
+<p class="demo-note"><strong>Bonnes pratiques :</strong> utilisez des branches ou tags spécifiques pour la production plutôt que des branches principales en évolution constante ; mettez en place des processus de revue de code avant de fusionner vers les branches de production ; maintenez une documentation claire sur les dépôts et chemins contenant le code de production.</p>
+</div>
+<p><strong>Bénéfices de collaboration :</strong> plusieurs développeurs peuvent collaborer sur le développement de workflows en utilisant les workflows Git standards (branches, pull requests, revues de code) tout en maintenant la stabilité de la production.</p>`
+      },
+      {
+        id: "w2l16", title: "Best Practices — synthèse en 3 axes",
+        html: `
+<p>Voici les bonnes pratiques complètes qui garantissent le succès en production sur tous les aspects de l'implémentation de Lakeflow Jobs.</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>Compute &amp; Cost Optimization</h4><p>Use job or serverless clusters in production · Avoid interactive clusters for production workloads · Enable Photon for faster and cheaper execution · Reuse clusters to reduce startup time and cost</p></div>
+  <div class="mini-card"><h4>Orchestration &amp; Modularity</h4><p>Break complex pipelines into modular jobs/run jobs · Use multi-task jobs for parallel and scalable execution · Apply conditional logic using Run If, If/Else, For Each task · Limit jobs to manageable task counts for maintainability (Limited to 1000 task)</p></div>
+  <div class="mini-card"><h4>Monitoring &amp; Governance</h4><p>Use service principals for job ownership and data access · Configure alerts for failures, delays, and completions · Leverage Repair &amp; Run for reducing cost on re-processing · Parameterize tasks for reusability and flexibility</p></div>
+</div>
+
+<h4>Compute &amp; Cost Optimization Practices</h4>
+<ul>
+<li><strong>Production Compute</strong> — utilisez toujours des <strong>job clusters</strong> ou du <strong>compute serverless</strong> en production, pour garantir l'efficacité de coût et l'isolation des ressources.</li>
+<li><strong>Interactive Cluster Avoidance</strong> — réservez strictement les clusters interactifs au développement et à l'analyse ad-hoc, afin d'éviter les dépassements de coûts et les conflits de ressources en production.</li>
+<li><strong>Photon Enablement</strong> — activez l'accélération <strong>Photon</strong> sur toutes les charges éligibles pour des gains de performance significatifs et des réductions de coût.</li>
+<li><strong>Cluster Reuse</strong> — concevez les workflows pour <strong>réutiliser les clusters entre les tâches</strong> quand c'est possible, réduisant les frais de démarrage et améliorant l'efficacité de coût.</li>
+</ul>
+
+<h4>Orchestration &amp; Modularity Practices</h4>
+<ul>
+<li><strong>Modular Architecture</strong> — décomposez les pipelines complexes en modules logiques maintenables en utilisant le pattern de tâche <em>run job</em>, pour une meilleure maintenabilité et collaboration d'équipe.</li>
+<li><strong>Multi-Task Design</strong> — tirez parti des jobs multi-tâches pour l'exécution parallèle et une meilleure utilisation des ressources, tout en gardant la clarté du workflow.</li>
+<li><strong>Advanced Logic</strong> — implémentez une logique métier sophistiquée à l'aide des tâches <strong>Run If</strong>, <strong>If/Else</strong> et <strong>For Each</strong> pour gérer les scénarios complexes du monde réel.</li>
+<li><strong>Task Limitations</strong> — maintenez les jobs individuels sous <strong>1000 tâches</strong> pour préserver la gérabilité et la performance, en utilisant le design modulaire pour les workflows plus larges.</li>
+</ul>
+
+<h4>Monitoring &amp; Governance Practices</h4>
+<ul>
+<li><strong>Service Principal Usage</strong> — utilisez des <strong>service principals</strong> plutôt que des comptes personnels pour la propriété des jobs et l'accès aux données, afin de garantir la continuité et un contrôle d'accès approprié.</li>
+<li><strong>Comprehensive Alerting</strong> — configurez des alertes pour les <strong>échecs, retards et complétions</strong>, avec des stratégies d'escalade et de notification appropriées.</li>
+<li><strong>Recovery Optimization</strong> — tirez parti des capacités <strong>Repair &amp; Run</strong> pour minimiser les coûts et le temps de récupération lors de la gestion des échecs.</li>
+<li><strong>Parameterization</strong> — concevez les tâches avec un <strong>paramétrage</strong> approprié pour une réutilisabilité et une flexibilité maximales entre environnements et cas d'usage.</li>
 </ul>`
       }
     ]
