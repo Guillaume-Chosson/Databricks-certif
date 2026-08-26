@@ -3101,7 +3101,7 @@ dbutils.jobs.taskValues.get(
   {
     id: "w3", num: "W3", tier: "gold",
     title: "Lakeflow Spark Declarative Pipelines",
-    subtitle: "Construire des pipelines ETL batch/streaming déclaratifs : ST, MV, expectations, CDC.",
+    subtitle: "Construire des pipelines ETL batch/streaming déclaratifs : ST, MV, expectations, joins, production, CDC.",
     lessons: [
       {
         id: "w3l1", title: "Objectifs & prérequis du module",
@@ -3118,100 +3118,403 @@ dbutils.jobs.taskValues.get(
 </ul>
 <p><strong>Prérequis requis :</strong></p>
 <ul>
-<li><strong>Connaissance fondamentale de la plateforme :</strong> Workspaces, Apache Spark, Delta Lake & Médaillon, Unity Catalog.</li>
+<li><strong>Connaissance fondamentale de la plateforme :</strong> Workspaces, Apache Spark, Delta Lake &amp; Médaillon, Unity Catalog.</li>
 <li><strong>Ingestion de données brutes dans une table :</strong> familiarité avec l'ingestion via la fonction SQL <code>read_files</code> (CSV, JSON, TXT, Parquet).</li>
 <li><strong>Transformation SQL :</strong> requêtes de niveau intermédiaire et connaissances de base des jointures SQL.</li>
 </ul>
 <p><strong>Plan du cours (3 sections) :</strong> Introduction au Data Engineering dans Databricks ; Fondamentaux des Lakeflow Spark Declarative Pipelines ; Construction des Lakeflow Spark Declarative Pipelines.</p>`
       },
       {
-        id: "w3l2", title: "Qu'est-ce que SDP ?",
+        id: "w3l2", title: "Le Data Engineering dans Databricks — la pile Lakeflow",
         html: `
-<h4>Pourquoi c'est difficile</h4>
-<p>Construire et opérer des pipelines de données fiables demande de gérer une multitude de préoccupations en plus de la logique de transformation : <strong>gestion des dépendances, calcul des partitions, checkpointing & retries, gestion des backfills, contrôles qualité, gouvernance, découverte des données, version control, déploiement, infrastructure…</strong></p>
-<p>Conséquences typiques :</p>
+<p>Dans cette leçon, vous apprendrez comment Databricks permet un data engineering efficace grâce au <strong>stockage optimisé</strong>, à la <strong>gouvernance unifiée</strong> avec Unity Catalog, et aux outils intégrés de Lakeflow pour l'<strong>ingestion</strong>, la <strong>transformation</strong> et l'<strong>orchestration</strong> — en se concentrant sur la simplification et l'automatisation d'un ETL batch et streaming fiable avec les Lakeflow Declarative Pipelines.</p>
+<p>Tout commence par le <strong>stockage optimisé</strong> utilisant <strong>Delta Lake</strong>, <strong>Parquet</strong> ou <strong>Iceberg</strong>. Au-dessus de cette couche de stockage se trouve la <strong>gouvernance unifiée</strong> avec <strong>Unity Catalog</strong> — un catalogue de données centralisé qui fournit le contrôle d'accès, l'audit, le lignage des données, le monitoring de la qualité et la découverte des données à travers les workspaces Databricks.</p>
+<p>Databricks propose ensuite <strong>Lakeflow</strong>, une solution de data engineering <strong>de bout en bout</strong> qui permet aux data engineers, développeurs logiciels, développeurs SQL, analystes et data scientists de livrer des données de haute qualité pour l'analytique, l'IA et les applications opérationnelles en aval.</p>
+
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:16px;margin:0 0 14px">
+<div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.4px;color:#ff6a52;text-transform:uppercase;margin-bottom:4px">Lakeflow</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.8px;color:#8a97a8;text-transform:uppercase;margin-bottom:12px">Unified data engineering for the Data Intelligence Platform</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:9px">
+  <div style="background:#232c38;border:1px solid #2b3542;border-top:3px solid #ff4a2e;border-radius:7px;padding:11px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12.5px;color:#e8ecf2">CONNECT</div>
+    <div style="font-size:12px;color:#8a97a8;margin-top:5px">Efficient ingestion connectors</div>
+  </div>
+  <div style="background:#232c38;border:1px solid #2b3542;border-top:3px solid #e3b23c;border-radius:7px;padding:11px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12.5px;color:#e3b23c">SPARK DECLARATIVE PIPELINES</div>
+    <div style="font-size:11px;color:#6b7686;margin-top:2px">(Previously DLT)</div>
+    <div style="font-size:12px;color:#8a97a8;margin-top:5px">Accelerated ETL development</div>
+  </div>
+  <div style="background:#232c38;border:1px solid #2b3542;border-top:3px solid #ff4a2e;border-radius:7px;padding:11px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12.5px;color:#e8ecf2">JOBS</div>
+    <div style="font-size:11px;color:#6b7686;margin-top:2px">(Previously Workflows)</div>
+    <div style="font-size:12px;color:#8a97a8;margin-top:5px">Reliable orchestration for analytics and AI</div>
+  </div>
+</div>
+<div style="background:#232c38;border:1px solid #2b3542;border-radius:7px;padding:9px 12px;text-align:center;font-size:12.5px;color:#aeb9c7;margin-bottom:9px">
+  <strong style="color:#e8ecf2">INDUSTRY LEADING DATA PROCESSING ENGINE</strong><br/><span style="font-size:11.5px;color:#8a97a8">(Apache Spark + Structured Streaming)</span>
+</div>
+<div style="background:#232c38;border:1px solid #2b3542;border-radius:7px;padding:8px 12px;text-align:center;font-size:12.5px;color:#aeb9c7;margin-bottom:7px">UNIFIED GOVERNANCE</div>
+<div style="background:#232c38;border:1px solid #2b3542;border-radius:7px;padding:8px 12px;text-align:center;font-size:12.5px;color:#aeb9c7">OPTIMIZED STORAGE</div>
+</div>
+
+<h4>Les trois composants de Lakeflow</h4>
 <ul>
-<li><strong>Développement laborieux</strong> et pipelines lents/sources d'erreurs → retarde les produits data et l'impact métier.</li>
-<li><strong>Complexité opérationnelle</strong> → coûts élevés, downtime, gaspillage de ressources.</li>
-<li><strong>Batch et streaming en silos</strong> → flexibilité limitée, difficile et coûteux de s'adapter aux besoins de latence/coût/SLA.</li>
+<li><strong>Lakeflow Connect</strong> — un ensemble de connecteurs d'ingestion efficaces qui simplifient l'ingestion depuis des applications d'entreprise populaires, des bases de données, du stockage cloud, des bus de messages et des fichiers locaux.</li>
+<li><strong>Lakeflow Spark Declarative Pipelines</strong> — un framework pour construire des pipelines de données <strong>batch et streaming</strong> en SQL et Python, conçu pour accélérer le développement ETL.</li>
+<li><strong>Lakeflow Jobs</strong> — un outil d'automatisation de workflows pour Databricks qui orchestre les charges de traitement de données. Il permet la coordination de plusieurs tâches au sein de workflows complexes, autorisant la planification, l'optimisation et la gestion de processus répétables.</li>
 </ul>
-<h4>Ce qu'apporte SDP — « Reliable data pipelines made easy »</h4>
-<ul>
-<li><strong>Batch et streaming unifiés :</strong> les pipelines s'adaptent au quasi temps réel comme au batch, optimisant performance et coût.</li>
-<li><strong>Optimisation intelligente à l'échelle :</strong> scaling et récupération automatiques → fiabilité accrue, maintenance réduite.</li>
-<li><strong>Authoring simplifié :</strong> on déclare ingestion et transformations en SQL ou Python, et SDP gère le reste.</li>
-</ul>
-<h4>SDP dans le Médaillon & traitement incrémental</h4>
-<p>SDP simplifie l'ETL batch et streaming dans l'architecture Médaillon. Les sources (Lakeflow Connect, SaaS, stockage cloud, files d'attente comme Kafka/Pub-Sub/Kinesis, bases de données) alimentent Bronze → Silver → Gold.</p>
-<p><strong>Vue d'ensemble du traitement incrémental :</strong> source brute → Bronze (<em>streaming table</em>) → Silver (<em>streaming table</em>) → Gold (<em>materialized view</em>).</p>
-<ul>
-<li><strong>Run 1 :</strong> le fichier 1 est ingéré (append) en Bronze, transformé (append) en Silver, puis agrégé en Gold (materialized view), avec des optimisations natives sur serverless.</li>
-<li><strong>Run 2 :</strong> seules les <strong>nouvelles données</strong> (fichier 2) sont appendées et transformées ; le batch traite en mode <em>append</em> (planifié), le streaming en flux continu.</li>
-</ul>`
+<div class="callout"><strong>Périmètre de ce cours :</strong> simplifier l'ETL batch et streaming avec une <strong>fiabilité automatisée</strong>, des <strong>optimisations</strong> et une <strong>qualité de données intégrée</strong> grâce aux <strong>Lakeflow Spark Declarative Pipelines (SDP)</strong> !</div>`
       },
       {
-        id: "w3l3", title: "Types de datasets : ST, MV, Views",
+        id: "w3l3", title: "Qu'est-ce que Spark Declarative Pipelines ?",
         html: `
-<p>SDP manipule trois types de datasets selon la façon de traiter les données.</p>
-<h4>STREAMING TABLE (ST)</h4>
+<p>Dans cette leçon, vous apprendrez ce que sont les Lakeflow Spark Declarative Pipelines et comment créer des pipelines de données à l'aide du framework <strong>déclaratif low-code</strong> de Databricks, pour construire, gérer et automatiser des flux de données batch et streaming en <strong>SQL ou Python</strong>.</p>
+
+<h4>Il est difficile de construire et d'opérer des pipelines de données fiables</h4>
+<p>Vos data engineers veulent simplement se concentrer sur la transformation et l'agrégation des données — les mettre dans la bonne forme pour le métier. Mais avant cela :</p>
 <ul>
-<li>Table supportant le traitement <strong>incrémental ou streaming</strong> (<strong>exactly-once</strong> : chaque fichier lu une seule fois).</li>
-<li>À chaque rafraîchissement, les données ajoutées aux tables sources sont <strong>appendées</strong> à la streaming table.</li>
-<li>Code SQL : <code>CREATE OR REFRESH STREAMING TABLE</code>.</li>
-<li>En SQL, utiliser <code>FROM STREAM read_files()</code> pour invoquer Auto Loader (lectures streaming incrémentales + checkpoints).</li>
+<li>ils doivent déterminer <strong>où vivent les données</strong> — réparties entre le data lake et le data warehouse ;</li>
+<li>puis les rendre exploitables pour le <strong>reporting BI</strong>, la <strong>data science</strong> et le <strong>machine learning</strong> ;</li>
+<li>ils supportent des <strong>pipelines streaming</strong> pour de nouveaux cas d'usage, activent des projets d'<strong>IA générative</strong> et gèrent l'<strong>orchestration</strong> — tout cela en même temps ;</li>
+<li>et ce, avant même d'aborder le <strong>version control</strong>, la <strong>CI/CD</strong> et l'<strong>infrastructure de déploiement</strong> ;</li>
+<li>s'y ajoutent les <strong>contrôles de qualité</strong>, la <strong>gouvernance</strong> et la <strong>découverte des données</strong> — chacun avec sa propre complexité ;</li>
+<li>enfin, le travail opérationnel de fond : coder à la main les <strong>backfills</strong>, gérer les <strong>dépendances</strong>, les <strong>partitions</strong>, le <strong>checkpointing</strong>, les <strong>retries</strong>…</li>
 </ul>
-<h4>MATERIALIZED VIEW (MV)</h4>
-<ul>
-<li>À chaque mise à jour, les résultats de la requête sont <strong>recalculés</strong> pour refléter les changements des datasets amont.</li>
-<li>Créée et tenue à jour par le pipeline ; syntaxe <code>CREATE OR REFRESH MATERIALIZED VIEW</code>.</li>
-<li>Utilisable <strong>partout</strong> dans le pipeline (pas seulement en Gold).</li>
-<li>Quand c'est possible, les résultats sont <strong>rafraîchis de façon incrémentale</strong> (évite la reconstruction complète à l'arrivée de nouvelles données) — <strong>Serverless uniquement</strong>, via un optimiseur basé sur les coûts.</li>
-<li>Sert aux transformations, agrégations, pré-calcul de requêtes lentes, calculs fréquents.</li>
-</ul>
-<h4>VIEW & TEMPORARY VIEW</h4>
-<ul>
-<li>Construisent une <strong>table virtuelle sans données physiques</strong>, basée sur la requête.</li>
-<li><strong>TEMPORARY VIEW :</strong> persiste seulement sur la durée de vie du pipeline, privée au pipeline, <strong>non enregistrée dans Unity Catalog</strong> ; utile comme requête intermédiaire non exposée aux utilisateurs finaux. Syntaxe <code>CREATE TEMPORARY VIEW</code>.</li>
-<li><strong>VIEW :</strong> <strong>enregistrée comme objet dans Unity Catalog</strong> ; syntaxe <code>CREATE VIEW</code>. <em>Limitations :</em> le pipeline doit être un pipeline UC ; les views ne peuvent pas avoir de requêtes streaming ni servir de source streaming.</li>
-</ul>
-<div class="callout"><strong>Renommages depuis DLT</strong> (l'ancienne syntaxe reste supportée par compatibilité) :<br/>
-<code>CREATE OR REFRESH STREAMING LIVE TABLE</code> → <code>CREATE OR REFRESH STREAMING TABLE</code><br/>
-<code>CREATE OR REFRESH LIVE TABLE</code> → <code>CREATE OR REFRESH MATERIALIZED VIEW</code><br/>
-<code>CREATE LIVE VIEW</code> / <code>CREATE TEMPORARY LIVE VIEW</code> → <code>CREATE VIEW</code> / <code>CREATE TEMPORARY VIEW</code></div>`
+<svg viewBox="0 0 700 260" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>.cw{font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8}</style>
+  <rect x="14" y="12" width="150" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="89" y="29" text-anchor="middle" class="cw">Version Control</text>
+  <rect x="180" y="12" width="150" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="255" y="29" text-anchor="middle" class="cw">Deployment</text>
+  <rect x="346" y="12" width="150" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="421" y="29" text-anchor="middle" class="cw">Infrastructure</text>
+  <rect x="512" y="12" width="174" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="599" y="29" text-anchor="middle" class="cw">Orchestration</text>
+
+  <rect x="14" y="48" width="150" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="89" y="65" text-anchor="middle" class="cw">Quality Checks</text>
+  <rect x="180" y="48" width="150" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="255" y="65" text-anchor="middle" class="cw">Governance</text>
+  <rect x="346" y="48" width="150" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="421" y="65" text-anchor="middle" class="cw">Data Discovery</text>
+  <rect x="512" y="48" width="174" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="599" y="65" text-anchor="middle" class="cw">Backfill Handling</text>
+
+  <rect x="14" y="84" width="150" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="89" y="101" text-anchor="middle" class="cw">Dependency Management</text>
+  <rect x="180" y="84" width="150" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="255" y="101" text-anchor="middle" class="cw">Daily Partition Computation</text>
+  <rect x="346" y="84" width="150" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="421" y="101" text-anchor="middle" class="cw">Checkpointing &amp; Retries</text>
+  <rect x="512" y="84" width="174" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="599" y="101" text-anchor="middle" class="cw">Streaming</text>
+
+  <rect x="150" y="126" width="400" height="42" rx="7" fill="#ff4a2e"/>
+  <text x="350" y="152" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:14px;fill:#fff">[your transformation logic]</text>
+
+  <rect x="14" y="184" width="130" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="79" y="201" text-anchor="middle" class="cw">Data Lake</text>
+  <rect x="156" y="184" width="130" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="221" y="201" text-anchor="middle" class="cw">Data Warehouse</text>
+  <rect x="298" y="184" width="130" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="363" y="201" text-anchor="middle" class="cw">Data Science</text>
+  <rect x="440" y="184" width="112" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="496" y="201" text-anchor="middle" class="cw">Generative AI</text>
+  <rect x="564" y="184" width="122" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="625" y="201" text-anchor="middle" class="cw">BI</text>
+  <rect x="230" y="220" width="240" height="26" rx="5" fill="#232c38" stroke="#2b3542"/><text x="350" y="237" text-anchor="middle" class="cw">Machine Learning</text>
+</svg>
+<p>Tout cela alors que ce qui vous importe vraiment est simplement de <strong>livrer des données fiables</strong>.</p>
+
+<h4>Trois causes racines</h4>
+<div class="cards-3">
+  <div class="mini-card"><h4>Labor-Intensive Development</h4><p><strong>Slow &amp; Error-Prone Pipelines :</strong> retarde les produits data et les insights, ralentissant l'impact métier.</p></div>
+  <div class="mini-card"><h4>Operational Complexity</h4><p><strong>High Operational Costs :</strong> les inefficacités entraînent des interruptions, du travail ingrat d'ingénierie et du gaspillage de ressources.</p></div>
+  <div class="mini-card"><h4>Siloed Batch and Streaming</h4><p><strong>Limited Flexibility :</strong> s'adapter à l'évolution des besoins de latence, de coût et de SLA est laborieux et coûteux.</p></div>
+</div>
+
+<h4>SDP : « Reliable data pipelines made easy »</h4>
+<p>Avec les Lakeflow Spark Declarative Pipelines, laissez votre équipe se concentrer sur ce qui compte vraiment : <strong>écrire et gérer la logique de transformation</strong> ! Plus besoin de s'enliser dans l'orchestration, l'infrastructure ou les opérations de cas limites. Juste des pipelines de données propres et fiables, livrés avec moins d'effort et plus de confiance.</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>Simplified Pipeline Authoring</h4><p>Déclarez facilement l'ingestion et les transformations en <strong>SQL ou Python</strong>, et laissez SDP gérer le reste : plan d'exécution, gestion des erreurs et gestion des dépendances en coulisses.</p></div>
+  <div class="mini-card"><h4>Intelligent Optimization at Scale</h4><p><strong>Scaling et récupération automatiques</strong> améliorent la fiabilité et réduisent la maintenance. À mesure que les volumes croissent, moins d'interventions manuelles et moins de charge opérationnelle.</p></div>
+  <div class="mini-card"><h4>Unified Batch and Streaming</h4><p>Les pipelines s'adaptent sans couture aux charges <strong>quasi temps réel</strong> comme <strong>batch</strong>, optimisant performance et coût — sans gérer des systèmes séparés ni réécrire le code.</p></div>
+</div>
+
+<h4>Se connecter aux sources de données</h4>
+<p>Tout commence par faire entrer vos données dans Databricks, et c'est là que <strong>Lakeflow Connect</strong> joue un rôle crucial. Vous pouvez apporter des données depuis une variété de sources :</p>
+<svg viewBox="0 0 700 220" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w3ar1" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <style>.src{font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2}.srcs{font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8}</style>
+  <rect x="14" y="14" width="190" height="38" rx="6" fill="#232c38" stroke="#2b3542"/><text x="26" y="32" class="src">Cloud Storage</text><text x="26" y="45" class="srcs">(S3, ADLS, GCS)</text>
+  <rect x="14" y="60" width="190" height="38" rx="6" fill="#232c38" stroke="#2b3542"/><text x="26" y="78" class="src">Message Queues</text><text x="26" y="91" class="srcs">(Kafka, Pub/Sub, Kinesis, etc)</text>
+  <rect x="14" y="106" width="190" height="38" rx="6" fill="#232c38" stroke="#2b3542"/><text x="26" y="124" class="src">Databases</text><text x="26" y="137" class="srcs">(SQL Server, PostgreSQL, etc)</text>
+  <rect x="14" y="152" width="190" height="38" rx="6" fill="#232c38" stroke="#2b3542"/><text x="26" y="170" class="src">Software as a Service</text><text x="26" y="183" class="srcs">(Workday, Salesforce, etc)</text>
+
+  <rect x="224" y="14" width="90" height="176" rx="8" fill="#232c38" stroke="#ff4a2e" stroke-dasharray="4 3"/>
+  <text x="269" y="96" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;fill:#ff6a52">Lakeflow</text>
+  <text x="269" y="112" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;fill:#ff6a52">Connect</text>
+  <path d="M208 33 L 220 80 M208 79 L220 92 M208 125 L220 108 M208 171 L220 120" stroke="#8a97a8" stroke-width="1.2" fill="none" marker-end="url(#w3ar1)"/>
+
+  <rect x="336" y="14" width="352" height="176" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <text x="512" y="34" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:600;fill:#e3b23c">Spark Declarative Pipelines</text>
+  <rect x="356" y="86" width="90" height="40" rx="6" fill="#1c232d" stroke="#c77b3b"/><text x="401" y="111" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c77b3b">Bronze</text>
+  <rect x="466" y="86" width="90" height="40" rx="6" fill="#1c232d" stroke="#aeb9c7"/><text x="511" y="111" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#aeb9c7">Silver</text>
+  <rect x="576" y="86" width="90" height="40" rx="6" fill="#1c232d" stroke="#e3b23c"/><text x="621" y="111" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e3b23c">Gold</text>
+  <path d="M450 106 L 462 106 M560 106 L 572 106" stroke="#8a97a8" stroke-width="1.4" marker-end="url(#w3ar1)"/>
+  <path d="M318 102 L 332 102" stroke="#8a97a8" stroke-width="1.4" marker-end="url(#w3ar1)"/>
+</svg>
+<p>Que les données soient stockées dans des <strong>object stores cloud</strong> (S3, ADLS, GCS), diffusées depuis des <strong>files de messages</strong> (Kafka, Pub/Sub, Kinesis), extraites de <strong>bases de données traditionnelles</strong> (SQL Server, Postgres) ou provenant d'<strong>applications SaaS</strong> (Salesforce, Workday), Lakeflow Connect rend l'ingestion simple et fiable.</p>
+<p>Une fois les données connectées, les Spark Declarative Pipelines gèrent efficacement l'ingestion et la transformation. Cela permet de construire des pipelines suivant l'<strong>architecture Médaillon</strong>, faisant progresser les données à travers les couches bronze, silver et gold avec confiance en la fiabilité et la scalabilité.</p>`
       },
       {
-        id: "w3l4", title: "Créer des ST et MV en SQL",
+        id: "w3l4", title: "Simplifier l'ETL batch et streaming dans le Médaillon",
         html: `
-<h4>Streaming table Bronze (depuis des fichiers JSON)</h4>
+<p>Avec les Spark Declarative Pipelines, vous concentrez vos efforts ETL en ingérant les données par méthode <strong>batch</strong> ou <strong>streaming</strong> :</p>
+<ul>
+<li>L'<strong>ingestion batch</strong> est conçue pour de gros volumes de données qui arrivent en une seule fois.</li>
+<li>L'<strong>ingestion streaming</strong>, en revanche, gère des données qui arrivent en continu par petits incréments, permettant un traitement quasi temps réel.</li>
+</ul>
+<svg viewBox="0 0 700 210" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w3ar2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <text x="76" y="20" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;fill:#8a97a8">Ingest</text>
+  <text x="350" y="20" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;fill:#8a97a8">Data Processing and Transformation</text>
+  <text x="620" y="20" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;fill:#8a97a8">Consumers</text>
+
+  <rect x="14" y="48" width="124" height="44" rx="6" fill="#232c38" stroke="#2b3542"/><text x="76" y="75" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#e8ecf2">Batch</text>
+  <rect x="14" y="118" width="124" height="44" rx="6" fill="#232c38" stroke="#2b3542"/><text x="76" y="145" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#e8ecf2">Streaming</text>
+
+  <rect x="164" y="32" width="372" height="146" rx="8" fill="#232c38" stroke="#ff4a2e" stroke-dasharray="4 3"/>
+  <text x="350" y="48" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">Data Quality Levels →</text>
+  <rect x="182" y="62" width="104" height="96" rx="6" fill="#1c232d" stroke="#c77b3b"/>
+  <text x="234" y="84" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#c77b3b">Bronze</text>
+  <text x="234" y="112" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Raw Data</text>
+  <text x="234" y="126" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Ingestion</text>
+  <rect x="298" y="62" width="104" height="96" rx="6" fill="#1c232d" stroke="#aeb9c7"/>
+  <text x="350" y="84" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#aeb9c7">Silver</text>
+  <text x="350" y="112" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Cleaned</text>
+  <text x="350" y="126" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Data</text>
+  <rect x="414" y="62" width="104" height="96" rx="6" fill="#1c232d" stroke="#e3b23c"/>
+  <text x="466" y="84" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e3b23c">Gold</text>
+  <text x="466" y="112" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Business</text>
+  <text x="466" y="126" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Level Aggs</text>
+  <path d="M290 110 L 294 110 M406 110 L 410 110" stroke="#8a97a8" stroke-width="1.4" marker-end="url(#w3ar2)"/>
+  <path d="M142 70 L 178 90 M142 140 L 178 120" stroke="#8a97a8" stroke-width="1.4" fill="none" marker-end="url(#w3ar2)"/>
+
+  <rect x="562" y="42" width="124" height="34" rx="6" fill="#232c38" stroke="#2b3542"/><text x="624" y="63" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">BI &amp; Reporting</text>
+  <rect x="562" y="88" width="124" height="34" rx="6" fill="#232c38" stroke="#2b3542"/><text x="624" y="109" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">ML &amp; AI</text>
+  <rect x="562" y="134" width="124" height="34" rx="6" fill="#232c38" stroke="#2b3542"/><text x="624" y="150" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Streaming</text><text x="624" y="163" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Analytics</text>
+  <path d="M522 110 L 540 60 M522 110 L 558 105 M522 110 L 540 150" stroke="#8a97a8" stroke-width="1.2" fill="none" marker-end="url(#w3ar2)"/>
+</svg>
+<p>Une fois les données ingérées, vous suivez l'architecture Médaillon pour les organiser et les affiner :</p>
+<ul>
+<li><strong>Bronze</strong> est la couche d'ingestion de données brutes de votre lakehouse. Les données y sont apportées <strong>telles quelles</strong> (<em>as-is</em>), parfois avec des <strong>colonnes de métadonnées additionnelles</strong> pour fournir du contexte sur le processus d'ingestion.</li>
+<li><strong>Silver</strong> est l'endroit où se produisent le <strong>nettoyage et la transformation</strong>, transformant les données brutes en une table plus utilisable et raffinée.</li>
+<li><strong>Gold</strong> représente les <strong>agrégats de niveau métier</strong> finaux, conçus pour les cas d'usage en aval : reporting, machine learning, IA, streaming analytics, et plus.</li>
+</ul>
+<p>Cette approche structurée aide à garantir la qualité et l'utilisabilité des données à travers les besoins analytiques et opérationnels de votre organisation. Les Spark Declarative Pipelines rendent tout ce processus facile à créer, monitorer et optimiser.</p>
+
+<h4>Vue d'ensemble du traitement incrémental</h4>
+<p>Voyons à haut niveau comment les Declarative Pipelines rendent le traitement incrémental facile. <strong>C'est la raison fondamentale de les utiliser.</strong></p>
+<p>Vos données vivent au départ dans une ou plusieurs <strong>sources brutes</strong> — stockage cloud, bases de données, applications SaaS ou files de messages. De là, vous choisissez comment ingérer : <strong>batch</strong> (traitement planifié) ou <strong>streaming</strong> (flux continu). L'un des grands bénéfices est la flexibilité de <strong>basculer facilement entre ces modes</strong> si vos besoins changent.</p>
+<p>Typiquement, vous construisez un pipeline ETL bronze, silver et gold. Dans cet exemple simple, nous créons : une <strong>streaming table bronze</strong>, une <strong>streaming table silver</strong> et une <strong>materialized view gold</strong>.</p>
+
+<svg viewBox="0 0 700 300" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w3ar3" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <style>.lay{font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:600}.dt{font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8}.op{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#e3b23c}</style>
+  <text x="14" y="18" style="font-family:'Inter',sans-serif;font-size:10px;font-style:italic;fill:#8a97a8">Raw data source</text>
+  <text x="234" y="18" text-anchor="middle" class="lay" fill="#c77b3b">Bronze</text>
+  <text x="434" y="18" text-anchor="middle" class="lay" fill="#aeb9c7">Silver</text>
+  <text x="614" y="18" text-anchor="middle" class="lay" fill="#e3b23c">Gold</text>
+
+  <text x="14" y="40" style="font-family:'JetBrains Mono',monospace;font-size:10px;fill:#e3b23c">RUN 1</text>
+  <rect x="60" y="30" width="86" height="34" rx="5" fill="#232c38" stroke="#2272b4"/><text x="103" y="51" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">File 1</text>
+  <rect x="180" y="30" width="108" height="34" rx="5" fill="#232c38" stroke="#c77b3b"/><text x="234" y="51" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Streaming table</text>
+  <rect x="380" y="30" width="108" height="34" rx="5" fill="#232c38" stroke="#aeb9c7"/><text x="434" y="51" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Streaming table</text>
+  <rect x="560" y="30" width="108" height="34" rx="5" fill="#232c38" stroke="#e3b23c"/><text x="614" y="51" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Materialized View</text>
+  <path d="M150 47 L 176 47" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#w3ar3)"/>
+  <path d="M292 47 L 376 47" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#w3ar3)"/>
+  <path d="M492 47 L 556 47" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#w3ar3)"/>
+  <text x="163" y="42" text-anchor="middle" class="op">Append</text>
+  <text x="334" y="42" text-anchor="middle" class="op">Transform</text>
+  <text x="334" y="78" text-anchor="middle" class="op">Append</text>
+  <text x="524" y="78" text-anchor="middle" class="dt">Aggregations</text>
+
+  <line x1="14" y1="112" x2="686" y2="112" stroke="#2b3542"/>
+
+  <text x="14" y="146" style="font-family:'JetBrains Mono',monospace;font-size:10px;fill:#e3b23c">RUN 2</text>
+  <rect x="60" y="120" width="86" height="34" rx="5" fill="#232c38" stroke="#3fcf8e"/><text x="103" y="141" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#3fcf8e">File 2 (new)</text>
+  <rect x="180" y="120" width="108" height="34" rx="5" fill="#232c38" stroke="#c77b3b"/><text x="234" y="141" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Streaming table</text>
+  <rect x="380" y="120" width="108" height="34" rx="5" fill="#232c38" stroke="#aeb9c7"/><text x="434" y="141" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Streaming table</text>
+  <rect x="560" y="120" width="108" height="34" rx="5" fill="#232c38" stroke="#e3b23c"/><text x="614" y="141" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Materialized View</text>
+  <path d="M150 137 L 176 137" stroke="#3fcf8e" stroke-width="1.5" marker-end="url(#w3ar3)"/>
+  <path d="M292 137 L 376 137" stroke="#3fcf8e" stroke-width="1.5" marker-end="url(#w3ar3)"/>
+  <path d="M492 137 L 556 137" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#w3ar3)"/>
+  <text x="334" y="168" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#3fcf8e">nouvelles données seulement</text>
+  <text x="614" y="168" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">recalcul complet ou incrémental</text>
+
+  <rect x="14" y="190" width="200" height="52" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="26" y="209" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2"><tspan font-weight="600">Batch</tspan> : Scheduled Data</text>
+  <text x="26" y="222" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Processing</text>
+  <text x="26" y="236" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2"><tspan font-weight="600">Streaming</tspan> : Continuous Data Flow</text>
+  <rect x="234" y="190" width="230" height="52" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="349" y="212" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Aggregations and other queries</text>
+  <text x="349" y="226" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">from a streaming table</text>
+  <rect x="484" y="190" width="202" height="52" rx="6" fill="#232c38" stroke="#e3b23c"/>
+  <text x="585" y="212" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e3b23c">Built in optimizations</text>
+  <text x="585" y="226" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e3b23c">on Serverless</text>
+</svg>
+
+<h4>Run 1 — première exécution</h4>
+<ul>
+<li>Les données brutes sont ingérées depuis la source et <strong>appendées</strong> à la streaming table bronze.</li>
+<li>Le pipeline <strong>transforme</strong> les nouvelles données de la couche bronze selon votre logique de transformation et <strong>appende</strong> les résultats à la streaming table silver.</li>
+<li>Enfin, la <strong>materialized view</strong> traite les données au niveau gold. Selon divers facteurs, ce traitement peut être <strong>incrémental ou un full refresh</strong>, garantissant que vos données gold sont toujours à jour. Les materialized views contiennent une variété d'optimisations intégrées lorsqu'elles s'exécutent sur <strong>Serverless</strong>.</li>
+</ul>
+<h4>Run 2 — exécution suivante</h4>
+<ul>
+<li>Le pipeline utilise des <strong>checkpoints</strong> pour suivre quelles données ont déjà été ingérées et traitées (<strong>Auto Loader</strong>).</li>
+<li>Seules les <strong>nouvelles données</strong> sont ingérées de façon incrémentale et appendées à la streaming table bronze ; le pipeline <strong>ignore les données déjà traitées</strong> pour éviter la surcharge de traitement.</li>
+<li>Ensuite, seules les nouvelles données de la table bronze sont transformées de façon incrémentale et appendées à la streaming table silver, en ignorant ce qui a déjà été transformé au premier run.</li>
+<li>Enfin, la materialized view traite <strong>l'intégralité</strong> de la streaming table silver au niveau gold. Selon divers facteurs, ce traitement peut être incrémental ou un full refresh.</li>
+</ul>
+<div class="callout">Cette approche de traitement incrémental améliore l'efficacité en ne traitant que les <strong>nouvelles données non encore traitées</strong>. Elle évite le retraitement inutile des données existantes. Les materialized views ajoutent encore plus de valeur en fournissant des <strong>optimisations intégrées</strong>, rendant plus rapide et efficace l'agrégation ou l'interrogation des streaming tables.</div>
+
+<h4>Créer un Spark Declarative Pipeline</h4>
+<p>Il y a <strong>deux façons simples</strong> de démarrer :</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #ff4a2e;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#ff6a52;margin-bottom:6px">Méthode 1</div>
+<p style="font-size:13px;margin:0">Depuis n'importe où dans votre workspace, cliquez sur le bouton options (<strong>⋮</strong>) de la barre de navigation, puis :</p>
+<ul style="font-size:13px;margin:6px 0 0;padding-left:18px"><li>sélectionnez <strong>Create</strong> ;</li><li>choisissez <strong>ETL Pipeline</strong>.</li></ul>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #e3b23c;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e3b23c;margin-bottom:6px">Méthode 2</div>
+<p style="font-size:13px;margin:0">Allez directement à la section <strong>Jobs &amp; Pipelines</strong> dans la barre de navigation principale, puis :</p>
+<ul style="font-size:13px;margin:6px 0 0;padding-left:18px"><li>cliquez sur <strong>Create</strong> ;</li><li>sélectionnez <strong>ETL Pipeline</strong>.</li></ul>
+</div>
+</div>
+<p>Les deux chemins mènent au <strong>même flux de création de pipeline</strong>, où vous pouvez commencer à définir votre logique d'ingestion et de transformation en SQL ou Python.</p>`
+      },
+      {
+        id: "w3l5", title: "Vue d'ensemble du projet du cours",
+        html: `
+<p>Tout au long de ce cours, nous construisons ensemble un projet pratique avec les Lakeflow Spark Declarative Pipelines : un pipeline complet, modulaire et prêt pour la production, qui ingère, transforme, joint et agrège des données de commandes, de statuts et de clients depuis des fichiers JSON vers des tables et vues prêtes pour la production.</p>
+<p>Le projet commence avec des fichiers stockés dans le <strong>cloud storage</strong>. Pour ce cours, tous les fichiers seront au format <strong>JSON</strong>, mais gardez à l'esprit que Lakeflow supporte de nombreux types de fichiers dans les pipelines réels. Nous construirons <strong>trois flows au sein d'un même pipeline</strong>.</p>
+
+<svg viewBox="0 0 720 320" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w3ar4" markerWidth="6" markerHeight="6" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="#8a97a8"/></marker></defs>
+  <style>
+    .tb{font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:#fff}
+    .cp{font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8}
+    .gp{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:600;fill:#c9d3e0}
+  </style>
+  <text x="14" y="16" class="cp">Cloud Storage</text>
+  <rect x="14" y="22" width="76" height="266" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <rect x="24" y="52" width="56" height="40" rx="5" fill="#1c232d" stroke="#2b3542"/><text x="52" y="70" text-anchor="middle" class="cp">Orders</text><text x="52" y="82" text-anchor="middle" class="cp">JSON Files</text>
+  <rect x="24" y="134" width="56" height="40" rx="5" fill="#1c232d" stroke="#2b3542"/><text x="52" y="152" text-anchor="middle" class="cp">Status</text><text x="52" y="164" text-anchor="middle" class="cp">JSON Files</text>
+  <rect x="24" y="216" width="56" height="40" rx="5" fill="#1c232d" stroke="#2b3542"/><text x="52" y="234" text-anchor="middle" class="cp">Customers</text><text x="52" y="246" text-anchor="middle" class="cp">JSON Files</text>
+
+  <text x="112" y="52" class="cp">Streaming Table</text>
+  <rect x="112" y="58" width="104" height="24" rx="4" fill="#ff4a2e"/><text x="164" y="74" text-anchor="middle" class="tb">orders_bronze</text>
+  <text x="240" y="52" class="cp">Streaming Table</text>
+  <rect x="240" y="58" width="104" height="24" rx="4" fill="#ff4a2e"/><text x="292" y="74" text-anchor="middle" class="tb">orders_silver</text>
+  <path d="M94 72 L 108 70 M220 70 L 236 70" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#w3ar4)"/>
+
+  <text x="400" y="24" class="cp">Materialized View</text>
+  <rect x="400" y="30" width="120" height="24" rx="4" fill="#ff4a2e"/><text x="460" y="46" text-anchor="middle" class="tb">gold_orders_by_date</text>
+  <text x="460" y="66" text-anchor="middle" class="gp">Aggregation</text>
+  <path d="M348 66 L 396 46" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#w3ar4)"/>
+
+  <text x="112" y="134" class="cp">Streaming Table</text>
+  <rect x="112" y="140" width="104" height="24" rx="4" fill="#ff4a2e"/><text x="164" y="156" text-anchor="middle" class="tb">status_bronze</text>
+  <text x="240" y="134" class="cp">Streaming Table</text>
+  <rect x="240" y="140" width="104" height="24" rx="4" fill="#ff4a2e"/><text x="292" y="156" text-anchor="middle" class="tb">status_silver</text>
+  <path d="M94 154 L 108 152 M220 152 L 236 152" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#w3ar4)"/>
+
+  <text x="396" y="104" class="cp">Materialized View</text>
+  <rect x="396" y="110" width="124" height="24" rx="4" fill="#ff4a2e"/><text x="458" y="126" text-anchor="middle" class="tb">full_order_info_gold</text>
+  <text x="458" y="146" text-anchor="middle" class="gp">Join</text>
+  <path d="M348 78 L 392 118 M348 148 L 392 128" stroke="#8a97a8" stroke-width="1.2" fill="none" marker-end="url(#w3ar4)"/>
+
+  <text x="574" y="80" class="cp">Materialized View</text>
+  <rect x="574" y="86" width="120" height="24" rx="4" fill="#ff4a2e"/><text x="634" y="102" text-anchor="middle" class="tb">cancelled_orders</text>
+  <text x="634" y="122" text-anchor="middle" class="gp">Filtered MV</text>
+  <text x="574" y="146" class="cp">Materialized View</text>
+  <rect x="574" y="152" width="120" height="24" rx="4" fill="#ff4a2e"/><text x="634" y="168" text-anchor="middle" class="tb">delivered_orders</text>
+  <text x="634" y="188" text-anchor="middle" class="gp">Filtered MV</text>
+  <path d="M524 116 L 570 100 M524 124 L 570 162" stroke="#8a97a8" stroke-width="1.2" fill="none" marker-end="url(#w3ar4)"/>
+
+  <text x="396" y="204" text-anchor="middle" class="gp">Change Data Capture — SCD Type 1</text>
+  <rect x="112" y="212" width="580" height="76" rx="8" fill="#232c38" stroke="#2b3542" stroke-dasharray="4 3"/>
+  <text x="126" y="230" class="cp">Streaming Table</text>
+  <rect x="126" y="236" width="112" height="24" rx="4" fill="#ff4a2e"/><text x="182" y="252" text-anchor="middle" class="tb">customers_bronze</text>
+  <text x="262" y="230" class="cp">Streaming Table</text>
+  <rect x="262" y="236" width="140" height="24" rx="4" fill="#ff4a2e"/><text x="332" y="252" text-anchor="middle" class="tb">customers_bronze_clean</text>
+  <text x="428" y="230" class="cp">Streaming Table</text>
+  <rect x="428" y="236" width="136" height="24" rx="4" fill="#ff4a2e"/><text x="496" y="252" text-anchor="middle" class="tb">type1_customers_silver</text>
+  <path d="M94 236 L 122 246 M242 248 L 258 248 M406 248 L 424 248" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#w3ar4)"/>
+  <text x="496" y="272" text-anchor="middle" class="cp">Overwrite customer information in the table</text>
+  <text x="496" y="282" text-anchor="middle" class="cp">(inserts, updates and deletes)</text>
+</svg>
+
+<h4>Flow 1 : Orders</h4>
+<ul>
+<li>Ingère les fichiers JSON <em>orders</em> dans une streaming table <code>orders_bronze</code>.</li>
+<li>Transforme les données en une streaming table <code>orders_silver</code>.</li>
+<li>Crée la materialized view <code>gold_orders_by_date</code> résumant le <strong>nombre de commandes par date</strong>.</li>
+</ul>
+<h4>Flow 2 : Status</h4>
+<ul>
+<li>Ingère les fichiers JSON <em>status</em> dans une streaming table <code>status_bronze</code>.</li>
+<li>Transforme les données en une table <code>status_silver</code>.</li>
+<li><strong>Joint</strong> les tables orders et status pour créer la materialized view <code>full_order_info_gold</code>.</li>
+<li>Produit deux materialized views additionnelles :
+  <ul><li>une pour les commandes annulées — <code>cancelled_orders</code> ;</li><li>une pour les commandes livrées — <code>delivered_orders</code>.</li></ul>
+</li>
+</ul>
+<h4>Flow 3 : Customer Change Data Capture (CDC)</h4>
+<ul>
+<li>Ingère les fichiers JSON <em>customers</em> dans une table <code>customers_bronze</code>.</li>
+<li><strong>Nettoie</strong> les données dans une table bronze raffinée nommée <code>customers_bronze_clean</code>.</li>
+<li>Effectue le <strong>CDC</strong> pour suivre les changements de mise à jour de données dans la table <code>type1_customers_silver</code>.</li>
+</ul>
+<div class="callout">À la fin du cours, vous aurez une expérience pratique de la construction d'une architecture de pipeline <strong>complète, modulaire et prête pour la production</strong> avec les Spark Declarative Pipelines.</div>`
+      },
+      {
+        id: "w3l6", title: "Types de datasets : STREAMING TABLE",
+        html: `
+<p>Au sein des Declarative Pipelines, il y a <strong>trois principaux types de datasets</strong> avec lesquels vous travaillerez : les <strong>Streaming Tables (ST)</strong>, les <strong>Materialized Views (MV)</strong> et les <strong>Views</strong>. Commençons par les Streaming Tables.</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>STREAMING TABLE (ST)</h4><p>Une table avec support du traitement de données <strong>streaming ou incrémental</strong>, ne traitant que les <strong>nouvelles données</strong>.</p></div>
+  <div class="mini-card"><h4>MATERIALIZED VIEW (MV)</h4><p>Les enregistrements sont traités <em>selon les besoins</em> pour retourner des résultats exacts sur l'état courant des données.</p></div>
+  <div class="mini-card"><h4>VIEWS</h4><p>Construisent une <strong>table virtuelle sans données physiques</strong>, basée sur la requête dans vos Declarative Pipelines.</p></div>
+</div>
+<p>Les Streaming Tables sont conçues spécifiquement pour le traitement de données <strong>streaming ou incrémental</strong>. Cela signifie qu'elles ne traitent que les nouvelles données à mesure qu'elles arrivent, plutôt que de tout retraiter à chaque exécution du pipeline. Cette approche <strong>augmente significativement l'efficacité et diminue le coût</strong>, surtout avec de gros volumes ou des données fréquemment mises à jour.</p>
+
+<h4>STREAMING TABLE — vue d'ensemble</h4>
+<ul>
+<li>Support du <strong>batch ou du streaming</strong> pour le traitement incrémental des données (<strong>traitement exactly-once</strong> des fichiers).</li>
+<li>À chaque rafraîchissement d'une streaming table, les données ajoutées aux tables sources sont <strong>appendées</strong> à la streaming table — vous traitez toujours uniquement les données les plus récentes, sans duplication.</li>
+<li>Code SQL qui crée les streaming tables : <code>CREATE OR REFRESH STREAMING TABLE</code>.</li>
+<li>En SQL, vous <strong>devez utiliser <code>FROM STREAM read_files()</code></strong> pour invoquer la fonctionnalité <strong>Auto Loader</strong>, permettant les lectures streaming incrémentales et les <strong>checkpoints</strong>. Auto Loader suit automatiquement les nouveaux fichiers et assure une ingestion incrémentale fiable.</li>
+<li>Les <strong>noms de fichiers sont garantis d'être lus une seule fois</strong>, dans l'objectif de ne pas avoir de lectures dupliquées dans votre ingestion incrémentale.</li>
+</ul>
+
+<h4>Créer une STREAMING TABLE avec SQL — Bronze depuis des fichiers JSON</h4>
 <pre><code>CREATE OR REFRESH STREAMING TABLE 1_bronze_db.orders_bronze AS
-SELECT *,
-       current_timestamp() AS processing_time,
-       _metadata.file_name AS source_file
+SELECT
+  *,
+  current_timestamp() AS processing_time,
+  _metadata.file_name AS source_file
 FROM STREAM read_files(
   "/Volumes/dbacademy/ops/labuser/orders",
   format =&gt; 'JSON');</code></pre>
 <ul>
-<li>Le mot-clé <strong><code>STREAM</code></strong> indique d'utiliser une lecture streaming des fichiers source.</li>
-<li><code>read_files()</code> lit les fichiers d'un emplacement et renvoie des données tabulaires.</li>
-<li>Le <code>SELECT</code> choisit les colonnes à lire ; ici on ajoute aussi <code>processing_time</code> et <code>source_file</code>.</li>
-<li>Crée la streaming table <code>orders_bronze</code> dans le schéma <code>1_bronze_db</code> (catalogue par défaut).</li>
+<li>Crée une streaming table nommée <code>orders_bronze</code> dans le schéma <code>1_bronze_db</code>.</li>
+<li>La clause <code>SELECT</code> spécifie les colonnes à lire dans la streaming table depuis votre source de données.</li>
+<li>Le mot-clé <strong><code>STREAM</code></strong> indique d'utiliser une <strong>lecture streaming</strong> pour les fichiers source (JSON) — le pipeline traitera les nouveaux fichiers de façon incrémentale à mesure qu'ils arrivent.</li>
+<li>La fonction <code>read_files()</code> lit les fichiers sous un emplacement fourni et renvoie les données sous <strong>forme tabulaire</strong>.</li>
 </ul>
-<h4>Streaming table Silver (transformation depuis Bronze)</h4>
+<p><em>Note : la requête utilise le catalogue par défaut.</em> Cette configuration garantit que seules les nouvelles données sont traitées à chaque exécution, permettant une ingestion efficace et scalable directement depuis le stockage cloud.</p>
+
+<h4>Créer une STREAMING TABLE avec SQL — Silver depuis une ST bronze</h4>
 <pre><code>CREATE OR REFRESH STREAMING TABLE 2_silver_db.orders_silver AS
-SELECT order_id,
-       timestamp(order_timestamp) AS order_timestamp,
-       customer_id,
-       notifications
+SELECT
+  order_id,
+  timestamp(order_timestamp) AS order_timestamp,
+  customer_id,
+  notifications
 FROM STREAM 1_bronze_db.orders_bronze;</code></pre>
-<p>On utilise le mot-clé <code>STREAM</code> avec le nom de la streaming table source pour ne transformer que les <strong>nouvelles lignes</strong>.</p>
-<h4>Materialized view Gold (agrégation)</h4>
-<pre><code>CREATE OR REFRESH MATERIALIZED VIEW 3_gold_db.gold_orders_by_date AS
-SELECT date(order_timestamp) AS order_date,
-       count(*) AS total_daily_orders
-FROM 2_silver_db.orders_silver
-GROUP BY date(order_timestamp);</code></pre>
-<p>On référence la table source <strong>sans le mot-clé <code>STREAM</code></strong> ; quand c'est possible, la MV est rafraîchie de façon incrémentale.</p>
-<div class="callout"><strong>Dépendances automatiques :</strong> SDP parse les dépendances seul — l'<strong>ordre du code n'a pas d'importance</strong>. Il construit le graphe : Raw JSON → <code>orders_bronze</code> (ST) → <code>orders_silver</code> (ST) → <code>gold_orders_by_date</code> (MV).</div><div class="demo"><span class="demo-label">Exemple — pipeline Bronze→Silver→Gold (SQL)</span><p><strong>Bronze</strong> — ingestion incrémentale de JSON via Auto Loader, avec métadonnées et propriétés de table. <code>pipelines.reset.allowed = false</code> empêche un full refresh destructeur du bronze :</p><pre><code>CREATE OR REFRESH STREAMING TABLE 1_bronze_db.status_bronze_demo5
+<ul>
+<li>La clause <code>SELECT</code> est l'endroit où vous appliquez votre <strong>logique de transformation SQL</strong> sur les données streaming. Ici l'exemple reste simple, mais en pratique ces transformations peuvent inclure des jointures complexes, des filtres, des dérivations de colonnes, etc.</li>
+<li>Le plus important est la clause <code>FROM</code> : utilisez le mot-clé <strong><code>STREAM</code></strong> avec le nom de la <strong>STREAMING TABLE</strong> depuis laquelle vous lisez, afin de ne transformer que les <strong>nouvelles lignes</strong> arrivées dans la table bronze depuis la dernière exécution.</li>
+</ul>
+<p>Cette configuration garantit que votre table silver reste toujours à jour avec les dernières données traitées, sans retraiter ce qui a déjà été géré.</p>
+<div class="demo"><span class="demo-label">Exemple — Bronze et Silver avec propriétés et contraintes</span><p><strong>Bronze</strong> — ingestion incrémentale de JSON via Auto Loader, avec métadonnées et propriétés de table. <code>pipelines.reset.allowed = false</code> empêche un full refresh destructeur du bronze :</p><pre><code>CREATE OR REFRESH STREAMING TABLE 1_bronze_db.status_bronze_demo5
   COMMENT "Ingest raw JSON order status files from cloud storage"
   TBLPROPERTIES (
     "quality" = "bronze",
@@ -3239,59 +3542,343 @@ SELECT
 FROM STREAM 1_bronze_db.status_silver_demo5;</code></pre></div>`
       },
       {
-        id: "w3l5", title: "Développement simplifié & paramètres de pipeline",
+        id: "w3l7", title: "Types de datasets : MATERIALIZED VIEW",
         html: `
-<h4>Éditeur multi-fichiers (depuis le Data & AI Summit 2025)</h4>
-<p>On écrit du code en <code>.sql</code> ou <code>.py</code> (recommandé), ou en notebooks. Nouveautés :</p>
-<ol>
-<li>Navigateur d'assets du pipeline (<em>pipeline asset browser</em>) ;</li>
-<li>Éditeur de code multi-fichiers avec développement pas-à-pas ;</li>
-<li>Barres d'outils spécifiques au pipeline ;</li>
-<li>DAG interactif ;</li>
-<li>Aperçus de données (<em>data previews</em>) ;</li>
-<li>Panneaux d'insights d'exécution.</li>
-</ol>
-<p>Bénéfices : <strong>débogage plus facile</strong> et <strong>validation plus rapide avec le dry run</strong>.</p>
-<h4>Paramètres communs : Compute</h4>
+<p>Explorons maintenant les <strong>Materialized Views</strong>, ou MV, qui jouent un rôle clé dans votre pipeline.</p>
 <ul>
-<li><strong>Serverless</strong> (recommandé par Databricks) : optimise le coût tout en maintenant la performance ; permet de se concentrer sur le code plutôt que l'infrastructure ; option « Performance optimized » pour les jobs sensibles au temps ; inclut le <strong>rafraîchissement incrémental des MV</strong> (optimiseur basé coût).</li>
-<li><strong>Classic (taille fixe)</strong> avec <strong>autoscaling amélioré</strong> activé par défaut sur les nouveaux pipelines : optimise l'utilisation du cluster en allouant les ressources selon le volume de la charge. Les utilisateurs ont besoin de permissions pour créer du compute ; les admins du workspace peuvent configurer des <strong>cluster policies</strong>.</li>
+<li>Les enregistrements sont <strong>traités selon les besoins</strong> (<em>as required</em>) pour retourner des résultats exacts pour l'état courant des données. Les MV sont conçues pour maintenir automatiquement les résultats à jour à mesure que de nouvelles données circulent dans les tables amont.</li>
+<li>Utilisées pour des tâches de traitement de données telles que :
+  <ul>
+    <li>les <strong>transformations</strong> ;</li>
+    <li>les <strong>agrégations</strong> ;</li>
+    <li>le <strong>pré-calcul de requêtes lentes</strong> ou coûteuses ;</li>
+    <li>la mise en cache de <strong>calculs fréquemment utilisés</strong> pour un accès plus rapide.</li>
+  </ul>
+</li>
 </ul>
-<h4>Paramètres communs : Code Assets</h4>
-<p>La section <em>source code</em> référence les sous-dossiers/fichiers du pipeline (.py, .sql, notebooks). Le <strong>dossier racine du pipeline</strong> inclut automatiquement tous les fichiers pertinents (peut être un <strong>Git folder</strong>).</p>
-<h4>Paramètres communs : Configuration (parameters)</h4>
-<p>La configuration est une <strong>map clé-valeur</strong> pour paramétrer le code (lisibilité/maintenabilité, réutilisation entre fichiers/pipelines). En SQL, on référence la valeur d'une clé avec la syntaxe <code>\${key-name}</code> :</p>
-<pre><code>CREATE STREAMING TABLE bronze AS
-SELECT *
-FROM STREAM read_files("\${source}/orders", format =&gt; 'JSON');</code></pre>
-<p>Autres réglages explorés au fil du cours : pipeline settings, code assets, emplacement par défaut des data assets, compute, configuration, environnement, tags, budget, paramètres avancés.</p>`
+<p>En utilisant des MV, vous améliorez la performance et simplifiez la logique pour les consommateurs en aval — dashboards, modèles de machine learning, outils analytiques — puisque les données sont pré-calculées pour eux.</p>
+
+<h4>MATERIALIZED VIEW — vue d'ensemble</h4>
+<ul>
+<li>À chaque <strong>mise à jour</strong> d'une materialized view, les résultats de la requête sont <strong>recalculés</strong> pour refléter les changements dans les datasets amont.</li>
+<li><strong>Créée et tenue à jour par le pipeline</strong> — vous n'avez pas à gérer de logique de rafraîchissement manuelle.</li>
+<li>Utilisez la syntaxe <code>CREATE OR REFRESH MATERIALIZED VIEW</code>.</li>
+<li>Peut être utilisée <strong>n'importe où dans votre pipeline</strong>, pas seulement dans la couche gold — bien qu'elles y soient couramment utilisées, elles sont pertinentes partout où la performance et la réutilisabilité comptent.</li>
+<li>Le cas échéant, les résultats sont <strong>rafraîchis de façon incrémentale</strong>, évitant de reconstruire complètement la materialized view à l'arrivée de nouvelles données — <strong>Serverless uniquement</strong>.</li>
+<li>Le rafraîchissement incrémental des MV repose sur un <strong>optimiseur basé sur les coûts</strong> (<em>cost-based optimizer</em>) qui alimente des transformations rapides et efficaces sur compute Serverless. En coulisses, cet optimiseur détermine s'il faut rafraîchir incrémentalement ou recalculer entièrement la vue.</li>
+</ul>
+
+<h4>Créer une MATERIALIZED VIEW avec SQL — agrégation Gold</h4>
+<pre><code>CREATE OR REFRESH MATERIALIZED VIEW 3_gold_db.gold_orders_by_date AS
+SELECT
+  date(order_timestamp) AS order_date,
+  count(*) AS total_daily_orders
+FROM 2_silver_db.orders_silver
+GROUP BY date(order_timestamp);</code></pre>
+<ul>
+<li>Crée la materialized view <code>gold_orders_by_date</code> dans le schéma (base de données) <code>3_gold_db</code>, qui résume la table <code>orders_silver</code>.</li>
+<li>Spécifiez la table source <strong>sans le mot-clé <code>STREAM</code></strong> pour utiliser la STREAMING table source. C'est parce que les Materialized Views suivent automatiquement les changements et gèrent les rafraîchissements en se basant sur la streaming table amont.</li>
+<li><strong>NOTE :</strong> quand c'est possible, les requêtes seront <strong>rafraîchies de façon incrémentale</strong> plutôt que reconstruites de zéro. C'est supporté sur compute Serverless et piloté par un optimiseur basé sur les coûts.</li>
+</ul>
+<p><em>Note : la requête utilise le catalogue par défaut.</em> Cette approche est idéale pour créer des agrégations de couche gold ou des sorties prêtes pour le métier avec un minimum de surcharge et une haute performance.</p>`
       },
       {
-        id: "w3l6", title: "Qualité des données : Expectations",
+        id: "w3l8", title: "Types de datasets : VIEW & TEMPORARY VIEW, renommages et dépendances",
         html: `
-<p>Avec SDP, on applique des <strong>règles de qualité</strong> pour valider les lignes pendant l'ETL et obtenir des insights sur l'intégrité des données. Syntaxe générale :</p>
-<pre><code>CONSTRAINT &lt;constraint-name&gt; EXPECT (&lt;column condition&gt;) [ON VIOLATION &lt;action&gt;]</code></pre>
+<p>Parlons enfin des <strong>Views</strong> dans les Declarative Pipelines. Les views créent des <strong>tables virtuelles qui ne stockent aucune donnée physique</strong>. Ce sont simplement des représentations logiques basées sur la requête SQL définie dans votre pipeline. Il existe deux types de views avec lesquels vous travaillerez couramment : <strong>TEMPORARY VIEW</strong> et <strong>VIEW</strong>.</p>
+
+<h4>TEMPORARY VIEW — vue d'ensemble</h4>
+<ul>
+<li>Les temporary views ne sont <strong>persistées que sur la durée de vie du pipeline</strong> et sont <strong>privées au pipeline qui les définit</strong>.</li>
+<li>Elles <strong>ne sont pas enregistrées comme objet dans Unity Catalog</strong> — elles restent internes et isolées.</li>
+<li>Utilisez l'instruction <code>CREATE TEMPORARY VIEW</code>.</li>
+<li>Les TEMPORARY VIEWS sont utiles comme <strong>requêtes intermédiaires qui ne sont pas exposées aux utilisateurs finaux</strong> — ou à d'autres pipelines — mais qui supportent la logique de votre pipeline.</li>
+</ul>
+
+<h4>VIEW — vue d'ensemble</h4>
+<ul>
+<li>Construit une <strong>table virtuelle sans données physiques</strong> basée sur le result-set d'une requête SQL dans vos pipelines.</li>
+<li>Contrairement aux temporary views, elles <strong>sont enregistrées comme objet dans Unity Catalog</strong>, ce qui les rend disponibles et gérables dans tout votre environnement.</li>
+<li>Utilisez l'instruction <code>CREATE VIEW</code>.</li>
+</ul>
+<div class="callout"><strong>LIMITATIONS :</strong><br/>
+• Le pipeline <strong>doit être un pipeline Unity Catalog</strong> pour créer ces views.<br/>
+• Les views <strong>ne peuvent pas avoir de requêtes streaming</strong>, ni être utilisées comme <strong>source streaming</strong> pour un pipeline.</div>
+
+<h4>Renommages depuis DLT</h4>
+<p>Les utilisateurs existants de DLT remarqueront que les noms ont évolué. Les <strong>sémantiques restent les mêmes</strong>, et l'ancienne syntaxe reste supportée pour la compatibilité. L'objectif est de <strong>simplifier la syntaxe</strong> et de mieux s'aligner sur les autres systèmes et standards de l'industrie.</p>
 <table class="tbl">
-<thead><tr><th>Action</th><th>Exemple</th><th>Résultat</th></tr></thead>
+<thead><tr><th>Syntaxe actuelle</th><th>Deprecated (ancienne syntaxe DLT)</th></tr></thead>
 <tbody>
-<tr><td><strong>WARN</strong> (défaut)</td><td><code>CONSTRAINT valid_notification EXPECT (notifications IN ('Y','N'))</code></td><td>Les lignes invalides sont <strong>quand même écrites</strong> dans la cible ; les logs incluent le compte de valides vs invalides et d'autres métriques.</td></tr>
-<tr><td><strong>DROP</strong></td><td><code>CONSTRAINT valid_date EXPECT (order_timestamp &gt; "2021-01-01") ON VIOLATION DROP ROW</code></td><td>Les lignes invalides sont <strong>supprimées</strong> de la table ; le compte est journalisé avec les autres métriques.</td></tr>
-<tr><td><strong>FAIL</strong></td><td><code>CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION FAIL UPDATE</code></td><td>Provoque l'<strong>échec du flow</strong> concerné (sans faire échouer les autres flows du pipeline) ; <strong>intervention manuelle</strong> requise.</td></tr>
+<tr><td><code>CREATE OR REFRESH STREAMING TABLE</code></td><td><code>CREATE OR REFRESH STREAMING LIVE TABLE</code></td></tr>
+<tr><td><code>CREATE OR REFRESH MATERIALIZED VIEW</code></td><td><code>CREATE OR REFRESH LIVE TABLE</code></td></tr>
+<tr><td><code>CREATE VIEW</code> / <code>CREATE TEMPORARY VIEW</code></td><td><code>CREATE LIVE VIEW</code> / <code>CREATE TEMPORARY LIVE VIEW</code></td></tr>
 </tbody>
 </table>
-<h4>Exemple combiné</h4>
-<pre><code>CREATE OR REFRESH STREAMING TABLE 2_silver_db.orders_silver (
+
+<h4>Les dépendances du pipeline sont parsées automatiquement</h4>
+<p>Une des fonctionnalités puissantes des Declarative Pipelines est que <strong>les dépendances du pipeline sont automatiquement parsées</strong> : <strong>l'ordre du code n'est pas requis</strong>. Toutes les dépendances sont connectées en coulisses dans le <strong>Declarative Pipeline Graph</strong>, ce qui garantit que les données circulent correctement d'une étape à la suivante.</p>
+<svg viewBox="0 0 700 250" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w3ar5" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <style>.hd{font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8}.cd{font-family:'JetBrains Mono',monospace;font-size:6.5px;fill:#8a97a8}</style>
+  <text x="14" y="16" class="hd">Raw JSON -&gt; Bronze</text>
+  <text x="240" y="16" class="hd">Bronze -&gt; Silver</text>
+  <text x="466" y="16" class="hd">Silver -&gt; Materialized View</text>
+  <rect x="14" y="22" width="212" height="70" rx="5" fill="#0a0d11" stroke="#2b3542"/>
+  <text x="22" y="34" class="cd">CREATE OR REFRESH STREAMING TABLE</text>
+  <text x="22" y="44" class="cd">  1_bronze_db.orders_bronze AS</text>
+  <text x="22" y="54" class="cd">SELECT *, current_timestamp() ...</text>
+  <text x="22" y="64" class="cd">FROM STREAM read_files(</text>
+  <text x="22" y="74" class="cd">  "/Volumes/.../orders",</text>
+  <text x="22" y="84" class="cd">  format =&gt; 'JSON');</text>
+  <rect x="240" y="22" width="212" height="70" rx="5" fill="#0a0d11" stroke="#2b3542"/>
+  <text x="248" y="34" class="cd">CREATE OR REFRESH STREAMING TABLE</text>
+  <text x="248" y="44" class="cd">  2_silver_db.orders_silver AS</text>
+  <text x="248" y="54" class="cd">SELECT order_id,</text>
+  <text x="248" y="64" class="cd">  timestamp(order_timestamp) ...</text>
+  <text x="248" y="74" class="cd">FROM STREAM</text>
+  <text x="248" y="84" class="cd">  1_bronze_db.orders_bronze;</text>
+  <rect x="466" y="22" width="220" height="70" rx="5" fill="#0a0d11" stroke="#2b3542"/>
+  <text x="474" y="34" class="cd">CREATE OR REFRESH MATERIALIZED VIEW</text>
+  <text x="474" y="44" class="cd">  3_gold_db.gold_orders_by_date AS</text>
+  <text x="474" y="54" class="cd">SELECT date(order_timestamp) ...,</text>
+  <text x="474" y="64" class="cd">  count(*) AS total_daily_orders</text>
+  <text x="474" y="74" class="cd">FROM 2_silver_db.orders_silver</text>
+  <text x="474" y="84" class="cd">GROUP BY date(order_timestamp);</text>
+
+  <path d="M120 96 L 180 138" stroke="#ff6a52" stroke-width="1.3" fill="none" marker-end="url(#w3ar5)"/>
+  <path d="M346 96 L 388 138" stroke="#ff6a52" stroke-width="1.3" fill="none" marker-end="url(#w3ar5)"/>
+  <path d="M576 96 L 588 138" stroke="#ff6a52" stroke-width="1.3" fill="none" marker-end="url(#w3ar5)"/>
+
+  <rect x="14" y="120" width="86" height="80" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="57" y="150" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#c9d3e0">Batch</text>
+  <text x="57" y="178" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#c9d3e0">Streaming</text>
+
+  <text x="182" y="136" class="hd">Streaming table</text>
+  <rect x="130" y="144" width="140" height="32" rx="6" fill="#ff4a2e"/><text x="200" y="165" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;fill:#fff">orders_bronze</text>
+  <text x="390" y="136" class="hd">Streaming table</text>
+  <rect x="330" y="144" width="140" height="32" rx="6" fill="#ff4a2e"/><text x="400" y="165" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;fill:#fff">orders_silver</text>
+  <text x="576" y="136" class="hd">Materialized view</text>
+  <rect x="530" y="144" width="156" height="32" rx="6" fill="#ff4a2e"/><text x="608" y="165" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;fill:#fff">gold_orders_by_date</text>
+  <path d="M104 160 L 126 160 M274 160 L 326 160 M474 160 L 526 160" stroke="#ff6a52" stroke-width="1.6" marker-end="url(#w3ar5)"/>
+  <text x="350" y="220" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-style:italic;fill:#c9d3e0">Declarative Pipeline Graph</text>
+</svg>
+<ul>
+<li>La table <code>orders_bronze</code> ingère les données JSON brutes.</li>
+<li>La streaming table <code>orders_silver</code> est liée à <code>orders_bronze</code>, transformant les données ingérées de façon incrémentale.</li>
+<li>La materialized view <code>gold_orders_by_date</code> dépend de la streaming table <code>orders_silver</code>, agrégeant les données transformées pour l'usage métier en aval.</li>
+</ul>
+<p>Ce <strong>liage automatique</strong> simplifie le développement du pipeline et réduit les erreurs en supprimant le besoin de gérer manuellement l'ordre d'exécution. Il rend aussi facile la visualisation et le monitoring de votre pipeline et de ses dépendances, vous donnant une <strong>visibilité claire</strong> sur la façon dont les données circulent à travers chaque étape.</p>`
+      },
+      {
+        id: "w3l9", title: "Développement simplifié : l'éditeur multi-fichiers",
+        html: `
+<p>L'éditeur multi-fichiers des Lakeflow Spark Declarative Pipelines rend le développement et le débogage de vos pipelines ETL <strong>plus faciles et plus efficaces</strong>. Au lieu de gérer un seul gros fichier, votre pipeline est organisé comme un <strong>ensemble de fichiers</strong> visibles dans le pipeline assets browser, ce qui vous permet d'éditer le code et de configurer les composants du pipeline <strong>au même endroit</strong>.</p>
+<p><em>Nouveautés depuis le Data &amp; AI Summit 2025 :</em></p>
+<ol>
+<li><strong>Pipeline asset browser</strong> — naviguer facilement dans les fichiers du pipeline.</li>
+<li><strong>Multi-file code editor</strong> — un éditeur de code multi-fichiers avec des fonctionnalités pour le développement <strong>pas-à-pas</strong>.</li>
+<li><strong>Pipeline-specific toolbars</strong> — barres d'outils spécifiques au pipeline pour un accès rapide aux actions courantes.</li>
+<li><strong>Interactive DAG</strong> — un DAG (Directed Acyclic Graph) interactif pour visualiser les dépendances du pipeline.</li>
+<li><strong>Data previews</strong> — aperçus de données pour inspecter les résultats intermédiaires.</li>
+<li><strong>Execution insights panels</strong> — panneaux d'insights d'exécution pour monitorer les runs du pipeline.</li>
+</ol>
+<div class="cards-3">
+  <div class="mini-card"><h4>Easier debugging</h4><p>Débogage facilité avec des outils intégrés.</p></div>
+  <div class="mini-card"><h4>Faster validation with dry run</h4><p>Validation plus rapide grâce au <em>dry run</em> : vérifiez votre pipeline sans lancer d'exécution complète.</p></div>
+  <div class="mini-card"><h4>Formats de code</h4><p>Avec les Spark Declarative Pipelines, vous écrivez le code en fichiers <code>.sql</code> ou <code>.py</code> (<strong>recommandé</strong>), ou en <strong>notebooks</strong>.</p></div>
+</div>
+<p>Ces fonctionnalités rationalisent votre workflow et vous aident à construire des pipelines robustes plus rapidement.</p>`
+      },
+      {
+        id: "w3l10", title: "Paramètres communs d'un pipeline",
+        html: `
+<p>Les Declarative Pipelines viennent avec une variété de <strong>réglages</strong> que vous pouvez configurer facilement pour personnaliser le comportement de votre pipeline. Avec le nouvel éditeur multi-fichiers, accéder et éditer ces réglages est simple et intuitif : cliquez sur la petite <strong>icône d'engrenage</strong> dans la fenêtre de l'éditeur pour ouvrir rapidement la popup des paramètres du pipeline — sans quitter votre environnement de développement.</p>
+<p>Il existe de nombreux réglages personnalisables, mais les <strong>trois plus courants</strong> avec lesquels vous travaillerez sont :</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>Compute</h4><p>Choisir les ressources et l'environnement sur lesquels votre pipeline s'exécutera.</p></div>
+  <div class="mini-card"><h4>Code Assets</h4><p>Gérer les fichiers et modules de code qui composent votre pipeline.</p></div>
+  <div class="mini-card"><h4>Configuration (parameters)</h4><p>Définir des paramètres de pipeline pour contrôler dynamiquement le comportement pendant l'exécution.</p></div>
+</div>
+
+<h4>1 · Compute</h4>
+<table class="tbl">
+<thead><tr><th style="width:26%">Option</th><th>Détail</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>SERVERLESS</strong><br/><span style="color:#3fcf8e;font-size:12px">recommandé</span></td>
+  <td>
+    <ul style="margin:0;padding-left:18px">
+      <li><strong>Databricks recommande de développer les nouveaux pipelines en serverless</strong>, car cela simplifie la gestion du pipeline.</li>
+      <li><strong>Optimise le coût</strong> tout en maintenant la performance.</li>
+      <li>Vous permet de <strong>vous concentrer sur le code</strong> plutôt que de gérer l'infrastructure.</li>
+      <li>Réglage optionnel <strong>Serverless Performance optimized</strong> pour les charges sensibles au temps.</li>
+      <li>Le compute serverless inclut le <strong>rafraîchissement incrémental des materialized views</strong> : un <strong>optimiseur basé sur les coûts</strong> pour alimenter des transformations rapides et efficaces des MV sur compute Serverless.</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td><strong>CLASSIC</strong> (fixed size)</td>
+  <td>
+    <ul style="margin:0;padding-left:18px">
+      <li>Les utilisateurs ont besoin de la <strong>permission de créer du compute</strong> pour les Declarative Pipelines.</li>
+      <li>Les <strong>administrateurs du workspace</strong> peuvent configurer des <strong>cluster policies</strong> pour donner aux utilisateurs accès aux ressources de compute pour les Declarative Pipelines.</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td><strong>AUTOSCALING</strong></td>
+  <td>
+    <ul style="margin:0;padding-left:18px">
+      <li>L'<strong>enhanced autoscaling</strong> est <strong>activé par défaut</strong> pour tous les nouveaux pipelines.</li>
+      <li>Optimise l'utilisation du cluster en <strong>allouant automatiquement les ressources</strong> selon le volume de la charge de travail, aidant à maîtriser les coûts sans intervention manuelle.</li>
+    </ul>
+  </td>
+</tr>
+</tbody>
+</table>
+
+<h4>2 · Code Assets</h4>
+<p>Ce réglage contrôle quels fichiers de code votre pipeline utilise pendant l'exécution.</p>
+<ul>
+<li>Le <strong>Pipeline root folder</strong> inclut <strong>automatiquement</strong> tous les fichiers pertinents dans ce dossier pour le projet de pipeline (sauf spécification contraire de l'utilisateur). <strong>Ce peut être un Git folder</strong>, permettant un contrôle de version et une collaboration faciles.</li>
+<li>La section <strong>source code</strong> référence et inclut les <strong>sous-dossiers (ou fichiers)</strong> du pipeline : <code>.py</code>, <code>.sql</code>, notebooks — typiquement des sous-dossiers et fichiers au sein du dossier racine.</li>
+</ul>
+<p>Ensemble, ces réglages garantissent que votre pipeline s'exécute avec exactement le code dont il a besoin, organisé et versionné dans le cadre de votre projet.</p>
+
+<h4>3 · Configuration (parameters)</h4>
+<p>La configuration d'un pipeline est une <strong>map de paires clé-valeur</strong> qui peut être utilisée pour <strong>paramétrer votre code</strong> :</p>
+<ul>
+<li><strong>Améliore la lisibilité et la maintenabilité</strong> du code en centralisant les valeurs clés ;</li>
+<li>permet de <strong>réutiliser des paramètres communs dans plusieurs fichiers de pipeline</strong>, évitant de coder les valeurs en dur.</li>
+</ul>
+<p>Par exemple, vous pourriez avoir un paramètre appelé <code>source</code> qui pointe vers un chemin de volume spécifique. En SQL, on référence la valeur d'une clé en utilisant la syntaxe <code>\${key-name}</code>, qui insère dynamiquement la valeur à l'exécution :</p>
+<pre><code>CREATE STREAMING TABLE bronze AS
+SELECT *
+FROM STREAM read_files(
+  "\${source}/orders",
+  format =&gt; 'JSON');</code></pre>
+<p>Cela rend votre pipeline flexible et plus facile à mettre à jour sans changer le code à plusieurs endroits.</p>
+
+<h4>Autres réglages courants</h4>
+<p>Au-delà des réglages fondamentaux discutés, il existe plusieurs autres paramètres de pipeline que vous rencontrerez au fil du cours :</p>
+<table class="tbl">
+<thead><tr><th style="width:34%">Réglage</th><th>Rôle</th></tr></thead>
+<tbody>
+<tr><td><strong>Pipeline settings</strong></td><td>Comportement général et métadonnées du pipeline.</td></tr>
+<tr><td><strong>Code assets</strong></td><td>Gestion des fichiers de code du pipeline.</td></tr>
+<tr><td><strong>Default location for data assets</strong></td><td>Définit où les données sont stockées par défaut.</td></tr>
+<tr><td><strong>Compute</strong></td><td>Choisir votre environnement d'exécution.</td></tr>
+<tr><td><strong>Configuration</strong></td><td>Paramétrer le code de votre pipeline.</td></tr>
+<tr><td><strong>Environment</strong></td><td>Dépendances d'environnement — une dépendance est une ligne d'un fichier <em>pip requirements</em>.</td></tr>
+<tr><td><strong>Tags</strong></td><td>Organiser et catégoriser les pipelines pour une gestion facile.</td></tr>
+<tr><td><strong>Budget</strong></td><td>Définir des contrôles et limites de coût.</td></tr>
+<tr><td><strong>Advanced settings</strong></td><td>Options additionnelles pour affiner votre pipeline.</td></tr>
+</tbody>
+</table>`
+      },
+      {
+        id: "w3l11", title: "Qualité des données : les Expectations",
+        html: `
+<p>Dans cette leçon, vous apprendrez à créer et ajouter des <strong>expectations de qualité de données</strong> à vos pipelines, à les appliquer pour valider les données streaming, et à comprendre les actions disponibles pour gérer les enregistrements qui échouent aux contrôles de qualité.</p>
+<p>Avec les Lakeflow Spark Declarative Pipelines, vous pouvez appliquer des <strong>règles de qualité de données</strong> pour valider les lignes pendant les processus ETL et obtenir des insights sur l'intégrité des données, en utilisant la syntaxe suivante :</p>
+<pre><code>CONSTRAINT &lt;constraint-name&gt; EXPECT (&lt;column condition&gt;) [ON VIOLATION &lt;action&gt;]</code></pre>
+<p>Ces règles valident vos données <strong>ligne par ligne</strong>. Vous pouvez spécifier <strong>trois types d'actions</strong> quand une violation se produit :</p>
+<table class="tbl">
+<thead><tr><th style="width:12%">Action</th><th style="width:44%">Exemple de syntaxe SQL</th><th>Résultat</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>WARN</strong><br/><span style="color:#8a97a8;font-size:12px">(default)</span></td>
+  <td><code>CONSTRAINT valid_notification EXPECT (notifications IN ('Y','N'))</code></td>
+  <td><ul style="margin:0;padding-left:16px"><li>Les lignes invalides sont <strong>quand même écrites</strong> dans la cible.</li><li>Les logs incluent les <strong>comptes de valides vs invalides</strong> et d'autres métriques.</li></ul>Cela permet de monitorer la qualité sans arrêter le pipeline.</td>
+</tr>
+<tr>
+  <td><strong>DROP</strong></td>
+  <td><code>CONSTRAINT valid_date EXPECT (order_timestamp &gt; "2021-01-01") ON VIOLATION DROP ROW</code></td>
+  <td><ul style="margin:0;padding-left:16px"><li>Les lignes invalides sont <strong>écartées</strong> de la table.</li><li>Le <strong>compte est journalisé</strong> aux côtés des autres métriques, pour l'audit.</li></ul></td>
+</tr>
+<tr>
+  <td><strong>FAIL</strong></td>
+  <td><code>CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION FAIL UPDATE</code></td>
+  <td><ul style="margin:0;padding-left:16px"><li>Provoque l'<strong>échec d'un seul flow</strong> et <strong>ne fait pas échouer les autres flows</strong> de votre pipeline.</li><li>Une <strong>intervention manuelle est requise</strong>.</li></ul>Cela aide à détecter les problèmes critiques qui doivent être résolus avant de poursuivre.</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Exemple — ajouter des expectations de qualité</h4>
+<p>Créons une streaming table nommée <code>orders_silver</code> avec les trois contraintes :</p>
+<pre><code>CREATE OR REFRESH STREAMING TABLE 2_silver_db.orders_silver
+(
   CONSTRAINT valid_notifications EXPECT (notifications IN ('Y','N')),
-  CONSTRAINT valid_id            EXPECT (customer_id IS NOT NULL) ON VIOLATION DROP ROW,
-  CONSTRAINT valid_date          EXPECT (order_timestamp &gt; "2021-01-01") ON VIOLATION FAIL UPDATE
-) AS
-SELECT order_id,
-       timestamp(order_timestamp) AS order_timestamp,
-       customer_id,
-       notifications
+  CONSTRAINT valid_date EXPECT (order_timestamp &gt; "2021-01-01") ON VIOLATION FAIL UPDATE,
+  CONSTRAINT valid_id   EXPECT (customer_id IS NOT NULL) ON VIOLATION DROP ROW
+)
+AS
+SELECT
+  order_id,
+  timestamp(order_timestamp) AS order_timestamp,
+  customer_id,
+  notifications
 FROM STREAM 1_bronze_db.orders_bronze;</code></pre>
-<p>Pour chaque ligne, l'expectation décide : <strong>Pass</strong> → garder la ligne et continuer ; <strong>WARN</strong> → consigner en métrique ; <strong>DROP</strong> → écarter la ligne ; <strong>FAIL</strong> → faire échouer le flow.</p>
-<div class="callout">Depuis le Q2 2025, les <strong>materialized views</strong> qui utilisent des expectations sont <strong>toujours entièrement rafraîchies</strong>.</div><div class="demo"><span class="demo-label">Exemple — Expectations (3 niveaux d'action)</span><p>Les contraintes <code>EXPECT</code> définissent la politique sur violation : <strong>warn</strong> (par défaut, on garde la ligne), <strong>DROP ROW</strong> (on rejette la ligne), <strong>FAIL UPDATE</strong> (on échoue le flow) :</p><pre><code>CREATE STREAMING TABLE 1_bronze_db.customers_bronze_clean_demo6
+<ul>
+<li><strong>WARN</strong> (métrique) — <code>CONSTRAINT valid_notifications EXPECT (notifications IN ('Y','N'))</code></li>
+<li><strong>FAIL THE PIPELINE</strong> — <code>CONSTRAINT valid_date EXPECT (order_timestamp &gt; "2021-01-01") ON VIOLATION FAIL UPDATE</code></li>
+<li><strong>DROP the row</strong> — <code>CONSTRAINT valid_id EXPECT (customer_id IS NOT NULL) ON VIOLATION DROP ROW</code></li>
+</ul>
+
+<h4>Actions Overview — le parcours d'une ligne</h4>
+<svg viewBox="0 0 700 220" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="w3ar6" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker>
+    <marker id="w3ar7" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker>
+  </defs>
+  <rect x="14" y="86" width="96" height="30" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="62" y="106" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;font-style:italic;fill:#c9d3e0">Row of Data</text>
+  <path d="M114 101 L 146 101" stroke="#8a97a8" stroke-width="1.5" marker-end="url(#w3ar6)"/>
+  <rect x="150" y="56" width="130" height="92" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="215" y="82" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c9d3e0">Spark</text>
+  <text x="215" y="97" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c9d3e0">Declarative</text>
+  <text x="215" y="112" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c9d3e0">Pipeline</text>
+  <text x="215" y="128" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e8ecf2">Expectations</text>
+
+  <path d="M284 78 L 320 50 L 396 50" stroke="#8a97a8" stroke-width="1.5" fill="none" marker-end="url(#w3ar6)"/>
+  <text x="336" y="42" style="font-family:'Inter',sans-serif;font-size:10.5px;font-style:italic;fill:#c9d3e0">Pass</text>
+  <path d="M284 124 L 320 124" stroke="#ff6a52" stroke-width="1.5" fill="none"/>
+  <text x="336" y="120" style="font-family:'Inter',sans-serif;font-size:10.5px;font-style:italic;fill:#ff6a52">Fail</text>
+  <path d="M320 124 L 320 92 L 396 92 M320 124 L 396 124 M320 124 L 320 158 L 396 158" stroke="#ff6a52" stroke-width="1.5" fill="none" marker-end="url(#w3ar7)"/>
+
+  <rect x="400" y="38" width="110" height="26" rx="5" fill="#00a972"/><text x="455" y="55" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;fill:#0d1014">Keep the row</text>
+  <rect x="400" y="80" width="110" height="26" rx="5" fill="#e3b23c"/><text x="455" y="97" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;fill:#0d1014">WARN</text>
+  <rect x="400" y="112" width="110" height="26" rx="5" fill="#ff4a2e"/><text x="455" y="129" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;fill:#fff">DROP</text>
+  <rect x="400" y="146" width="110" height="26" rx="5" fill="#98102a"/><text x="455" y="163" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;fill:#fff">FAIL FLOW</text>
+  <path d="M455 80 L 455 68" stroke="#e3b23c" stroke-width="1.4" stroke-dasharray="3 2" marker-end="url(#w3ar6)"/>
+
+  <rect x="558" y="66" width="128" height="46" rx="6" fill="#00a972"/>
+  <text x="622" y="86" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;fill:#0d1014">Continue</text>
+  <text x="622" y="100" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;fill:#0d1014">processing data</text>
+  <path d="M514 51 L 622 51 L 622 62" stroke="#8a97a8" stroke-width="1.4" fill="none" marker-end="url(#w3ar6)"/>
+  <path d="M514 125 L 540 125 L 540 89 L 554 89" stroke="#ff6a52" stroke-width="1.4" fill="none" stroke-dasharray="4 3" marker-end="url(#w3ar7)"/>
+
+  <rect x="14" y="184" width="672" height="26" rx="5" fill="#232c38" stroke="#2272b4"/>
+  <text x="350" y="201" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">As of 2025Q2 materialized views that use <tspan font-weight="700">expectations</tspan> are <tspan font-weight="700">always fully refreshed</tspan></text>
+</svg>
+<p>Voici ce qui se passe étape par étape :</p>
+<ol>
+<li>Une <strong>ligne de données</strong> entre dans le pipeline.</li>
+<li>Cette ligne est <strong>évaluée</strong> contre les expectations (contraintes) définies.</li>
+</ol>
+<ul>
+<li>Si la ligne <strong>passe</strong> toutes les expectations, elle est <strong>conservée</strong> et le pipeline continue son traitement normalement.</li>
+<li>Si la ligne <strong>échoue</strong> à une expectation, l'action définie dans la contrainte détermine la suite :
+  <ul>
+    <li><strong>WARN</strong> (défaut) : l'échec est journalisé, la ligne est <strong>quand même incluse</strong>, et le pipeline continue.</li>
+    <li><strong>DROP</strong> : la ligne est <strong>écartée</strong>, mais le pipeline continue à traiter les données restantes.</li>
+    <li><strong>FAIL</strong> : le pipeline <strong>échoue immédiatement pour ce flow spécifique</strong> et une intervention manuelle est requise. Les autres flows ne sont pas affectés.</li>
+  </ul>
+</li>
+</ul>
+<div class="callout">Depuis le <strong>Q2 2025</strong>, toutes les <strong>materialized views qui utilisent des expectations</strong> seront <strong>toujours entièrement rafraîchies</strong> lors des exécutions du pipeline.</div>
+<div class="demo"><span class="demo-label">Exemple — Expectations (3 niveaux d'action)</span><p>Les contraintes <code>EXPECT</code> définissent la politique sur violation : <strong>warn</strong> (par défaut, on garde la ligne), <strong>DROP ROW</strong> (on rejette la ligne), <strong>FAIL UPDATE</strong> (on échoue le flow) :</p><pre><code>CREATE STREAMING TABLE 1_bronze_db.customers_bronze_clean_demo6
 (
   CONSTRAINT valid_id        EXPECT (customer_id IS NOT NULL) ON VIOLATION FAIL UPDATE,
   CONSTRAINT valid_operation EXPECT (operation  IS NOT NULL) ON VIOLATION DROP ROW,
@@ -3306,24 +3893,95 @@ SELECT *, CAST(from_unixtime(timestamp) AS timestamp) AS timestamp_datetime
 FROM STREAM 1_bronze_db.customers_bronze_raw_demo6;</code></pre></div>`
       },
       {
-        id: "w3l7", title: "Jointures en streaming",
+        id: "w3l12", title: "Vue d'ensemble des jointures en streaming",
         html: `
-<p>Trois schémas de jointure dans les pipelines.</p>
-<h4>1) Stream-Snapshot (ST ↔ table statique)</h4>
+<p>Dans cette leçon, vous apprendrez les fondamentaux des <strong>jointures streaming</strong> : comment réaliser des <strong>stream-snapshot joins</strong>, joindre des streaming tables à l'aide de <strong>materialized views</strong>, et exécuter des <strong>stream-stream joins</strong> pour combiner des données temps réel de plusieurs sources.</p>
+
+<h4>1 · Stream-Snapshot Join — Streaming Table vers Static Table</h4>
+<p><strong>L'objectif est de joindre de façon incrémentale les nouvelles données avec une table statique.</strong> Dans ce pattern, on joint incrémentalement les nouvelles données d'une streaming table à une <strong>table de lookup statique</strong> pour créer une autre streaming table.</p>
+<p>Par exemple, imaginez que vous ingérez un flux de transactions qui inclut une colonne <code>country_code</code>. Vous pouvez le joindre avec une table de référence statique qui associe chaque code au nom complet du pays. C'est utile quand vous voulez <strong>enrichir vos données streaming</strong> avec des informations de référence qui ne changent pas souvent.</p>
+<svg viewBox="0 0 700 200" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w3ar8" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <rect x="14" y="10" width="200" height="24" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="114" y="27" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2"><tspan font-weight="700">Streaming Table</tspan> to <tspan font-weight="700">Static Table</tspan></text>
+
+  <text x="140" y="58" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Streaming Table</text>
+  <rect x="76" y="64" width="128" height="76" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <rect x="86" y="72" width="108" height="8" rx="2" fill="#2272b4"/>
+  <rect x="86" y="84" width="108" height="8" rx="2" fill="#2272b4"/>
+  <rect x="86" y="96" width="108" height="8" rx="2" fill="#2272b4"/>
+  <text x="140" y="122" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#3fcf8e">Append</text>
+
+  <text x="350" y="58" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Joined Streaming Table</text>
+  <rect x="286" y="64" width="128" height="76" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <rect x="294" y="72" width="52" height="8" rx="2" fill="#2272b4"/><rect x="352" y="72" width="54" height="8" rx="2" fill="#00a972"/>
+  <rect x="294" y="84" width="52" height="8" rx="2" fill="#2272b4"/><rect x="352" y="84" width="54" height="8" rx="2" fill="#00a972"/>
+  <rect x="294" y="96" width="52" height="8" rx="2" fill="#2272b4"/><rect x="352" y="96" width="54" height="8" rx="2" fill="#00a972"/>
+
+  <text x="580" y="58" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Static Table</text>
+  <rect x="516" y="64" width="128" height="76" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <rect x="526" y="72" width="108" height="8" rx="2" fill="#00a972"/>
+  <rect x="526" y="84" width="108" height="8" rx="2" fill="#00a972"/>
+  <rect x="526" y="96" width="108" height="8" rx="2" fill="#00a972"/>
+  <rect x="526" y="108" width="108" height="8" rx="2" fill="#00a972"/>
+  <rect x="526" y="120" width="108" height="8" rx="2" fill="#00a972"/>
+
+  <path d="M208 90 L 282 90" stroke="#8a97a8" stroke-width="1.5" marker-end="url(#w3ar8)"/>
+  <path d="M512 100 L 460 100 L 460 88 L 418 88" stroke="#8a97a8" stroke-width="1.5" fill="none" marker-end="url(#w3ar8)"/>
+  <path d="M20 90 L 70 90" stroke="#2272b4" stroke-width="4" marker-end="url(#w3ar8)"/>
+
+  <rect x="120" y="160" width="470" height="30" rx="5" fill="#232c38" stroke="#2272b4"/>
+  <text x="355" y="179" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Only the <tspan font-weight="700">new data</tspan> in the streaming table JOINS using all of the <tspan font-weight="700">data in the lookup table</tspan></text>
+</svg>
 <ul>
-<li>Objectif : joindre de façon <strong>incrémentale</strong> les <em>nouvelles</em> données d'une streaming table avec l'<strong>intégralité</strong> d'une table de référence (lookup) statique.</li>
-<li>Seules les nouvelles données du flux sont jointes, en utilisant toutes les données de la table de lookup. Résultat : une streaming table jointe (append).</li>
+<li>À mesure que de nouvelles données arrivent dans votre streaming table, elles sont jointes <strong>en temps réel</strong> avec la table de référence statique.</li>
+<li>Chaque nouvel enregistrement de la streaming table est confronté à <strong>toutes les données disponibles</strong> dans la table statique, assurant une jointure complète et exacte à chaque fois.</li>
+<li>Le résultat de cette jointure est ensuite <strong>appendé</strong> à votre streaming table de sortie finale, poursuivant le flux du pipeline.</li>
+<li>Point clé : à mesure que de nouvelles données sont appendées à la streaming table source, <strong>seules les nouvelles lignes</strong> sont jointes avec l'intégralité de la table de lookup. C'est une <strong>jointure incrémentale</strong> : la table statique n'a pas besoin d'être retraitée, seules les données streaming entrantes sont évaluées.</li>
 </ul>
-<h4>2) ST + ST via Materialized View</h4>
+<p>C'est efficace, fiable, et cela fonctionne bien puisqu'<strong>un seul côté de la jointure</strong> — la streaming table — change au fil du temps. Excellent pattern pour enrichir des données streaming avec du contexte : convertir des codes pays, des IDs produits ou des rôles utilisateurs en formats lisibles.</p>
+
+<h4>2 · Joindre des Streaming Tables avec une Materialized View</h4>
+<p><strong>L'objectif est de prendre toutes les lignes de deux streaming tables et de les joindre ensemble à chaque exécution du pipeline.</strong> Ce type de jointure est typiquement utilisé quand <strong>les deux jeux de données d'entrée changent en continu</strong> et que vous devez les combiner régulièrement pour produire un résultat unifié et à jour.</p>
+<svg viewBox="0 0 700 200" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w3ar9" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <rect x="14" y="10" width="290" height="24" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="159" y="27" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2"><tspan font-weight="700">Streaming Table</tspan> to <tspan font-weight="700">Streaming Table</tspan> with a <tspan font-weight="700">Materialized View</tspan></text>
+
+  <text x="140" y="58" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Streaming Table</text>
+  <rect x="76" y="64" width="128" height="76" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <rect x="86" y="72" width="108" height="8" rx="2" fill="#2272b4"/>
+  <rect x="86" y="84" width="108" height="8" rx="2" fill="#2272b4"/>
+  <rect x="86" y="96" width="108" height="8" rx="2" fill="#2272b4"/>
+  <text x="140" y="122" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#3fcf8e">Append</text>
+
+  <text x="350" y="58" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e3b23c">Joined Materialized View</text>
+  <rect x="286" y="64" width="128" height="76" rx="6" fill="#232c38" stroke="#e3b23c"/>
+  <rect x="294" y="72" width="52" height="8" rx="2" fill="#2272b4"/><rect x="352" y="72" width="54" height="8" rx="2" fill="#00a972"/>
+  <rect x="294" y="84" width="52" height="8" rx="2" fill="#2272b4"/><rect x="352" y="84" width="54" height="8" rx="2" fill="#00a972"/>
+  <rect x="294" y="96" width="52" height="8" rx="2" fill="#2272b4"/><rect x="352" y="96" width="54" height="8" rx="2" fill="#00a972"/>
+
+  <text x="580" y="58" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Streaming Table</text>
+  <rect x="516" y="64" width="128" height="76" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <rect x="526" y="72" width="108" height="8" rx="2" fill="#00a972"/>
+  <rect x="526" y="84" width="108" height="8" rx="2" fill="#00a972"/>
+  <rect x="526" y="96" width="108" height="8" rx="2" fill="#00a972"/>
+  <text x="580" y="122" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#3fcf8e">Append</text>
+
+  <path d="M208 90 L 282 90" stroke="#8a97a8" stroke-width="1.5" marker-end="url(#w3ar9)"/>
+  <path d="M512 90 L 418 90" stroke="#8a97a8" stroke-width="1.5" marker-end="url(#w3ar9)"/>
+
+  <rect x="90" y="160" width="520" height="30" rx="5" fill="#232c38" stroke="#e3b23c"/>
+  <text x="350" y="179" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">The materialized view efficiently computes all the data in the streaming tables and joins the rows</text>
+</svg>
 <ul>
-<li>Objectif : prendre <strong>toutes les lignes de deux streaming tables</strong> et les joindre à chaque exécution du pipeline.</li>
-<li>La <strong>materialized view</strong> calcule efficacement toutes les données des streaming tables et joint les lignes ; à l'arrivée de nouvelles données, elle recalcule efficacement la jointure.</li>
+<li>À mesure que de nouvelles données sont appendées <strong>aux deux streaming tables</strong>, la materialized view détecte les changements et réagit en conséquence.</li>
+<li>À chaque exécution du pipeline, la materialized view <strong>calcule efficacement la jointure</strong> en traitant toutes les données courantes des deux streaming tables.</li>
+<li>Cela garantit que chaque nouvel enregistrement de l'un ou l'autre côté est correctement apparié, produisant une sortie complète et à jour.</li>
+<li>L'usage d'une materialized view permet à la jointure de <strong>passer à l'échelle efficacement</strong>, en tirant parti du <strong>rafraîchissement incrémental</strong> quand c'est possible pour éviter le recalcul inutile.</li>
 </ul>
-<h4>3) Stream-Stream</h4>
-<ul>
-<li>Objectif : joindre de façon <strong>incrémentale</strong> les nouvelles données de <strong>deux flux</strong> ; les données passées ne sont pas utilisées.</li>
-<li><em>Hors périmètre du cours</em> (voir le cours « Databricks Streaming and DLT (Advanced) »).</li>
-</ul><div class="demo"><span class="demo-label">Exemple — joindre deux ST via une Materialized View</span><p>Une façon de joindre deux streaming tables : une <strong>materialized view</strong> qui exécute un inner join complet. Noter que <strong>le mot-clé <code>STREAM</code> n'est pas utilisé</strong> quand on référence les ST dans la MV :</p><pre><code>CREATE OR REFRESH MATERIALIZED VIEW 3_gold_db.full_order_info_gold_demo5
+<p>Exemple : un flux contient l'activité client et un autre les mises à jour du catalogue produits. On peut les joindre via une materialized view pour enrichir les données d'activité avec les informations produit les plus récentes. Parce que <strong>les deux côtés sont streaming</strong>, une materialized view est <strong>requise</strong> pour gérer cette jointure efficacement et garder les résultats courants.</p>
+<div class="demo"><span class="demo-label">Exemple — joindre deux ST via une Materialized View</span><p>Une façon de joindre deux streaming tables : une <strong>materialized view</strong> qui exécute un inner join complet. Noter que <strong>le mot-clé <code>STREAM</code> n'est pas utilisé</strong> quand on référence les ST dans la MV :</p><pre><code>CREATE OR REFRESH MATERIALIZED VIEW 3_gold_db.full_order_info_gold_demo5
   COMMENT "Join orders + order status (tous les statuts par commande)"
   TBLPROPERTIES ("quality" = "gold")
 AS
@@ -3338,29 +3996,103 @@ AS
 SELECT order_id, order_timestamp, order_status, order_status_timestamp,
   datediff(DAY, order_timestamp, order_status_timestamp) AS days_to_cancel
 FROM 3_gold_db.full_order_info_gold_demo5
-WHERE order_status = 'canceled';</code></pre></div>`
+WHERE order_status = 'canceled';</code></pre></div>
+
+<h4>3 · Incremental Stream to Stream Joins</h4>
+<div class="callout"><strong>Hors du périmètre du cours</strong> (<em>Outside the scope of the course</em>) — voir le cours <em>Databricks Streaming and DLT (Advanced)</em>.</div>
+<p><strong>L'objectif est de joindre de façon incrémentale les nouvelles données de deux tables ; les données passées ne sont pas utilisées.</strong> Le dernier type de jointure streaming est le <strong>stream-stream join</strong>, conçu pour joindre incrémentalement les nouvelles données de deux streaming tables à mesure qu'elles arrivent. Dans ce pattern, seules les nouvelles données entrantes de chaque flux sont jointes ; les données passées ne sont pas considérées à chaque exécution.</p>
+<p>Ces jointures sont utiles pour détecter des relations entre des événements qui se produisent <strong>proches dans le temps</strong>, comme joindre des données de clickstream avec des impressions publicitaires temps réel. Cependant, parce que les stream-stream joins impliquent souvent de la <strong>logique de fenêtrage</strong> (<em>windowing</em>), du <strong>watermarking</strong> et d'autres concepts streaming avancés, ils sont hors du périmètre de ce cours.</p>`
       },
       {
-        id: "w3l8", title: "Déployer un pipeline en production",
+        id: "w3l13", title: "Déployer un pipeline en production",
         html: `
-<p>Trois tâches de production courantes : <strong>planifier</strong> le pipeline, configurer les <strong>notifications email</strong>, <strong>monitorer</strong> via l'event log.</p>
-<h4>Scheduling — modes de déclenchement</h4>
-<ul>
-<li><strong>Triggered :</strong> rafraîchit les tables sélectionnées avec les données disponibles au démarrage, puis <strong>s'arrête</strong> une fois la mise à jour terminée. Déclenchable manuellement ou planifié.</li>
-<li><strong>Continuous :</strong> traite en <strong>continu</strong> les nouvelles données pour maintenir streaming tables et materialized views quasi à jour en temps réel ; surveille les dépendances et ne met à jour que quand la source change.</li>
+<p>Dans cette leçon, vous apprendrez les tâches courantes impliquées dans le déploiement d'un pipeline en production, en vous concentrant sur les bonnes pratiques opérationnelles et les exigences pour des environnements de traitement de données de qualité production.</p>
+<p>À ce stade du projet, nous avons complété le premier flow du pipeline — <strong>Orders Flow</strong> : fichiers JSON orders → <code>orders_bronze</code> → <code>orders_silver</code> → <code>gold_orders_by_date</code>. Nous sommes prêts à ajouter le second flow, le <strong>Status flow</strong> :</p>
+<ol>
+<li>Ingérer les fichiers JSON status vers la streaming table <code>status_bronze</code>.</li>
+<li>Transformer la streaming table bronze en streaming table <code>status_silver</code>.</li>
+<li><strong>Joindre</strong> <code>status_silver</code> avec <code>orders_silver</code> pour créer une nouvelle materialized view : <code>full_order_info_gold</code>.</li>
+<li>À partir de là, construire deux materialized views additionnelles :
+  <ul><li><code>cancelled_orders</code></li><li><code>delivered_orders</code></li></ul>
+</li>
+</ol>
+<p>Ce flow nous donne une <strong>vision riche des états du cycle de vie des commandes</strong> et démontre comment joindre des flows ensemble et brancher la logique pour de l'analytique plus avancée. Une fois le Status Flow terminé, l'étape suivante est de faire passer le pipeline du <strong>développement à la production</strong>.</p>
+
+<h4>Common Production Tasks</h4>
+<p>Quand vous êtes prêt à déplacer votre Lakeflow Spark Declarative Pipeline en production, il y a des <strong>tâches opérationnelles clés</strong> pour garantir qu'il soit fiable, automatisé et monitoré :</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>Scheduling</h4><p>Définir une planification pour l'exécution automatique (par ex. toutes les 15 minutes, horaire, quotidienne, continue). Cela garantit que vos données sont rafraîchies régulièrement sans déclencheur manuel.</p></div>
+  <div class="mini-card"><h4>Email Notifications</h4><p>Configurer les notifications email pour tenir les parties prenantes informées de l'activité du pipeline.</p></div>
+  <div class="mini-card"><h4>Monitor pipelines</h4><p>Utiliser l'<strong>Event Log</strong> pour consulter les informations détaillées d'exécution : statut, comptes de lignes, erreurs, avertissements et métriques de performance.</p></div>
+</div>
+
+<h4>1 · Scheduling — deux modes de déclenchement</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #ff4a2e;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#ff6a52;margin-bottom:6px">Triggered</div>
+<ul style="font-size:13px;margin:0;padding-left:18px">
+<li>Peut être déclenché <strong>manuellement</strong> ou s'exécuter <strong>sur une planification</strong> récurrente.</li>
+<li><strong>Rafraîchit les tables sélectionnées</strong> en utilisant les données disponibles au démarrage de l'exécution, puis <strong>s'arrête</strong> une fois la mise à jour terminée.</li>
+<li>Idéal pour le <strong>traitement batch</strong> ou les pipelines qui n'ont pas besoin de tourner en permanence.</li>
 </ul>
-<h4>Email Notifications</h4>
-<p>On peut configurer des notifications email lors de la planification du pipeline.</p>
-<h4>Monitoring — Event Log</h4>
-<p>L'<strong>event log</strong> du pipeline capture toutes les informations clés :</p>
-<ul>
-<li><strong>Logs d'audit</strong></li>
-<li><strong>Contrôles de qualité</strong> (data quality checks)</li>
-<li><strong>Progression du pipeline</strong></li>
-<li><strong>Data lineage</strong></li>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #3fcf8e;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#3fcf8e;margin-bottom:6px">Continuous</div>
+<ul style="font-size:13px;margin:0;padding-left:18px">
+<li>Traite <strong>en continu</strong> les nouvelles données pour maintenir les streaming tables et materialized views à jour en <strong>quasi temps réel</strong>.</li>
+<li><strong>Surveille les dépendances</strong> et ne met à jour que <strong>quand les données source changent</strong>.</li>
+<li>Le mieux adapté aux cas d'usage <strong>streaming</strong> où la fraîcheur et la réactivité sont critiques.</li>
 </ul>
-<p>Par <strong>défaut</strong>, l'event log est écrit comme <strong>table Delta cachée</strong>, située dans le catalogue/schéma par défaut du pipeline. Via les paramètres avancés, on peut le <strong>publier</strong> comme table Delta (spécifier catalogue, schéma, nom de table), puis l'interroger :</p>
-<pre><code>SELECT * FROM &lt;catalog&gt;.&lt;schema&gt;.&lt;event_log_table_name&gt;;</code></pre><div class="demo"><span class="demo-label">Exemple — analyser la qualité via l'event log</span><p>L'event log expose les résultats des expectations. On explose le JSON <code>flow_progress</code> pour compter lignes passées/échouées par dataset et par contrainte :</p><pre><code>CREATE OR REPLACE TEMPORARY VIEW dq_source_vw AS
+</div>
+</div>
+
+<h4>2 · Email Notifications</h4>
+<p>Dans le cadre de la planification de votre pipeline, vous pouvez aussi configurer des <strong>notifications email</strong> pour tenir les parties prenantes informées. Vous disposez d'options flexibles quant au moment de déclencher les notifications. Vous pouvez choisir de recevoir un email :</p>
+<ul>
+<li>quand le pipeline <strong>démarre</strong> ;</li>
+<li>quand le pipeline <strong>réussit</strong> ;</li>
+<li>quand le pipeline <strong>échoue</strong> ;</li>
+<li>ou pour <strong>n'importe quelle combinaison</strong> des trois événements.</li>
+</ul>
+<p>C'est un moyen simple mais puissant de rester informé de la santé et du statut de votre pipeline sans avoir à vérifier constamment l'UI. C'est particulièrement utile pour les pipelines de production, afin d'être rapidement alerté des problèmes ou de confirmer que tout s'est bien déroulé.</p>
+
+<h4>3 · Monitor pipelines — l'Event Log</h4>
+<p>Les Spark Declarative Pipelines fournissent un <strong>pipeline event log</strong> qui capture toutes les informations clés du pipeline :</p>
+<table class="tbl">
+<thead><tr><th style="width:28%">Contenu</th><th>Ce que cela apporte</th></tr></thead>
+<tbody>
+<tr><td><strong>Audit logs</strong></td><td>Suivre qui a fait quoi et quand au sein du pipeline.</td></tr>
+<tr><td><strong>Data Quality Checks</strong></td><td>Monitorer les résultats des expectations ou contraintes appliquées pendant le traitement.</td></tr>
+<tr><td><strong>Pipeline Progress</strong></td><td>Voir le statut et la progression de chaque exécution du pipeline.</td></tr>
+<tr><td><strong>Data Lineage</strong></td><td>Comprendre comment les données circulent et se transforment à travers les étapes du pipeline.</td></tr>
+</tbody>
+</table>
+<p>Cet event log complet vous aide à <strong>diagnostiquer rapidement les problèmes</strong>, garantir l'intégrité des données et maintenir une visibilité totale sur les opérations de votre pipeline.</p>
+
+<h4>Interroger l'event log du pipeline</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #e3b23c;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e3b23c;margin-bottom:6px">Publier l'event log comme table Delta</div>
+<ul style="font-size:13px;margin:0;padding-left:18px">
+<li>Publier l'event log comme <strong>table Delta</strong> via les <strong>advanced settings</strong> :
+  <ul><li>spécifier l'emplacement de la table (<strong>catalogue, schéma</strong>) ;</li><li>définir le <strong>nom de la table</strong>.</li></ul>
+</li>
+</ul>
+<p style="font-size:13px;margin:8px 0 0">Cela se fait en activant l'option « <strong>Publish event log to metastore</strong> » dans la section <em>Advanced</em> de la configuration du pipeline.</p>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #8a97a8;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#aeb9c7;margin-bottom:6px">(DEFAULT) Table Delta cachée</div>
+<ul style="font-size:13px;margin:0;padding-left:18px">
+<li>Par <strong>défaut</strong>, l'Event Log est écrit comme une <strong>table Delta cachée</strong>.</li>
+<li>Située dans le <strong>catalogue et schéma par défaut du pipeline</strong>.</li>
+<li>Consulter la documentation « query the event log » pour accéder à l'event log caché.</li>
+</ul>
+</div>
+</div>
+<pre><code>-- Query the pipeline event log table
+SELECT * FROM &lt;catalog&gt;.&lt;schema&gt;.&lt;event_log_table_name&gt;;</code></pre>
+<p>Une fois publié, vous pouvez interroger l'event log comme n'importe quelle autre table Delta, ce qui vous permet de construire des <strong>rapports personnalisés</strong>, des <strong>dashboards</strong> ou de réaliser des analyses plus poussées sur l'activité et la santé du pipeline.</p>
+<div class="demo"><span class="demo-label">Exemple — analyser la qualité via l'event log</span><p>L'event log expose les résultats des expectations. On explose le JSON <code>flow_progress</code> pour compter lignes passées/échouées par dataset et par contrainte :</p><pre><code>CREATE OR REPLACE TEMPORARY VIEW dq_source_vw AS
 SELECT explode(
     from_json(details:flow_progress:data_quality:expectations,
       "array&lt;struct&lt;name: string, dataset: string, passed_records: int, failed_records: int&gt;&gt;")
@@ -3375,33 +4107,135 @@ SELECT
   SUM(row_expectations.failed_records) AS warnings_records
 FROM dq_source_vw
 GROUP BY row_expectations.dataset, row_expectations.name
-ORDER BY dataset;</code></pre></div>`
+ORDER BY dataset;</code></pre></div>
+<div class="callout">Avec ces étapes — <strong>planification</strong>, <strong>notifications</strong> et <strong>monitoring</strong> — votre pipeline sera <strong>entièrement prêt pour la production</strong> : automatisé, monitoré et fiable.</div>`
       },
       {
-        id: "w3l9", title: "Change Data Capture (CDC) & SCD",
+        id: "w3l14", title: "Change Data Capture (CDC) & Slowly Changing Dimensions",
         html: `
-<h4>Qu'est-ce que le CDC ?</h4>
-<p>Le <strong>Change Data Capture (CDC)</strong> est une technique pour <strong>suivre et capturer les changements</strong> dans une source (base de données, lakehouse, data warehouse) — <strong>INSERTS, UPDATES, DELETES</strong> — puis appliquer ces changements dans le lakehouse/data warehouse. La table source des changements doit actuellement être une <strong>streaming table</strong> ; la table cible reçoit les changements appliqués.</p>
-<p>Le CDC se catégorise en types de <strong>Slowly Changing Dimensions (SCD)</strong> selon la gestion de l'historique.</p>
-<h4>SCD Type 1 (écrasement)</h4>
+<p>Dans cette leçon, vous apprendrez les fondamentaux du <strong>Change Data Capture (CDC)</strong> : ce que c'est et comment implémenter les <strong>Slowly Changing Dimensions (SCD) Type 1 et Type 2</strong> pour gérer et suivre l'évolution des données dans vos pipelines.</p>
+
+<h4>Qu'est-ce que le Change Data Capture ?</h4>
 <ul>
-<li>Quand un enregistrement est mis à jour, l'ancien est <strong>simplement écrasé</strong> par sa clé avec la nouvelle valeur.</li>
-<li>Quand un enregistrement est supprimé par sa clé, la ligne est <strong>retirée</strong>.</li>
-<li><strong>Aucun suivi des anciennes valeurs</strong> : seule la donnée courante est conservée.</li>
-<li>À utiliser quand seul l'<strong>état actuel</strong> compte et que l'historique est sans importance.</li>
+<li>Le <strong>Change Data Capture (CDC)</strong> est une technique utilisée pour <strong>suivre et capturer les changements dans une source de données</strong> (telle qu'une base de données, un lakehouse ou un data warehouse).</li>
+<li>Puis à <strong>appliquer ces changements</strong> dans le Lakehouse ou le data warehouse, pour le tenir à jour avec le dernier état de la source.</li>
 </ul>
-<p>Exemple : sur la table <code>customers</code>, en appliquant les <code>updates</code> — Peter est mis à jour avec sa dernière info, Samarth est supprimé, Kostas est inséré.</p>
-<h4>SCD Type 2 (historisation / versioning)</h4>
+<svg viewBox="0 0 700 190" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w3ar10" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <text x="110" y="24" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e8ecf2">Source Data</text>
+  <rect x="34" y="34" width="152" height="112" rx="7" fill="#232c38" stroke="#2b3542"/>
+  <rect x="50" y="50" width="120" height="26" rx="5" fill="#1c232d" stroke="#3fcf8e"/><text x="110" y="67" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;fill:#3fcf8e">INSERTS</text>
+  <rect x="50" y="82" width="120" height="26" rx="5" fill="#1c232d" stroke="#e3b23c"/><text x="110" y="99" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;fill:#e3b23c">UPDATES</text>
+  <rect x="50" y="114" width="120" height="26" rx="5" fill="#1c232d" stroke="#ff4a2e"/><text x="110" y="131" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;fill:#ff6a52">DELETES</text>
+  <text x="110" y="166" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">Source table of changes — doit être</text>
+  <text x="110" y="178" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">actuellement une streaming table</text>
+
+  <path d="M192 90 L 268 90" stroke="#ff6a52" stroke-width="2" marker-end="url(#w3ar10)"/>
+  <rect x="276" y="46" width="180" height="88" rx="7" fill="#232c38" stroke="#e3b23c" stroke-dasharray="4 3"/>
+  <text x="366" y="66" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Slowly Changing Dimensions</text>
+  <text x="366" y="80" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">Main types</text>
+  <rect x="292" y="90" width="72" height="28" rx="5" fill="#1c232d" stroke="#e3b23c"/><text x="328" y="108" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e3b23c">SCD Type 1</text>
+  <rect x="372" y="90" width="72" height="28" rx="5" fill="#1c232d" stroke="#e3b23c"/><text x="408" y="108" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e3b23c">SCD Type 2</text>
+  <path d="M462 90 L 528 90" stroke="#ff6a52" stroke-width="2" marker-end="url(#w3ar10)"/>
+
+  <text x="616" y="24" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e8ecf2">Target Table</text>
+  <rect x="540" y="34" width="152" height="112" rx="7" fill="#232c38" stroke="#3fcf8e"/>
+  <rect x="556" y="50" width="120" height="10" rx="3" fill="#00a972"/>
+  <rect x="556" y="66" width="120" height="10" rx="3" fill="#00a972"/>
+  <rect x="556" y="82" width="120" height="10" rx="3" fill="#00a972"/>
+  <rect x="556" y="98" width="120" height="10" rx="3" fill="#00a972"/>
+  <text x="616" y="166" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">Table for changes to be applied</text>
+</svg>
+<p>Le CDC est <strong>catégorisé en différents types de Slowly Changing Dimensions (SCD)</strong>, qui représentent la façon dont les changements historiques sont gérés. Deux types principaux :</p>
 <ul>
-<li>Quand un enregistrement change, l'ancien est <strong>conservé</strong> avec une colonne indiquant sa <strong>période de validité</strong> (date de début, date de fin, ou flag courant), et un <strong>nouvel</strong> enregistrement est inséré avec l'info à jour.</li>
-<li>Une suppression conserve la ligne et la marque inactive.</li>
-<li>À utiliser quand l'<strong>historique est important</strong> (ex. suivre l'évolution de l'adresse ou du statut d'un client).</li>
-<li>Colonnes typiques <code>__START_AT</code> / <code>__END_AT</code> : un <code>__END_AT</code> à <code>null</code> indique la ligne <strong>courante</strong>, une valeur non nulle indique une ligne <strong>historique (inactive)</strong>.</li>
-<li><em>Hors périmètre détaillé du cours.</em></li>
+<li><strong>SCD Type 1</strong> — écrase les données existantes (pas de suivi de l'historique).</li>
+<li><strong>SCD Type 2</strong> — suit les changements historiques en stockant les versions précédentes des enregistrements.</li>
 </ul>
-<h4>AUTO CDC INTO (anciennement APPLY CHANGES INTO)</h4>
-<p>À utiliser au lieu d'un batch traditionnel avec une syntaxe <code>MERGE INTO</code> complexe. Les INSERT et UPDATE sont implémentés <strong>implicitement via les clés</strong>, sans code.</p>
-<pre><code>CREATE OR REFRESH STREAMING TABLE customers;
+<p><em>Exemple concret :</em> imaginez une table <code>customers</code>. La source contient de nouveaux enregistrements clients, ainsi que des mises à jour et des suppressions de clients existants. On veut appliquer ces changements à la table cible en utilisant la logique SCD Type 1 ou SCD Type 2.</p>
+
+<h4>SCD Type 1 — Overwrite Target with Latest Values</h4>
+<ul>
+<li>Quand un enregistrement est <strong>mis à jour</strong> par sa/ses clé(s), l'enregistrement précédent est <strong>simplement écrasé</strong> par la nouvelle valeur, et <strong>aucun historique de version n'est conservé</strong>.</li>
+<li>Quand un enregistrement est <strong>supprimé</strong> par sa clé, l'enregistrement est <strong>retiré</strong> de la table cible.</li>
+<li>Il n'y a <strong>aucun suivi des anciennes clés (lignes)</strong> : seule la donnée courante est conservée.</li>
+</ul>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+<div>
+<p style="font-size:13px;margin:0 0 6px"><strong><code>customers</code></strong> — <em>target table with all customers</em> (avant)</p>
+<table class="tbl" style="font-size:12px">
+<thead><tr><th>CustomerID</th><th>Name</th><th>Address</th><th>ProcessDate</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Peter</td><td>1 Blue Rd.</td><td>5/1/2025</td></tr>
+<tr><td>2</td><td>Samarth</td><td>22 Front St</td><td>5/1/2025</td></tr>
+</tbody>
+</table>
+</div>
+<div>
+<p style="font-size:13px;margin:0 0 6px"><strong><code>updates</code></strong> — <em>source table with updates</em></p>
+<table class="tbl" style="font-size:12px">
+<thead><tr><th>CustomerID</th><th>Name</th><th>Address</th><th>Operation</th><th>ProcessDate</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Peter</td><td>99 Sunny St.</td><td>UPDATE</td><td>5/15/2025</td></tr>
+<tr><td>1</td><td>Peter</td><td>123 Main St.</td><td>UPDATE</td><td>5/20/2025</td></tr>
+<tr><td>2</td><td>null</td><td>null</td><td>DELETE</td><td>5/20/2025</td></tr>
+<tr><td>3</td><td>Kostas</td><td>100 Athens Dr.</td><td>NEW</td><td>5/20/2025</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>L'objectif est de mettre à jour la table <code>customers</code> avec les nouvelles informations client issues de la table source <code>updates</code>. En appliquant le SCD Type 1, la table cible est mise à jour avec les dernières informations, sans conserver de versions historiques, en se basant sur <code>CustomerID</code> (colonne ID) et <code>ProcessDate</code> (colonne de séquence) :</p>
+<ul>
+<li><strong>Peter (customer_id 1)</strong> — son adresse est mise à jour à la <strong>dernière adresse selon le ProcessDate</strong>, soit <code>123 Main St.</code> (<em>Update the row</em>).</li>
+<li><strong>Samarth (customer_id 2)</strong> — il a été supprimé, donc sa ligne est retirée de la table cible (<em>Delete the row</em>).</li>
+<li><strong>Kostas (customer_id 3)</strong> — c'est un nouveau client, son enregistrement est inséré dans la table (<em>Insert the row</em>).</li>
+</ul>
+<p style="font-size:13px;margin:0 0 6px"><strong>Updated SCD Type 1 Table</strong> (résultat)</p>
+<table class="tbl" style="font-size:12px">
+<thead><tr><th>CustomerID</th><th>Name</th><th>Address</th><th>ProcessDate</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Peter</td><td>123 Main St.</td><td>5/20/2025</td></tr>
+<tr><td>3</td><td>Kostas</td><td>100 Athens Dr.</td><td>5/20/2025</td></tr>
+</tbody>
+</table>
+<div class="callout">La table <code>customers</code> contient un <strong>instantané courant de tous les clients actifs</strong>, sans historique — juste les clients les plus récents. C'est la stratégie CDC la plus simple. <strong>Utilisez le SCD Type 1 quand seules les données courantes comptent et que les valeurs historiques sont sans importance.</strong></div>
+
+<h4>SCD Type 2 — Historical Tracking / Versioning</h4>
+<p><em>(Outside the scope of the course)</em></p>
+<ul>
+<li>Quand un enregistrement change :
+  <ul>
+    <li>l'<strong>ancien enregistrement est préservé</strong> avec une colonne additionnelle indiquant sa <strong>période de validité</strong> (date de début, date de fin ou un flag « courant »), et un <strong>nouvel enregistrement est inséré</strong> avec l'information mise à jour ;</li>
+    <li>quand un enregistrement est marqué comme supprimé, l'<strong>enregistrement est conservé</strong> et une colonne indique qu'il est <strong>inactif</strong>.</li>
+  </ul>
+</li>
+<li>Utilisé quand les <strong>données historiques sont importantes</strong> et que le système doit suivre comment les attributs changent au fil du temps (comme suivre les changements d'adresse ou de statut d'un client).</li>
+</ul>
+<p style="font-size:13px;margin:0 0 6px">Exemple de table cible <code>customers</code> avec SCD Type 2 :</p>
+<table class="tbl" style="font-size:12px">
+<thead><tr><th>CustomerID</th><th>Name</th><th>Address</th><th>ProcessDate</th><th>__START_AT</th><th>__END_AT</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Peter</td><td>123 Main St.</td><td>5/20/2025</td><td>5/20/2025</td><td><strong>null</strong></td></tr>
+<tr><td>1</td><td>Peter</td><td>1 Blue Rd.</td><td>5/1/2025</td><td>5/1/2025</td><td>5/20/2025</td></tr>
+<tr><td>2</td><td>Samarth</td><td>22 Front St</td><td>5/1/2025</td><td>5/1/2025</td><td>5/20/2025</td></tr>
+<tr><td>3</td><td>Kostas</td><td>100 Athens Dr.</td><td>5/20/2025</td><td>5/20/2025</td><td><strong>null</strong></td></tr>
+</tbody>
+</table>
+<p>Deux colonnes de métadonnées importantes ont été ajoutées à la table cible — ces <strong>colonnes indiquent les lignes actives et inactives</strong> :</p>
+<ul>
+<li><code>__START_AT</code> — montre <strong>quand la ligne est devenue active</strong> ;</li>
+<li><code>__END_AT</code> — montre <strong>quand la ligne est devenue inactive</strong> (si c'est le cas). Les <strong>valeurs nulles indiquent la ligne courante</strong> ; les <strong>valeurs non nulles indiquent les lignes inactives (historiques)</strong>.</li>
+</ul>
+<p><strong>Décomposition de l'exemple :</strong></p>
+<ul>
+<li><strong>Customer ID 1 – Peter</strong> : deux enregistrements existent. L'enregistrement <em>actif</em> montre l'adresse mise à jour de Peter (<code>__END_AT</code> est null → toujours actif ; <code>__START_AT</code> marque quand la mise à jour s'est produite). L'enregistrement <em>inactif</em> conserve l'ancienne adresse de Peter — on sait qu'il est inactif car <code>__END_AT</code> est renseigné → plus courant.</li>
+<li><strong>Customer ID 2 – Samarth</strong> : puisqu'il a supprimé son compte, son enregistrement existant est désormais <strong>inactif</strong>. Une date est ajoutée à <code>__END_AT</code> pour indiquer quand il a été retiré.</li>
+<li><strong>Customer ID 3 – Kostas</strong> : nouveau client, son enregistrement a été inséré dans la table. <code>__START_AT</code> montre quand il a rejoint ; <code>__END_AT</code> est null → l'enregistrement est actuellement actif.</li>
+</ul>
+
+<h4>Utiliser AUTO CDC INTO (anciennement APPLY CHANGES INTO)</h4>
+<p>Lakeflow fournit un mécanisme CDC déclaratif intégré via l'instruction <strong><code>AUTO CDC INTO</code></strong>. Vous l'utilisez pour gérer les <strong>updates, inserts et deletes</strong> dans votre pipeline.</p>
+<pre><code>-- Créer une streaming table, puis utiliser AUTO CDC pour la peupler
+CREATE OR REFRESH STREAMING TABLE customers;
 
 CREATE FLOW scd_type_1_flow AS
 AUTO CDC INTO customers
@@ -3411,28 +4245,40 @@ APPLY AS DELETE WHEN operation = "DELETE"
 SEQUENCE BY ProcessDate
 COLUMNS * EXCEPT (operation)
 STORED AS SCD TYPE 1;</code></pre>
-<ul>
-<li>On crée d'abord une streaming table, puis on utilise <code>AUTO CDC</code> pour la peupler.</li>
-<li><code>FROM STREAM updates</code> : les enregistrements source qui déterminent updates/deletes/inserts.</li>
-<li><code>KEYS (CustomerID)</code> : la/les colonne(s) qui identifient une ligne dans source et cible.</li>
-<li><code>APPLY AS DELETE WHEN</code> : quand un événement CDC doit être traité comme un <strong>DELETE</strong> plutôt qu'un upsert.</li>
-<li><code>SEQUENCE BY ProcessDate</code> : l'<strong>ordre logique</strong> des événements CDC dans la source.</li>
-<li><code>COLUMNS * EXCEPT (operation)</code> : sous-ensemble de colonnes à inclure dans la cible.</li>
-<li><code>STORED AS SCD TYPE 1</code> (défaut) ou <code>TYPE 2</code>.</li>
-</ul>
-<div class="callout"><strong>AUTO CDC FROM SNAPSHOT</strong> (Public Preview au Q2 2025) traite les changements à partir de <em>snapshots</em> de base de données.</div><div class="demo"><span class="demo-label">Exemple — AUTO CDC INTO (SCD Type 1)</span><p>On crée la table cible, puis un <strong>flow</strong> <code>AUTO CDC INTO</code> qui applique les changements (updates/deletes/inserts) en ordonnant par une colonne de séquence :</p><pre><code>-- Table cible
-CREATE OR REFRESH STREAMING TABLE 2_silver_db.scd_type_1_customers_silver_demo6
-  COMMENT 'SCD Type 1 Historical Customer Data';
+<table class="tbl">
+<thead><tr><th style="width:38%">Clause</th><th>Rôle</th></tr></thead>
+<tbody>
+<tr><td><code>CREATE OR REFRESH STREAMING TABLE customers;</code></td><td>Créer une streaming table, puis utiliser AUTO CDC pour la peupler.</td></tr>
+<tr><td><code>AUTO CDC INTO customers</code></td><td>Applique les <strong>updates, inserts et deletes</strong> à la <strong>table cible</strong> nommée <code>customers</code>.</td></tr>
+<tr><td><code>FROM STREAM updates</code></td><td>Les <strong>enregistrements source</strong> qui déterminent les updates, deletes et inserts (le flux source contenant les événements CDC).</td></tr>
+<tr><td><code>KEYS (CustomerID)</code></td><td>La ou les <strong>colonnes qui identifient de façon unique une ligne</strong> dans les tables source et cible — la clé primaire utilisée pour apparier les lignes.</td></tr>
+<tr><td><code>APPLY AS DELETE WHEN operation = "DELETE"</code></td><td>Spécifie <strong>quand un événement CDC doit être traité comme un DELETE</strong> plutôt qu'un <em>upsert</em>.</td></tr>
+<tr><td><code>SEQUENCE BY ProcessDate</code></td><td>Spécifie l'<strong>ordre logique des événements CDC</strong> dans les données source — critique pour appliquer les changements dans la bonne séquence.</td></tr>
+<tr><td><code>COLUMNS * EXCEPT (operation)</code></td><td>Spécifie un <strong>sous-ensemble de colonnes</strong> à inclure dans la cible (ici tout sauf l'indicateur d'opération CDC).</td></tr>
+<tr><td><code>STORED AS SCD TYPE 1</code></td><td>Détermine s'il faut stocker les enregistrements en <strong>SCD type 1 (défaut)</strong> ou <strong>type 2</strong>. En SCD Type 2, l'historique des changements est conservé.</td></tr>
+</tbody>
+</table>
+<div class="callout">
+<strong>INSERTs et UPDATEs sont implémentés implicitement via la ou les KEY(s), aucun code requis.</strong><br/><br/>
+Utilisez <strong><code>AUTO CDC INTO</code></strong> (anciennement <code>APPLY CHANGES INTO</code>) <strong>au lieu d'un job batch traditionnel avec la syntaxe complexe <code>MERGE INTO</code></strong>.<br/><br/>
+Utilisez <strong><code>AUTO CDC FROM SNAPSHOT</code></strong> (Public Preview au Q2 2025) pour traiter les changements à partir de <em>snapshots</em> de base de données.
+</div>
 
--- Flow CDC
-CREATE FLOW scd_type_1_flow AS
-AUTO CDC INTO 2_silver_db.scd_type_1_customers_silver_demo6   -- table cible
-FROM STREAM 1_bronze_db.customers_bronze_clean_demo6          -- source des changements
-  KEYS (customer_id)                              -- clé primaire d'identification
-  APPLY AS DELETE WHEN operation = "DELETE"       -- gestion des suppressions
-  SEQUENCE BY timestamp_datetime                  -- ordre d'application des changements
-  COLUMNS * EXCEPT (timestamp, _rescued_data, operation)
-  STORED AS SCD TYPE 1;                           -- SCD Type 1 (pas d'historique)</code></pre><p class="demo-note">Passer <code>STORED AS SCD TYPE 2</code> pour conserver l'historique des versions. La cible doit exister avant le <code>CREATE FLOW</code>.</p></div><h4>Pipeline complet — CDC clients (synthèse)</h4><p>Ce pipeline de bout en bout réunit la plupart des notions vues jusqu’ici : ingestion incrémentale par <strong>Auto Loader</strong>, <strong>colonnes de métadonnées</strong>, <strong>expectations</strong> de qualité, et application des changements via <strong>AUTO CDC INTO</strong> en <strong>SCD Type 1</strong>.</p><div class="demo"><span class="demo-label">STEP 1 — JSON → Bronze (ingestion Auto Loader)</span><p>Ingestion incrémentale des fichiers JSON du flux CDC vers une streaming table, en capturant l’horodatage de traitement et le fichier source :</p><pre><code>CREATE OR REFRESH STREAMING TABLE 1_bronze_db.customers_bronze_raw_demo6
+<h4>Le flow CDC final du projet</h4>
+<p>Voici le dernier flow CDC que nous ajoutons à notre pipeline — <strong>Customers Flow</strong> :</p>
+<ol>
+<li><strong>Ingérer les fichiers JSON customers</strong> — faire entrer les données brutes dans le pipeline depuis le stockage cloud vers la streaming table <code>customers_bronze</code>.</li>
+<li><strong>Créer la table <code>customers_bronze_clean</code></strong> — une streaming table nettoyée qui filtre et formate les updates, inserts et deletes incrémentaux issus de la streaming table <code>customers_bronze</code>.</li>
+<li><strong>Utiliser <code>AUTO CDC INTO customers_silver</code></strong> :
+  <ul>
+    <li>utilise le <strong>SCD Type 1</strong> pour écraser les changements clients (updates, inserts et deletes) ;</li>
+    <li>implémenté avec <code>AUTO CDC INTO</code> et <code>STORED AS SCD TYPE 1</code>.</li>
+  </ul>
+</li>
+</ol>
+<p>Ce flow final combine la logique CDC avec l'architecture Médaillon pour maintenir une table clients à jour (<strong>sans information historique</strong>), critique pour l'analytique en aval, la conformité et la personnalisation.</p>
+
+<div class="demo"><span class="demo-label">STEP 1 — JSON → Bronze (ingestion Auto Loader)</span><p>Ingestion incrémentale des fichiers JSON du flux CDC vers une streaming table, en capturant l'horodatage de traitement et le fichier source :</p><pre><code>CREATE OR REFRESH STREAMING TABLE 1_bronze_db.customers_bronze_raw_demo6
   COMMENT "Raw data from customers CDC feed"
   TBLPROPERTIES (
     "quality" = "bronze",
@@ -3446,7 +4292,8 @@ SELECT
 FROM STREAM read_files(
   "$\{source}/customers",
   format =&gt; "json"
-);</code></pre></div><div class="demo"><span class="demo-label">STEP 2 — Bronze clean (enforcement qualité)</span><p>Table bronze nettoyée avec contraintes <code>EXPECT</code> : id non nul (<code>FAIL UPDATE</code>), opération non nulle et email valide (<code>DROP ROW</code>), nom/adresse en warn — sauf pour les suppressions :</p><pre><code>CREATE STREAMING TABLE 1_bronze_db.customers_bronze_clean_demo6
+);</code></pre></div>
+<div class="demo"><span class="demo-label">STEP 2 — Bronze clean (enforcement qualité)</span><p>Table bronze nettoyée avec contraintes <code>EXPECT</code> : id non nul (<code>FAIL UPDATE</code>), opération non nulle et email valide (<code>DROP ROW</code>), nom/adresse en warn — sauf pour les suppressions :</p><pre><code>CREATE STREAMING TABLE 1_bronze_db.customers_bronze_clean_demo6
 (
   CONSTRAINT valid_id        EXPECT (customer_id IS NOT NULL) ON VIOLATION FAIL UPDATE,
   CONSTRAINT valid_operation EXPECT (operation  IS NOT NULL) ON VIOLATION DROP ROW,
@@ -3464,7 +4311,8 @@ AS
 SELECT
   *,
   CAST(from_unixtime(timestamp) AS timestamp) AS timestamp_datetime
-FROM STREAM 1_bronze_db.customers_bronze_raw_demo6;</code></pre></div><div class="demo"><span class="demo-label">STEP 3 — Bronze clean → Silver (AUTO CDC INTO, SCD Type 1)</span><p>On crée la table cible, puis un <code>CREATE FLOW</code> avec <code>AUTO CDC INTO</code> qui applique updates / deletes / inserts en ordonnant par <code>timestamp_datetime</code> :</p><pre><code>-- Créer la table cible si elle n'existe pas
+FROM STREAM 1_bronze_db.customers_bronze_raw_demo6;</code></pre></div>
+<div class="demo"><span class="demo-label">STEP 3 — Bronze clean → Silver (AUTO CDC INTO, SCD Type 1)</span><p>On crée la table cible, puis un <code>CREATE FLOW</code> avec <code>AUTO CDC INTO</code> qui applique updates / deletes / inserts en ordonnant par <code>timestamp_datetime</code> :</p><pre><code>-- Créer la table cible si elle n'existe pas
 CREATE OR REFRESH STREAMING TABLE 2_silver_db.scd_type_1_customers_silver_demo6
   COMMENT 'SCD Type 1 Historical Customer Data';
 
@@ -3476,27 +4324,60 @@ FROM STREAM 1_bronze_db.customers_bronze_clean_demo6         -- source des chang
   APPLY AS DELETE WHEN operation = "DELETE"       -- gestion des suppressions source -&gt; cible
   SEQUENCE BY timestamp_datetime                  -- ordre d'application des changements
   COLUMNS * EXCEPT (timestamp, _rescued_data, operation)   -- exclut les champs techniques
-  STORED AS SCD TYPE 1;                           -- SCD Type 1 (pas d'historique)</code></pre><p class="demo-note">Remplacer par <code>STORED AS SCD TYPE 2</code> pour conserver l’historique des versions. La table cible doit exister <em>avant</em> le <code>CREATE FLOW</code>.</p></div>`
+  STORED AS SCD TYPE 1;                           -- SCD Type 1 (pas d'historique)</code></pre><p class="demo-note">Remplacer par <code>STORED AS SCD TYPE 2</code> pour conserver l'historique des versions. La table cible doit exister <em>avant</em> le <code>CREATE FLOW</code>.</p></div>`
       },
       {
-        id: "w3l10", title: "Fonctionnalités additionnelles",
+        id: "w3l15", title: "Fonctionnalités additionnelles — au-delà du cours",
         html: `
-<p>Au-delà du périmètre détaillé du cours, plusieurs fonctionnalités enrichissent SDP.</p>
+<p>Dans cette leçon, vous découvrirez les <strong>capacités avancées</strong> disponibles dans les Lakeflow Declarative Pipelines : pipelines multi-flows, sinks externes, intégrations Delta Lake avancées, support Unity Catalog et déploiement automatisé — pour des workflows data plus flexibles, scalables et prêts pour l'entreprise.</p>
+<p>Bien que ce cours couvre les capacités fondamentales, plusieurs fonctionnalités avancées existent en dehors de ce qui a été démontré. Elles étendent la <strong>flexibilité</strong>, la <strong>scalabilité</strong> et l'<strong>intégration</strong> de votre pipeline entre systèmes.</p>
+
 <div class="cards-3">
-<div class="mini-card"><strong>Sinks</strong><br/>L'API Sink permet d'écrire vers des destinations <em>en dehors</em> du pipeline : <strong>Kafka, Delta, Event Hubs</strong>.</div>
-<div class="mini-card"><strong>Full Delta support</strong> (MV/ST)<br/><strong>Liquid clustering</strong>, <strong>row-level security</strong> et <strong>column masking</strong>, <strong>change data feed (CDF)</strong> depuis les streaming tables.</div>
-<div class="mini-card"><strong>Flows</strong><br/>Ajouter plusieurs flows vers la <strong>même cible</strong> → union de deux sources (ou tables).</div>
+  <div class="mini-card"><h4>FLOWS</h4><p>Ajouter des <strong>flows pour la même cible</strong>, créant une <strong>union</strong> des deux sources de données (ou tables).</p></div>
+  <div class="mini-card"><h4>SINKS</h4><p>L'<strong>API Sink</strong> permet d'écrire vers des destinations <strong>en dehors du pipeline</strong> : <strong>Kafka</strong>, <strong>Delta</strong>, <strong>Event hubs</strong>.</p></div>
+  <div class="mini-card"><h4>Full DELTA Support</h4><p>Support Delta amélioré pour les <strong>MV/ST</strong> : <strong>Liquid clustering</strong>, <strong>Row-level security</strong> et <strong>column masking</strong>, <strong>Change data feed (CDF)</strong> depuis les ST.</p></div>
 </div>
-<h4>Support Unity Catalog complet</h4>
+
+<h4>Flows</h4>
 <ul>
-<li>Publier vers <strong>plusieurs catalogues et schémas</strong>.</li>
-<li>Lire ST et MV en <strong>Dedicated Access Mode</strong>.</li>
-<li>Créer un pipeline UC en <strong>clonant</strong> un pipeline Hive metastore.</li>
+<li>Vous pouvez ajouter <strong>plusieurs flows qui écrivent vers la même cible</strong>.</li>
+<li>Cela crée une <strong>union de différentes sources de données</strong>, permettant de mélanger plusieurs pipelines en une seule table de sortie.</li>
+<li><em>Par exemple :</em> ingérer depuis deux systèmes clients différents vers une <strong>table clients unifiée</strong>.</li>
 </ul>
-<h4>Meilleures performances</h4>
-<p>Améliorées partout : <strong>Serverless</strong>, <strong>rafraîchissement incrémental des MV</strong>, <strong>Photon</strong>.</p>
+
+<h4>Sinks</h4>
+<ul>
+<li>L'<strong>API Sink</strong> permet d'écrire les sorties du pipeline vers des <strong>systèmes externes</strong>, pas seulement des tables Delta.</li>
+<li>Destinations supportées : <strong>Kafka</strong>, <strong>Delta</strong> (au sein ou entre workspaces), <strong>Azure Event Hubs</strong>.</li>
+<li>Idéal pour la consommation aval temps réel ou l'intégration système.</li>
+</ul>
+
+<h4>Full Delta Support</h4>
+<p>Les pipelines Lakeflow bénéficient d'un <strong>support natif complet de Delta Lake</strong>, qui inclut :</p>
+<ul>
+<li><strong>Liquid Clustering</strong> — optimise automatiquement les fichiers pour la performance pendant les exécutions du pipeline.</li>
+<li><strong>Row-Level Security &amp; Column Masking</strong> — appliquer des contrôles d'accès à grain fin directement dans vos streaming tables et materialized views.</li>
+<li><strong>Change Data Feed (CDF)</strong> — capturer les changements au niveau ligne depuis les streaming tables et les utiliser dans des applications aval, comme des logs d'audit ou de la propagation CDC.</li>
+</ul>
+
+<h4>Full UC Support</h4>
+<ul>
+<li><strong>Publier vers plusieurs catalogues &amp; schémas</strong> (comme vu dans ce cours).</li>
+<li><strong>Lire les ST et MV en Dedicated Access Mode</strong> (comme vu dans ce cours).</li>
+<li><strong>Créer un pipeline Unity Catalog en clonant</strong> un pipeline Hive metastore.</li>
+</ul>
+
+<h4>Better Performance</h4>
+<p>Performance améliorée à travers tout Lakeflow Spark Declarative Pipelines :</p>
+<ul>
+<li><strong>Serverless</strong> ;</li>
+<li><strong>Incremental refresh for materialized views</strong> ;</li>
+<li><strong>Photon</strong>.</li>
+</ul>
+
 <h4>Databricks Asset Bundles (DABs)</h4>
-<p>Les DABs permettent de <strong>valider, déployer et exécuter</strong> programmatiquement des ressources Databricks (dont les pipelines) pour le CI/CD des jobs de production (voir le cours « Automated Deployment with Databricks Asset Bundles » et le module W4).</p>`
+<p>Les <strong>DABs</strong> permettent de <strong>valider, déployer et exécuter programmatiquement</strong> des ressources Databricks — telles que les pipelines — pour les charges de production <strong>CI/CD</strong>.</p>
+<div class="callout">Pour approfondir : le cours <em>Automated Deployment with Databricks Asset Bundles</em> — et le <strong>module W4</strong> de ce trainer.</div>`
       }
     ]
   },
