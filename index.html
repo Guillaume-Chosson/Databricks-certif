@@ -4387,7 +4387,7 @@ FROM STREAM 1_bronze_db.customers_bronze_clean_demo6         -- source des chang
   {
     id: "w4", num: "W4", tier: "gold",
     title: "DevOps Essentials for Data Engineering",
-    subtitle: "Bonnes pratiques génie logiciel, CI, tests, Git, et déploiement continu (CD) avec DABs.",
+    subtitle: "Bonnes pratiques génie logiciel, DevOps, CI, tests, Git, et déploiement continu (CD) avec DABs.",
     lessons: [
       {
         id: "w4l1", title: "Objectifs & prérequis du module",
@@ -4404,250 +4404,1277 @@ FROM STREAM 1_bronze_db.customers_bronze_clean_demo6         -- source des chang
 </ul>
 <p><strong>Prérequis requis :</strong></p>
 <ul>
-<li><strong>Maîtrise confirmée de la plateforme :</strong> Workspaces, Apache Spark, Delta Lake & Médaillon, Unity Catalog, Spark Declarative Pipelines, Lakeflow Jobs, Git de base.</li>
-<li><strong>Ingestion & transformation :</strong> PySpark (DataFrames) et SQL intermédiaire.</li>
+<li><strong>Maîtrise confirmée de la plateforme :</strong> Workspaces, Apache Spark, Delta Lake &amp; Médaillon, Unity Catalog, Spark Declarative Pipelines, Lakeflow Jobs, Git de base.</li>
+<li><strong>Ingestion &amp; transformation :</strong> PySpark (DataFrames) et SQL intermédiaire.</li>
 <li><strong>Python :</strong> niveau intermédiaire — fonctions, classes, création/import/usage de packages.</li>
 </ul>
 <p><strong>Plan du cours (3 sections) :</strong> 1) Bonnes pratiques de génie logiciel, DevOps et fondamentaux CI/CD ; 2) Intégration continue (CI) ; 3) Introduction au déploiement continu (CD).</p>`
       },
       {
-        id: "w4l2", title: "Bonnes pratiques de génie logiciel",
+        id: "w4l2", title: "Introduction aux bonnes pratiques de génie logiciel (SWE)",
         html: `
-<p>Pour construire des pipelines fiables, on s'inspire du génie logiciel : suivre les bonnes pratiques garantit des pipelines <strong>efficaces, scalables et maintenables</strong>.</p>
-<h4>Pratiques de codage</h4>
-<table class="tbl">
-<thead><tr><th>Pratique</th><th>Détail</th></tr></thead>
-<tbody>
-<tr><td><strong>Code Readability</strong></td><td>Écrire du code facile à comprendre, naviguer et maintenir.</td></tr>
-<tr><td><strong>Naming Conventions</strong></td><td>Noms descriptifs et cohérents pour variables, fonctions, classes.</td></tr>
-<tr><td><strong>Modular Design</strong></td><td>Découper le logiciel en composants plus petits et réutilisables (fonctions). Des outils de <strong>linting</strong> aident à respecter les bonnes pratiques.</td></tr>
-</tbody>
-</table>
-<h4>Autres piliers</h4>
+<p>Dans cette leçon, nous introduisons quelques <strong>bonnes pratiques clés du développement logiciel</strong> et explorons comment elles peuvent être appliquées à la construction de <strong>pipelines de données fiables</strong>.</p>
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:16px;margin:0 0 14px;text-align:center">
+  <div style="display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap">
+    <div style="background:#232c38;border:1px solid #2b3542;border-radius:8px;padding:14px 18px;min-width:190px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;color:#8a97a8">&lt;/&gt;</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;color:#e8ecf2;margin-top:6px">Software Engineering<br/>Best Practices</div>
+    </div>
+    <div style="color:#ff6a52;font-size:20px">———</div>
+    <div style="background:#232c38;border:1.5px solid #ff4a2e;border-radius:8px;padding:14px 18px;min-width:190px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;color:#ff6a52">⌥</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;color:#e8ecf2;margin-top:6px">Building Data Pipelines</div>
+    </div>
+  </div>
+  <div style="background:#e3b23c;color:#0d1014;border-radius:6px;padding:9px 12px;margin-top:14px;font-size:12.5px">
+    Following <strong>best practices</strong> in development ensures that your data pipelines are efficient, scalable, and maintainable
+  </div>
+</div>
+<p>Incorporer ces bonnes pratiques dans le développement de pipelines de données aide à garantir que vos pipelines sont <strong>efficaces, scalables et faciles à maintenir</strong>. Voici un tour d'horizon de haut niveau des plus importantes.</p>
+
+<h4>Les 6 bonnes pratiques couvertes</h4>
+<svg viewBox="0 0 700 130" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>.bp{font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2}</style>
+  <rect x="200" y="8" width="300" height="26" rx="5" fill="#ff4a2e"/>
+  <text x="350" y="26" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;fill:#fff">Best Practices</text>
+  <rect x="10" y="42" width="680" height="80" rx="7" fill="none" stroke="#ff4a2e"/>
+  <rect x="20" y="50" width="106" height="46" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="73" y="70" text-anchor="middle" class="bp">Coding</text><text x="73" y="84" text-anchor="middle" class="bp">Practices</text>
+  <rect x="134" y="50" width="106" height="46" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="187" y="70" text-anchor="middle" class="bp">Document</text><text x="187" y="84" text-anchor="middle" class="bp">Code</text>
+  <rect x="248" y="50" width="106" height="46" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="301" y="70" text-anchor="middle" class="bp">Automated</text><text x="301" y="84" text-anchor="middle" class="bp">Testing</text>
+  <rect x="362" y="50" width="106" height="46" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="415" y="64" text-anchor="middle" class="bp">Version Control</text><text x="415" y="78" text-anchor="middle" class="bp">and Code</text><text x="415" y="90" text-anchor="middle" class="bp">Review</text>
+  <rect x="476" y="50" width="106" height="46" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="529" y="77" text-anchor="middle" class="bp">CI/CD</text>
+  <rect x="590" y="50" width="94" height="46" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="637" y="70" text-anchor="middle" class="bp">Isolated</text><text x="637" y="84" text-anchor="middle" class="bp">Environments</text>
+  <rect x="120" y="100" width="460" height="20" rx="4" fill="#e3b23c"/>
+  <text x="350" y="114" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#0d1014">The focus is on <tspan font-weight="700">writing high-quality code</tspan>, <tspan font-weight="700">testing</tspan> it, and ensuring <tspan font-weight="700">scalability</tspan> and <tspan font-weight="700">maintainability</tspan>.</text>
+</svg>
+
+<h4>1 · Coding Practices</h4>
+<p>Commençons par quelques pratiques de codage clés qui favorisent un meilleur développement.</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>Code Readability</h4><p>Écrire du code <strong>facile</strong> à comprendre, naviguer et maintenir. Un code clair et lisible réduit la confusion et minimise les risques d'erreur lors des mises à jour ou des changements.</p></div>
+  <div class="mini-card"><h4>Naming Conventions</h4><p>Utiliser des noms <strong>descriptifs et cohérents</strong> pour les variables, fonctions et classes. Cela rend le code auto-explicatif et améliore la collaboration entre membres de l'équipe.</p></div>
+  <div class="mini-card"><h4>Modular Design</h4><p>Décomposer le logiciel en <strong>composants plus petits et réutilisables</strong> (fonctions). Non seulement le code est plus facile à maintenir, mais cela permet aussi une montée en charge plus fluide à mesure que le projet grandit.</p></div>
+</div>
+<div class="callout">Vous pouvez utiliser des outils de <strong>linting</strong> pour aider à faire respecter ces pratiques. Les outils de linting analysent automatiquement votre code à la recherche d'erreurs potentielles, d'incohérences et de violations de style. Bien qu'ils soient <em>hors du périmètre de ce cours</em>, ce sont d'excellentes ressources pour améliorer la qualité du code et maintenir la lisibilité.</div>
+
+<h4>2 · Document Code</h4>
+<p>Une autre bonne pratique importante est de <strong>documenter son code</strong>. Une bonne documentation améliore :</p>
 <ul>
-<li><strong>Document Code</strong> — améliore la maintenabilité, renforce la collaboration, facilite le transfert de connaissances.</li>
-<li><strong>Automated Testing</strong> — <em>tests unitaires</em> (vérifient la fonctionnalité d'une unité isolée) et <em>tests d'intégration</em> (vérifient comment plusieurs composants/systèmes fonctionnent ensemble).</li>
-<li><strong>Version Control & Code Review</strong> — Git pour suivre les changements, collaborer et garder l'historique ; la revue de code aide à détecter les bugs tôt et à faire respecter les standards.</li>
-<li><strong>CI/CD</strong> — <em>Continuous Integration</em> : les développeurs committent/buildent/testent/releasent fréquemment vers un dépôt partagé ; <em>Continuous Deployment</em> : automatise la mise en production après réussite des tests. <strong>(C'est le focus principal de ce cours.)</strong></li>
-<li><strong>Isolated Environments</strong> — DEV / STAGE / PROD via plusieurs <strong>workspaces</strong> (un par environnement) et/ou plusieurs <strong>catalogues</strong> (un par environnement).</li>
+<li><strong>Improves Code Maintainability</strong> — la capacité à maintenir votre code. Une documentation claire aide les développeurs à comprendre l'objectif et la fonctionnalité du code, rendant les mises à jour et corrections de bugs plus rapides et faciles.</li>
+<li><strong>Enhances Collaboration</strong> — un code bien documenté permet aux membres de l'équipe de monter en compétence rapidement, réduisant les malentendus et les erreurs.</li>
+<li><strong>Facilitates Knowledge Transfer</strong> — documenter son code préserve les informations clés sur la conception et la structure, assurant des transitions fluides lors des changements d'équipe.</li>
 </ul>
-<h4>Génie logiciel avec Databricks — outils</h4>
+
+<h4>3 · Automated Testing</h4>
+<p>Le test est un composant <strong>extrêmement critique</strong> des bonnes pratiques de développement logiciel. Écrire à la fois des tests unitaires et des tests d'intégration est essentiel pour vérifier que les composants individuels <em>et</em> leurs interactions fonctionnent correctement.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #ff4a2e;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#ff6a52;margin-bottom:6px">1. Unit Tests</div>
+<p style="font-size:13px;margin:0">Vérifie la fonctionnalité d'une <strong>unité unique</strong> en isolation — typiquement un seul composant de code, pour s'assurer qu'il se comporte comme attendu.</p>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #e3b23c;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e3b23c;margin-bottom:6px">2. Integration Tests</div>
+<p style="font-size:13px;margin:0">Teste comment <strong>différents</strong> composants ou systèmes fonctionnent ensemble, pour s'assurer qu'ils fonctionnent correctement <em>dans leur ensemble</em>.</p>
+</div>
+</div>
+
+<h4>4 · Version Control and Code Review</h4>
 <ul>
-<li>Développer et exécuter des tests unitaires dans les Workspaces ou en local, avec notebooks ou fichiers (SQL, Python, Scala…).</li>
-<li>Utiliser les <strong>Databricks Git folders</strong> pour le version control et améliorer le workflow.</li>
-<li>Utiliser <strong>Unity Catalog</strong> (un ou plusieurs workspaces) pour <strong>isoler les environnements</strong> de façon sécurisée.</li>
-<li>Tester et déployer via des <strong>pipelines CI/CD</strong> avec les outils de déploiement Databricks.</li>
-</ul>`
+<li><strong>Version Control</strong> — des outils comme <strong>Git</strong> sont essentiels pour suivre les changements, collaborer avec les membres de l'équipe et maintenir un historique du codebase. Ils permettent de <strong>revenir en arrière</strong>, de gérer plusieurs versions et d'éviter les conflits, tout en gardant votre travail organisé et sécurisé.</li>
+<li><strong>Code Review</strong> — aide à <strong>détecter les bugs tôt</strong> et à garantir le respect des standards de codage. Combinées au version control, les revues de code améliorent la qualité et la cohérence, favorisent la collaboration, encouragent le partage de connaissances au sein de l'équipe et mènent à un code plus maintenable et fiable.</li>
+</ul>
+<p>En résumé : utilisez le version control pour gérer efficacement votre codebase, et les revues de code pour améliorer la qualité de votre code par la collaboration.</p>
+
+<h4>5 · CI/CD</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+<div style="background:#1c232d;border:1px solid #2b3542;border:1.5px dashed #3fcf8e;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#3fcf8e;margin-bottom:6px">Continuous Integration (CI)</div>
+<p style="font-size:13px;margin:0 0 8px">Une pratique où les développeurs <strong>commitent, buildent, testent</strong> et <strong>releasent du code</strong> fréquemment vers un <strong>dépôt partagé</strong>. L'objectif est de détecter les problèmes tôt grâce à l'intégration et aux tests continus.</p>
+<div style="background:#e3b23c;color:#0d1014;border-radius:5px;padding:6px 10px;font-size:12px;text-align:center;font-weight:600">Main focus of this course</div>
+</div>
+<div style="background:#1c232d;border:1.5px solid #ff4a2e;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#ff6a52;margin-bottom:6px">Continuous Deployment (CD)</div>
+<p style="font-size:13px;margin:0"><strong>Automatiser la mise en production</strong> du code après le passage des tests automatisés (tests unitaires et d'intégration). L'objectif est de livrer fonctionnalités et correctifs rapidement et de façon cohérente, en évitant les erreurs.</p>
+</div>
+</div>
+<p>Ce cours se concentre principalement sur la <strong>Continuous Integration</strong> au sein du pipeline CI/CD, avec une vue d'ensemble de haut niveau du continuous deployment et de la continuous delivery.</p>
+
+<h4>6 · Isolated Environments</h4>
+<p>Enfin, vous <strong>ne voulez pas modifier le code directement sur le codebase de production</strong>. Les organisations utilisent souvent des environnements différents pour chaque étape. Une configuration typique inclut « <strong>Development &amp; Stage</strong> » et « <strong>Production</strong> », mais cela peut varier selon les processus de votre organisation.</p>
+<p>Des environnements séparés aident à <strong>isoler les changements</strong> et à garantir des tests approfondis avant le déploiement, empêchant les problèmes liés au mélange développement/production.</p>
+<svg viewBox="0 0 700 190" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <rect x="24" y="20" width="230" height="150" rx="8" fill="#232c38" stroke="#8a97a8" stroke-dasharray="4 3"/>
+  <text x="139" y="60" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:22px;fill:#ff6a52">▤</text>
+  <text x="139" y="88" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;fill:#e8ecf2">Workspaces</text>
+  <text x="139" y="118" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#8a97a8">Utilizing multiple workspaces,</text>
+  <text x="139" y="134" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#8a97a8">one for each environment</text>
+
+  <rect x="284" y="34" width="132" height="34" rx="5" fill="#ff4a2e"/><text x="350" y="57" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;fill:#fff">DEV</text>
+  <rect x="284" y="78" width="132" height="34" rx="5" fill="#ff4a2e"/><text x="350" y="101" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;fill:#fff">STAGE</text>
+  <rect x="284" y="122" width="132" height="34" rx="5" fill="#ff4a2e"/><text x="350" y="145" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;fill:#fff">PROD</text>
+
+  <rect x="446" y="20" width="230" height="150" rx="8" fill="#232c38" stroke="#8a97a8" stroke-dasharray="4 3"/>
+  <text x="561" y="60" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:22px;fill:#ff6a52">▥</text>
+  <text x="561" y="88" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;fill:#e8ecf2">Catalogs</text>
+  <text x="561" y="118" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#8a97a8">Utilizing multiple catalogs,</text>
+  <text x="561" y="134" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#8a97a8">one for each environment</text>
+</svg>
+<p>Dans Databricks, vous pouvez isoler les environnements de plusieurs façons : utiliser <strong>plusieurs Workspaces</strong>, un pour chaque environnement ; ou utiliser <strong>un seul Workspace avec plusieurs catalogues</strong>.</p>
+<div class="callout">Un avantage majeur de Databricks est <strong>Unity Catalog</strong>, qui fournit des fonctionnalités intégrées comme le <strong>lineage</strong>, la <strong>sécurité</strong> et le <strong>monitoring</strong> — le tout sans avoir besoin d'outils tiers.</div>
+<p>Ce tour d'horizon rapide couvre quelques bonnes pratiques clés de génie logiciel ; il en existe bien d'autres non traitées ici. Ces pratiques visent à créer un logiciel de <strong>haute qualité et maintenable, capable d'évoluer dans le temps</strong>. Le focus est mis sur l'écriture d'un code <strong>efficace, lisible et sans défaut</strong>. Gardez à l'esprit comment ces bonnes pratiques peuvent vous aider à construire de meilleurs pipelines de données, plus efficaces.</p>`
       },
       {
-        id: "w4l3", title: "Modulariser le code PySpark",
+        id: "w4l3", title: "Le génie logiciel avec Databricks — les outils",
         html: `
-<h4>Avant (non modularisé)</h4>
-<pre><code># Load data
-df = (spark.read.csv("health.csv", header=True, inferSchema=True))
+<p>Parlons de certains outils de la <strong>Databricks Data Intelligence Platform</strong> que vous pouvez utiliser pour implémenter les bonnes pratiques de génie logiciel au sein de Databricks.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:14px">
+<div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:#ff6a52;text-transform:uppercase;margin-bottom:7px">1 · Develop &amp; test</div>
+<p style="font-size:13px;margin:0">Développer du code et exécuter des <strong>tests unitaires</strong> dans un Databricks Workspace ou <strong>localement</strong>, en utilisant des <strong>Notebooks</strong> ou des <strong>Files (SQL, Python, Scala, etc.)</strong>.</p>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:14px">
+<div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:#ff6a52;text-transform:uppercase;margin-bottom:7px">2 · Version control</div>
+<p style="font-size:13px;margin:0">Utiliser les <strong>Databricks Git folders</strong> pour fournir le version control et <strong>améliorer significativement le workflow</strong>, en fluidifiant la collaboration.</p>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:14px">
+<div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:#ff6a52;text-transform:uppercase;margin-bottom:7px">3 · Isolate environments</div>
+<p style="font-size:13px;margin:0">Se concentrer sur l'usage d'<strong>Unity Catalog</strong> au sein d'un <strong>Workspace unique</strong> ou de <strong>plusieurs Workspaces</strong> pour isoler vos environnements <strong>de façon sécurisée</strong>, en fournissant l'accès aux données nécessaire.</p>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:14px">
+<div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:#ff6a52;text-transform:uppercase;margin-bottom:7px">4 · Test &amp; deploy</div>
+<p style="font-size:13px;margin:0">Faire <strong>tester</strong> et <strong>déployer</strong> le code via des <strong>pipelines CI/CD</strong>, en utilisant les outils de déploiement Databricks pour déployer <strong>automatiquement</strong> vers l'environnement souhaité.</p>
+</div>
+</div>
+<p>En résumé : on développe et on teste (notebooks ou fichiers SQL/Python/Scala), on versionne avec les Git folders, on isole les environnements avec Unity Catalog, puis on <strong>automatise le processus</strong> — compilation, test et déploiement du code — à travers des pipelines CI/CD avec les outils de déploiement Databricks.</p>`
+      },
+      {
+        id: "w4l4", title: "Modulariser le code PySpark",
+        html: `
+<p>Dans cette leçon, nous voyons comment <strong>modulariser le code PySpark</strong> et explorons les bénéfices de cette démarche.</p>
+
+<h4>Non-Modularized Code (Before)</h4>
+<div style="display:grid;grid-template-columns:1.1fr 1fr;gap:14px;align-items:start;margin-bottom:14px">
+<pre style="margin:0"><code># Load data
+df = (spark
+     .read
+     .csv("health.csv",
+          header=True,
+          inferSchema=True))
 
 # Create column
-df = df.withColumn("NewColumn",
-        when(col("Column") == 0, 'Normal').otherwise('Unknown'))</code></pre>
-<p><strong>Problèmes :</strong> tout est dans un seul bloc → plus difficile de modifier ou tester des parties spécifiques (chargement, ajout de colonne) ; <strong>duplication de code</strong> probable si les mêmes opérations sont nécessaires ailleurs.</p>
-<h4>Après (modularisé en fonctions)</h4>
+df = (
+ df
+ .withColumn("NewColumn",
+  when(col("Column") == 0, 'Normal')
+  .otherwise('Unknown'))
+)</code></pre>
+<div>
+<p style="margin:0 0 6px"><strong>Issues</strong></p>
+<ul style="margin:0">
+<li>Tout est dans <strong>un seul bloc</strong>, rendant plus difficile la modification ou le test de parties spécifiques (par ex. le chargement des données, l'ajout de nouvelles colonnes).</li>
+<li>De la <strong>duplication de code</strong> peut survenir si les mêmes opérations sont nécessaires ailleurs dans le projet.</li>
+</ul>
+</div>
+</div>
+<p>Qui n'a jamais écrit du code comme celui-ci ? Du code réparti sur plusieurs lignes ou cellules, où l'on écrit systématiquement une logique spécifique pour transformer, préparer ou analyser ses données. À mesure que le flux se construit, le code devient <strong>difficile à lire et ingérable</strong>.</p>
+<p>Cette approche peut fonctionner, mais elle crée plusieurs difficultés au moment d'implémenter le <strong>CI/CD</strong> dans votre processus de développement. Le problème de la duplication est particulièrement coûteux : <em>quand une chose change dans votre logique, vous devez la changer partout</em>.</p>
+
+<h4>Modularized Code (After)</h4>
+<p>À la place, vous voulez vous concentrer sur la <strong>modularisation</strong> de votre code.</p>
 <pre><code>def load_data(file_path):
-    return (spark.read.csv(file_path, header=True, inferSchema=True))
+    return (spark
+            .read
+            .csv(file_path,
+                 header=True,
+                 inferSchema=True))
+
 
 def add_new_col(df, new, s_col):
-    return df.withColumn(new,
-             when(col(s_col) == 0, 'Normal').otherwise('Unknown'))</code></pre>
-<p><strong>Bénéfices :</strong></p>
+    return (df
+            .withColumn(new,
+                when(col(s_col) == 0, 'Normal')
+                .otherwise('Unknown')))</code></pre>
 <ul>
-<li><strong>Maintenance plus simple</strong> : mettre à jour uniquement des fonctions spécifiques sans changer tout le script.</li>
-<li><strong>Réutilisation</strong> des fonctions dans différents projets.</li>
-<li><strong>Tests</strong> des fonctions individuelles via des tests unitaires pour assurer la fiabilité.</li>
-</ul>`
-      },
-      {
-        id: "w4l4", title: "Fondamentaux DevOps",
-        html: `
-<h4>Qu'est-ce que le DevOps ?</h4>
-<p>Le <strong>DevOps</strong> est l'intersection des <strong>bonnes pratiques de génie logiciel</strong> et des <strong>opérations IT</strong>. Il favorise la <strong>collaboration</strong> entre les équipes de développement et d'opérations pour automatiser les jobs et fluidifier les processus. Bénéfices clés : <strong>déploiements plus rapides, meilleure collaboration, fiabilité accrue, meilleure scalabilité</strong>.</p>
-<p>C'est un processus pour <strong>intégrer, tester et déployer le code en continu</strong>, selon le cycle :</p>
-<p><em>Plan → Code → Build → Test → Release → Deploy → Operate → Monitor</em> (planifier les fonctionnalités, coder, builder en exécutables, tester automatiquement, releaser le package prêt, déployer en prod, opérer l'application, monitorer la performance et recueillir le feedback).</p>
-<h4>DevOps, DataOps, MLOps</h4>
-<table class="tbl">
-<thead><tr><th>Discipline</th><th>Domaine</th><th>Pratiques</th></tr></thead>
-<tbody>
-<tr><td><strong>DevOps</strong></td><td>Développement logiciel & opérations IT</td><td>Automatiser le CI/CD, tests continus, version control, jobs de production, orchestration & automatisation, monitoring des performances.</td></tr>
-<tr><td><strong>DataOps</strong></td><td>Construire des processus de pipeline de qualité (Data Engineering)</td><td>Optimiser le traitement, centraliser découverte/gestion/gouvernance, lineage traçable et monitoring, collaboration accrue, monitoring de la qualité des données.</td></tr>
-<tr><td><strong>MLOps</strong></td><td>Développement & déploiement de modèles ML</td><td>Traiter le code modèle comme du logiciel, les modèles comme des données, gérer le cycle de vie du modèle, monitorer sa performance. <em>(Hors périmètre.)</em></td></tr>
-</tbody>
-</table>
-<div class="callout"><strong>DataOps = DevOps pour le Data Engineering :</strong> il s'agit de réfléchir à comment appliquer les principes et la culture DevOps à ses pipelines de données.</div>`
-      },
-      {
-        id: "w4l5", title: "Le rôle du CI/CD",
-        html: `
-<h4>Vue d'ensemble</h4>
-<ul>
-<li><strong>Continuous Integration (CI)</strong> : automatise et fluidifie le développement ; améliore qualité, vitesse et fiabilité du code.</li>
-<li><strong>Continuous Deployment (CD)</strong> : le code est déployé en production via un processus automatisé ; permet de livrer en cycles courts et fréquents, avec des pipelines automatisés pour rapidité et cohérence.</li>
-<li><strong>Adoption :</strong> pratique courante en développement logiciel, dont l'importance croît en data engineering et data science.</li>
+<li>Le code écrit pour lire le fichier CSV dans un Spark DataFrame peut être transformé en une fonction, telle que <code>def load_data()</code>.</li>
+<li>De même, la fonction qui crée une nouvelle colonne à partir d'une colonne existante peut être refactorisée en <code>def add_new_col()</code> — ou, idéalement, un nom plus spécifique qui reflète clairement ce que fait la fonction (par exemple <code>def add_age_category()</code> si vous catégorisez des âges).</li>
 </ul>
-<h4>CI — vue détaillée</h4>
-<p>La CI consiste à <strong>fusionner régulièrement</strong> les changements de plusieurs contributeurs dans un dépôt central et à lancer des <strong>tests automatisés</strong> pour garantir la qualité. Bénéfices : <strong>détection précoce des problèmes, cycle de développement plus rapide, meilleure collaboration et qualité, tests et validation automatisés</strong>. Elle s'appuie sur le version control et une stratégie de branches.</p>
-<h4>Niveaux de tests (du plus rapide au plus lent)</h4>
+
+<h4>Modularized Code Benefits</h4>
 <div class="cards-3">
-<div class="mini-card"><strong>Unit Tests</strong><br/>Fonctions/méthodes isolées. <strong>Rapides</strong>, faible coût, haute couverture, automatisés. Ex. : fonctions PySpark custom.</div>
-<div class="mini-card"><strong>Integration Tests</strong><br/>Interaction entre composants ou systèmes. Ex. : interactions Notebooks / SDP / Jobs.</div>
-<div class="mini-card"><strong>System Tests</strong><br/>Toute l'application en conditions réelles. <strong>Lents</strong>. Ex. : pipeline data end-to-end dans un Job.</div>
-</div>
-<h4>CD — Delivery vs Deployment</h4>
+  <div class="mini-card"><h4>Easier Maintenance</h4><p>En mettant à jour <strong>uniquement des fonctions spécifiques</strong> sans changer l'ensemble du script. Cela rend la gestion et la correction des problèmes bien plus faciles par la suite.</p></div>
+  <div class="mini-card"><h4>Reuse</h4><p><strong>Réutiliser</strong> les fonctions dans différents projets. Une fois <code>load_data()</code> ou <code>add_new_col()</code> écrite, plus besoin de réécrire le même code encore et encore — cela fait gagner du temps et réduit les erreurs.</p></div>
+  <div class="mini-card"><h4>Testing</h4><p><strong>Tester les fonctions individuelles</strong> via des tests unitaires pour assurer la fiabilité du code. En isolant une logique spécifique dans des fonctions, on peut écrire un test unitaire par fonction — ce qui mène à un code plus fiable et sans bug.</p></div>
+</div>`
+      },
+      {
+        id: "w4l5", title: "Fondamentaux DevOps & cycle de vie",
+        html: `
+<p>Dans cette leçon, nous explorons le concept de <strong>DevOps</strong> et discutons de la façon dont il soutient et améliore les <strong>Lakeflow Jobs</strong> en Data Engineering et Machine Learning.</p>
+
+<h4>Qu'est-ce que le DevOps ?</h4>
+<svg viewBox="0 0 700 180" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <text x="350" y="26" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;fill:#ff4a2e">DevOps</text>
+  <rect x="60" y="38" width="580" height="52" rx="7" fill="#232c38" stroke="#8a97a8" stroke-dasharray="4 3"/>
+  <text x="120" y="62" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:16px;fill:#8a97a8">&lt;/&gt;</text>
+  <text x="240" y="60" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12.5px;fill:#e8ecf2">Software Engineering</text>
+  <text x="240" y="76" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12.5px;fill:#e8ecf2">Best Practices</text>
+  <text x="350" y="72" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;fill:#ff4a2e">+</text>
+  <text x="440" y="70" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:16px;fill:#8a97a8">◍</text>
+  <text x="540" y="70" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12.5px;fill:#e8ecf2">IT Operations</text>
+
+  <rect x="30" y="102" width="310" height="66" rx="7" fill="#232c38" stroke="#2b3542"/>
+  <text x="46" y="122" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#c9d3e0">Fosters <tspan font-weight="700" fill="#e8ecf2">collaboration</tspan> between development</text>
+  <text x="46" y="138" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#c9d3e0">and operations teams to <tspan font-weight="700" fill="#e8ecf2">automate Lakeflow</tspan></text>
+  <text x="46" y="154" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#c9d3e0"><tspan font-weight="700" fill="#e8ecf2">Jobs</tspan> and <tspan font-weight="700" fill="#e8ecf2">streamline processes</tspan>.</text>
+
+  <rect x="360" y="102" width="310" height="66" rx="7" fill="#232c38" stroke="#2b3542"/>
+  <text x="376" y="120" style="font-family:'Inter',sans-serif;font-size:11.5px;font-weight:700;fill:#e8ecf2">Key benefits include</text>
+  <text x="376" y="136" style="font-family:'Inter',sans-serif;font-size:11px;fill:#8a97a8">· faster deployments   · improved collaboration</text>
+  <text x="376" y="152" style="font-family:'Inter',sans-serif;font-size:11px;fill:#8a97a8">· enhanced reliability   · better scalability</text>
+</svg>
+<p>Le <strong>DevOps</strong> est une <strong>culture et un ensemble de pratiques</strong> qui combine les <strong>bonnes pratiques de génie logiciel</strong> avec les <strong>opérations IT</strong> pour livrer du logiciel plus rapidement, plus efficacement et avec une qualité supérieure. Il s'agit avant tout de favoriser la collaboration entre les équipes de développement et d'opérations pour <strong>automatiser vos Lakeflow Jobs</strong>, fluidifier les processus et garantir la livraison continue des applications.</p>
+<p><strong>Bénéfices clés du DevOps :</strong></p>
 <ul>
-<li><strong>Continuous Delivery :</strong> push <strong>automatique</strong> vers staging/pré-prod, avec capacité de déployer <strong>manuellement</strong> en production à tout moment.<br/><em>Develop → Test → Version Control → Build → Deploy to Stage = AUTO ; Deploy to Production = MANUEL.</em></li>
-<li><strong>Continuous Deployment :</strong> processus entièrement automatisé où chaque changement qui passe les tests est <strong>immédiatement déployé en production</strong>.<br/><em>… Deploy to Production = AUTO.</em></li>
+<li>Cycles de déploiement plus rapides (<em>faster deployment cycles</em>) ;</li>
+<li>Meilleure collaboration entre les équipes ;</li>
+<li>Fiabilité système accrue ;</li>
+<li>Meilleure scalabilité et efficacité.</li>
+</ul>
+<p>En bref, le DevOps est une façon de <strong>construire et livrer du logiciel rapidement et de manière fiable</strong>, en comblant le fossé entre le développement et les opérations.</p>
+
+<h4>Les 8 étapes clés du cycle de vie DevOps</h4>
+<svg viewBox="0 0 700 250" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .dv{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#fff}
+    .dsc{font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8}
+    .dk{font-family:'Inter',sans-serif;font-size:9.5px;font-weight:700}
+  </style>
+  <circle cx="230" cy="125" r="76" fill="none" stroke="#1B3139" stroke-width="30"/>
+  <circle cx="470" cy="125" r="76" fill="none" stroke="#2ba8dd" stroke-width="30"/>
+  <text x="230" y="133" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;fill:#2ba8dd">Dev</text>
+  <text x="470" y="133" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;fill:#1B3139">Ops</text>
+  <path d="M300 80 L 400 170" stroke="#2ba8dd" stroke-width="26" stroke-linecap="round"/>
+  <text x="352" y="130" text-anchor="middle" transform="rotate(-42 352 130)" class="dv">release</text>
+  <text x="288" y="96" text-anchor="middle" transform="rotate(-60 288 96)" class="dv">plan</text>
+  <text x="230" y="58" text-anchor="middle" class="dv">code</text>
+  <text x="172" y="96" text-anchor="middle" transform="rotate(62 172 96)" class="dv">build</text>
+  <text x="230" y="196" text-anchor="middle" class="dv">test</text>
+  <text x="470" y="58" text-anchor="middle" class="dv">deploy</text>
+  <text x="528" y="122" text-anchor="middle" transform="rotate(80 528 122)" class="dv">operate</text>
+  <text x="470" y="196" text-anchor="middle" class="dv">monitor</text>
+
+  <text x="14" y="20" class="dk" fill="#e8ecf2">BUILD</text><text x="56" y="20" class="dsc">the code into executable files</text>
+  <text x="14" y="240" class="dk" fill="#e8ecf2">TEST</text><text x="48" y="240" class="dsc">the code works as expected by running automated tests</text>
+  <text x="214" y="20" class="dk" fill="#e8ecf2">CODE</text><text x="252" y="20" class="dsc">the project</text>
+  <text x="330" y="20" class="dk" fill="#e8ecf2">PLAN</text><text x="366" y="20" class="dsc">the project's features and requirements</text>
+  <text x="270" y="240" class="dk" fill="#2ba8dd">RELEASE</text><text x="326" y="240" class="dsc">the packaged application ensuring it's ready for roll out</text>
+  <text x="560" y="20" class="dk" fill="#2ba8dd">DEPLOY</text><text x="608" y="20" class="dsc">to production</text>
+  <text x="560" y="118" class="dk" fill="#2ba8dd">OPERATE</text><text x="618" y="118" class="dsc">the app</text>
+  <text x="560" y="240" class="dk" fill="#2ba8dd">MONITOR</text><text x="618" y="240" class="dsc">performance</text>
+</svg>
+<ol>
+<li><strong>Plan</strong> — c'est là que l'on définit les objectifs du projet, que l'on recueille les exigences et que l'on s'assure que toute l'équipe est alignée sur ce qui doit être livré.</li>
+<li><strong>Code</strong> — les développeurs écrivent le code source de l'application, construisant les fonctionnalités nécessaires.</li>
+<li><strong>Build</strong> — on compile le code en <strong>fichiers exécutables</strong>, en s'assurant que toutes les dépendances sont correctement intégrées.</li>
+<li><strong>Test</strong> — on exécute des <strong>tests automatisés</strong> pour s'assurer que le code fonctionne comme attendu, en attrapant les bugs avant la release. <em>Le test est extrêmement important dans le DevOps.</em></li>
+<li><strong>Release</strong> — on package l'application en s'assurant qu'elle est <strong>prête pour la production</strong>, et on prépare un déploiement contrôlé.</li>
+<li><strong>Deploy</strong> — on pousse l'application vers l'environnement de production et on la rend disponible aux utilisateurs.</li>
+<li><strong>Operate</strong> — on opère l'application : monitorer la performance, gérer ses ressources et traiter rapidement les problèmes qui surviennent.</li>
+<li><strong>Monitor</strong> — on suit la performance de l'application, on recueille le feedback et on travaille continuellement aux améliorations.</li>
+</ol>
+<div class="callout"><strong>DevOps is a process for <em>continuously</em> integrating, testing and deploying your code.</strong><br/>Le cycle de vie DevOps repose sur une <strong>collaboration sans couture</strong> entre les équipes de développement et d'opérations pour livrer du logiciel de haute qualité — en <strong>itérant continuellement</strong> à travers le cycle à mesure que le projet nécessite des correctifs, des mises à jour ou de nouvelles fonctionnalités.</div>`
+      },
+      {
+        id: "w4l6", title: "DevOps, DataOps et MLOps",
+        html: `
+<h4>Appliquer le DevOps au Data Engineering et au Machine Learning</h4>
+<p>Nous pouvons appliquer les <strong>principes DevOps</strong> au Data Engineering et au Machine Learning. Rappelons-le : le DevOps consiste à <strong>automatiser les processus, améliorer la collaboration, tester et accélérer la livraison</strong>.</p>
+<svg viewBox="0 0 620 190" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w4ar1" markerWidth="8" markerHeight="8" refX="4" refY="7" orient="auto"><path d="M0,0 L8,0 L4,8 z" fill="#2272b4"/></marker></defs>
+  <rect x="150" y="14" width="320" height="38" rx="5" fill="#ff4a2e"/>
+  <text x="310" y="39" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;fill:#0d1014">DevOps</text>
+  <text x="310" y="74" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#c9d3e0">Apply <tspan font-weight="700" fill="#e8ecf2">DevOps principles</tspan> to Data</text>
+  <text x="310" y="90" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#c9d3e0">Engineering and Machine Learning</text>
+  <path d="M230 100 L 230 122" stroke="#2272b4" stroke-width="9" marker-end="url(#w4ar1)"/>
+  <path d="M390 100 L 390 122" stroke="#2272b4" stroke-width="9" marker-end="url(#w4ar1)"/>
+  <rect x="150" y="132" width="160" height="46" rx="5" fill="#d7ead9" stroke="#3fcf8e"/>
+  <text x="230" y="152" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;fill:#0d1014">DataOps</text>
+  <text x="230" y="169" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#0d1014">Data Engineering</text>
+  <rect x="312" y="132" width="158" height="46" rx="5" fill="#d9d4ec" stroke="#8a97a8"/>
+  <text x="391" y="152" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;fill:#0d1014">MLOps</text>
+  <text x="391" y="169" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#0d1014">Machine Learning</text>
+</svg>
+<ul>
+<li><strong>DataOps</strong> est un <strong>sous-ensemble du DevOps</strong> qui l'applique au data engineering. Il automatise la gestion des pipelines de données, garantissant des flux de données fluides et fiables de la collecte au traitement. Résultat : <strong>moins de goulets d'étranglement et des insights plus rapides</strong>.</li>
+<li><strong>MLOps</strong> consiste à appliquer le DevOps au machine learning. Il fluidifie le processus de déploiement et de gestion des modèles ML, garantissant que les modèles passent du développement à la production rapidement et sont monitorés en performance.</li>
+</ul>
+
+<h4>Comparaison des trois approches</h4>
+<p>DevOps, DataOps et ModelOps sont <strong>un ensemble de pratiques, de processus et de technologies</strong>. Comparons les trois approches qui fluidifient les Lakeflow Jobs dans différents domaines techniques.</p>
+<table class="tbl">
+<thead><tr><th style="width:16%">Discipline</th><th style="width:26%">Domaine</th><th>Pratiques</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong style="color:#2272b4">DevOps</strong></td>
+  <td>Software development and IT operations</td>
+  <td><ul style="margin:0;padding-left:16px">
+    <li>Automate CI/CD</li>
+    <li>Enable continuous code testing</li>
+    <li>Version control</li>
+    <li>Establish Production-grade Lakeflow Jobs</li>
+    <li>Orchestration &amp; Automation</li>
+    <li>Monitor system performance</li>
+  </ul></td>
+</tr>
+<tr>
+  <td><strong style="color:#3fcf8e">DataOps</strong></td>
+  <td>Building quality data pipeline processes</td>
+  <td><ul style="margin:0;padding-left:16px">
+    <li>Optimize data processing</li>
+    <li>Centralize data discovery, management, and governance</li>
+    <li>Establish traceable data lineage and monitoring</li>
+    <li>Enhance collaboration across teams</li>
+    <li>Monitor data quality</li>
+  </ul></td>
+</tr>
+<tr>
+  <td><strong style="color:#aeb9c7">MLOps</strong><br/><span style="background:#e3b23c;color:#0d1014;font-size:11px;padding:2px 6px;border-radius:4px;display:inline-block;margin-top:4px">Outside the scope of this course</span></td>
+  <td>ML model development and deployment</td>
+  <td><ul style="margin:0;padding-left:16px">
+    <li>Treating model code as software</li>
+    <li>Treating models as data</li>
+    <li>Manage the model lifecycle</li>
+    <li>Monitor Model Performance</li>
+  </ul></td>
+</tr>
+</tbody>
+</table>
+<p><strong>DevOps</strong> vise avant tout à combler le fossé entre développement logiciel et opérations IT. L'objectif principal est d'<strong>automatiser le CI/CD</strong>, rendant le déploiement logiciel plus rapide et plus fiable. On se concentre aussi sur les <strong>tests automatisés</strong> et le <strong>version control</strong> pour garantir la qualité du code. Le but est d'établir des Lakeflow Jobs fluides et de qualité production, et d'automatiser l'orchestration pour réduire le travail manuel. Enfin, le <strong>monitoring des performances système</strong> aide à détecter les problèmes tôt.</p>
+<p><strong>DataOps</strong> consiste à construire des processus de pipeline de données de qualité. Il optimise le traitement des données et <strong>centralise la découverte, la gestion et la gouvernance avec Unity Catalog</strong>. DataOps met aussi l'accent sur un <strong>lineage traçable</strong>, permettant de suivre les données à chaque étape. Monitorer les données tout au long du pipeline garantit qu'elles restent exactes et accessibles, tout en favorisant la collaboration d'équipe pour améliorer le flux et la qualité des données.</p>
+<p><strong>ModelOps</strong> se concentre sur le cycle de vie des modèles de machine learning. Il traite le code du modèle comme du logiciel, en s'assurant qu'il est versionné, testé et déployé efficacement. Il se concentre aussi sur la gestion du cycle de vie du modèle et le <strong>monitoring de sa performance après déploiement</strong>, pour que les modèles restent précis et efficaces dans le temps. <em>MLOps est hors du périmètre de ce cours.</em></p>
+
+<h4>DataOps = DevOps for Data Engineering</h4>
+<svg viewBox="0 0 700 170" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>.dv2{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;fill:#fff}</style>
+  <path d="M14 78 L 100 78 L 100 62 L 130 85 L 100 108 L 100 92 L 14 92 z" fill="#8a97a8"/>
+  <text x="57" y="82" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#0d1014">Business</text>
+  <text x="57" y="93" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#0d1014">requirement</text>
+  <rect x="130" y="76" width="440" height="18" fill="#8a97a8"/>
+  <path d="M570 78 L 656 78 L 656 62 L 690 85 L 656 108 L 656 92 L 570 92 z" fill="#8a97a8"/>
+  <text x="622" y="82" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#0d1014">Business</text>
+  <text x="622" y="93" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#0d1014">value</text>
+  <circle cx="255" cy="85" r="62" fill="none" stroke="#1B3139" stroke-width="26"/>
+  <circle cx="445" cy="85" r="62" fill="none" stroke="#2ba8dd" stroke-width="26"/>
+  <path d="M310 48 L 390 122" stroke="#2ba8dd" stroke-width="22" stroke-linecap="round"/>
+  <text x="255" y="90" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;fill:#fff">DATA</text>
+  <text x="445" y="90" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;fill:#fff">OPS</text>
+  <text x="255" y="30" text-anchor="middle" class="dv2">Develop</text>
+  <text x="305" y="60" text-anchor="middle" transform="rotate(-58 305 60)" class="dv2">Plan</text>
+  <text x="350" y="88" text-anchor="middle" transform="rotate(-42 350 88)" class="dv2">Release</text>
+  <text x="205" y="60" text-anchor="middle" transform="rotate(62 205 60)" class="dv2">Build</text>
+  <text x="215" y="120" text-anchor="middle" transform="rotate(-40 215 120)" class="dv2">Env mgmnt</text>
+  <text x="290" y="120" text-anchor="middle" transform="rotate(40 290 120)" class="dv2">Test</text>
+  <text x="445" y="30" text-anchor="middle" class="dv2">Deploy</text>
+  <text x="500" y="88" text-anchor="middle" transform="rotate(80 500 88)" class="dv2">Operate</text>
+  <text x="440" y="140" text-anchor="middle" class="dv2">Monitor</text>
+  <rect x="60" y="148" width="580" height="18" rx="4" fill="#232c38" stroke="#2b3542"/>
+  <text x="350" y="161" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2">You want to think about how <tspan font-weight="700">DevOps</tspan> principles and culture can be applied to your <tspan font-weight="700">Data Engineering pipelines</tspan>.</text>
+</svg>
+<p>Le <strong>DataOps est essentiellement le DevOps pour le data engineering</strong> : il applique ces mêmes principes d'<strong>automatisation, de collaboration et d'amélioration continue</strong> aux Lakeflow Jobs de données. Tout comme le DevOps fluidifie la livraison logicielle, le DataOps se concentre sur l'optimisation du <strong>flux, de la qualité et de la gestion</strong> des pipelines de données.</p>
+<div class="callout">Au final, vous devez réfléchir à la façon dont les <strong>principes et la culture DevOps peuvent être appliqués à vos pipelines de Data Engineering</strong>.</div>`
+      },
+      {
+        id: "w4l7", title: "Le rôle du CI/CD dans le DevOps",
+        html: `
+<p>Dans cette leçon, vous apprendrez comment les pratiques CI/CD dans le DevOps fluidifient le <strong>développement, le test et le déploiement</strong> pour les projets de Data Engineering et de Machine Learning.</p>
+
+<h4>CI et CD au sein du cycle de vie DevOps</h4>
+<svg viewBox="0 0 700 200" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>.dv3{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;fill:#fff}</style>
+  <path d="M14 70 L 100 70 L 100 54 L 130 77 L 100 100 L 100 84 L 14 84 z" fill="#8a97a8"/>
+  <rect x="130" y="68" width="440" height="18" fill="#8a97a8"/>
+  <path d="M570 70 L 656 70 L 656 54 L 690 77 L 656 100 L 656 84 L 570 84 z" fill="#8a97a8"/>
+  <circle cx="255" cy="77" r="62" fill="none" stroke="#1B3139" stroke-width="26"/>
+  <circle cx="445" cy="77" r="62" fill="none" stroke="#2ba8dd" stroke-width="26"/>
+  <path d="M310 40 L 390 114" stroke="#2ba8dd" stroke-width="22" stroke-linecap="round"/>
+  <text x="255" y="82" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;fill:#fff">DATA</text>
+  <text x="445" y="82" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;fill:#fff">OPS</text>
+  <text x="255" y="22" text-anchor="middle" class="dv3">Develop</text>
+  <text x="305" y="52" text-anchor="middle" transform="rotate(-58 305 52)" class="dv3">Plan</text>
+  <text x="350" y="80" text-anchor="middle" transform="rotate(-42 350 80)" class="dv3">Release</text>
+  <text x="205" y="52" text-anchor="middle" transform="rotate(62 205 52)" class="dv3">Build</text>
+  <text x="215" y="112" text-anchor="middle" transform="rotate(-40 215 112)" class="dv3">Env mgmnt</text>
+  <text x="290" y="112" text-anchor="middle" transform="rotate(40 290 112)" class="dv3">Test</text>
+  <text x="445" y="22" text-anchor="middle" class="dv3">Deploy</text>
+  <text x="500" y="80" text-anchor="middle" transform="rotate(80 500 80)" class="dv3">Operate</text>
+  <text x="440" y="132" text-anchor="middle" class="dv3">Monitor</text>
+  <path d="M195 146 L 195 154 L 320 154 L 320 146" stroke="#1B3139" stroke-width="2" fill="none"/>
+  <path d="M258 154 L 258 162" stroke="#1B3139" stroke-width="2"/>
+  <rect x="176" y="162" width="166" height="32" rx="6" fill="#232c38" stroke="#1B3139" stroke-width="2"/>
+  <text x="259" y="182" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:700;fill:#e8ecf2">Continuous integration</text>
+  <path d="M386 146 L 386 154 L 510 154 L 510 146" stroke="#2ba8dd" stroke-width="2" fill="none"/>
+  <path d="M448 154 L 448 162" stroke="#2ba8dd" stroke-width="2"/>
+  <rect x="366" y="162" width="166" height="32" rx="6" fill="#232c38" stroke="#2ba8dd" stroke-width="2"/>
+  <text x="449" y="182" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:700;fill:#2ba8dd">Continuous deployment</text>
+</svg>
+<p>Le <strong>CI/CD est un sous-ensemble clé des pratiques DevOps</strong> qui se concentre sur l'automatisation de l'intégration du code, des tests et des pipelines de livraison — <strong>y compris les pipelines DataOps</strong>. Au sein du cycle de vie DevOps :</p>
+<ul>
+<li>la <strong>continuous integration (CI)</strong> met l'accent sur la <strong>planification, le développement, la gestion de l'environnement et les tests</strong> des pipelines ;</li>
+<li>la <strong>continuous deployment (CD)</strong> se concentre sur l'automatisation des <strong>processus de release, du déploiement, de l'opération et du monitoring</strong> de ces pipelines.</li>
+</ul>
+
+<h4>Vue d'ensemble du CI/CD</h4>
+<p><strong>CI/CD</strong> signifie <strong>Continuous Integration</strong> et <strong>Continuous Deployment/Delivery</strong> — une pratique qui transforme la façon dont nous développons et livrons nos pipelines de données.</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>CI/CD Overview</h4><p><strong>Automatise</strong> et <strong>fluidifie</strong> les processus de développement logiciel.<br/><strong>Améliore</strong> la qualité du code, la vitesse et la fiabilité.<br/>Le code est déployé en production via un <strong>processus automatisé</strong>, incorporant un processus de contrôle qualité.</p></div>
+  <div class="mini-card"><h4>CI/CD Process</h4><p>Permet le <strong>développement</strong> et la <strong>livraison</strong> de logiciel en cycles <strong>courts et fréquents</strong>.<br/>Utilise des <strong>pipelines automatisés</strong> pour garantir un déploiement plus rapide et de la cohérence — ce qui permet aux développeurs d'identifier les problèmes tôt et de les traiter avant qu'ils ne deviennent plus graves.</p></div>
+  <div class="mini-card"><h4>CI/CD Adoption</h4><p>Pratique <strong>courante</strong> en développement logiciel.<br/><strong>Importance croissante</strong> en data engineering et data science. À mesure que ces domaines évoluent, le besoin d'automatisation et de livraison rapide et fiable des applications pilotées par la donnée s'accroît.</p></div>
+</div>`
+      },
+      {
+        id: "w4l8", title: "La CI en détail & la pyramide de tests",
+        html: `
+<h4>Continuous Integration (CI) — vue d'ensemble</h4>
+<div class="callout">La CI consiste à <strong>fusionner régulièrement les changements de code</strong> provenant de <strong>multiples contributeurs</strong> dans un <strong>dépôt central</strong>, et à exécuter des <strong>tests automatisés</strong> pour garantir la qualité du code.</div>
+<svg viewBox="0 0 700 210" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="w4ar2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker>
+    <marker id="w4ar3" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#00a972"/></marker>
+  </defs>
+  <text x="52" y="52" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:18px;fill:#ff6a52">◉</text>
+  <text x="52" y="70" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#c9d3e0">Developer A</text>
+  <text x="52" y="102" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:18px;fill:#ff6a52">◉</text>
+  <text x="52" y="120" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#c9d3e0">Developer B</text>
+  <text x="52" y="152" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:18px;fill:#ff6a52">◉</text>
+  <text x="52" y="170" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#c9d3e0">Developer C</text>
+
+  <path d="M96 46 L 156 46" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#w4ar2)"/>
+  <path d="M96 96 L 156 96" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#w4ar2)"/>
+  <path d="M96 146 L 156 146" stroke="#00a972" stroke-width="1.5" marker-end="url(#w4ar3)"/>
+
+  <rect x="160" y="22" width="106" height="152" rx="7" fill="#232c38" stroke="#2b3542"/>
+  <text x="213" y="40" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e8ecf2">Tests</text>
+  <text x="213" y="72" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:22px;fill:#ff4a2e">✕</text>
+  <text x="213" y="122" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:22px;fill:#ff4a2e">✕</text>
+  <text x="213" y="164" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:22px;fill:#00a972">✚</text>
+  <path d="M266 156 L 306 156 L 306 100 L 322 100" stroke="#00a972" stroke-width="1.5" fill="none" marker-end="url(#w4ar3)"/>
+
+  <rect x="326" y="52" width="112" height="96" rx="7" fill="#232c38" stroke="#2b3542"/>
+  <text x="382" y="76" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e8ecf2">Version</text>
+  <text x="382" y="92" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e8ecf2">Control</text>
+  <text x="382" y="122" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:20px;fill:#e8ecf2">⑂</text>
+  <text x="382" y="166" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8">Branching Strategy</text>
+
+  <text x="470" y="42" style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:700;fill:#e8ecf2">Benefits</text>
+  <text x="470" y="66" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c9d3e0">· Early Detection of Issues</text>
+  <text x="470" y="90" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c9d3e0">· Faster Development Cycle</text>
+  <text x="470" y="114" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c9d3e0">· Improved Collaboration and</text>
+  <text x="480" y="128" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c9d3e0">Code Quality</text>
+  <text x="470" y="152" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c9d3e0">· Automated Testing and</text>
+  <text x="480" y="166" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c9d3e0">Validation</text>
+</svg>
+<p><strong>Les tests qui échouent n'entrent pas dans votre code source.</strong> La façon dont les tests et les commits vers le version control sont implémentés dépend de la <strong>stratégie de branches</strong> définie par votre organisation. <em>Décider d'une stratégie de branching et de test est extrêmement important.</em></p>
+<p><strong>Quatre bénéfices clés de la Continuous Integration :</strong></p>
+<ul>
+<li><strong>Early Detection of Issues</strong> — en intégrant le code souvent, les bugs et conflits sont détectés tôt, ce qui les rend plus faciles à corriger.</li>
+<li><strong>Faster Development Cycle</strong> — l'intégration fréquente accélère la livraison de nouvelles fonctionnalités et corrections.</li>
+<li><strong>Improved Collaboration and Code Quality</strong> — l'intégration régulière conduit à un code plus propre, plus modulaire et à un meilleur travail d'équipe.</li>
+<li><strong>Automated Testing and Validation</strong> — des tests automatisés s'exécutent à chaque intégration pour garantir que le code est stable et fonctionne avec les fonctionnalités existantes.</li>
+</ul>
+<p>Ces bénéfices — détection précoce des problèmes, livraison plus rapide, meilleure collaboration et tests automatisés — rendent la Continuous Integration <strong>essentielle à un développement fluide</strong>.</p>
+
+<h4>High-level Testing Steps — la pyramide de tests</h4>
+<p>Au sein du CI/CD, il existe des étapes de test à suivre dans ce qu'on appelle la <strong>testing pyramid</strong>. La pyramide de tests catégorise les différents tests : <strong>unit tests, integration tests et system tests</strong>.</p>
+<svg viewBox="0 0 700 210" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w4ar4" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <path d="M170 20 L 290 190 L 50 190 z" fill="#ff4a2e"/>
+  <line x1="120" y1="120" x2="220" y2="120" stroke="#1c232d" stroke-width="2.5"/>
+  <line x1="145" y1="70" x2="195" y2="70" stroke="#1c232d" stroke-width="2.5"/>
+  <text x="170" y="52" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;fill:#fff">System</text>
+  <text x="170" y="64" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;fill:#fff">Tests</text>
+  <text x="170" y="98" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;fill:#fff">Integration</text>
+  <text x="170" y="112" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;fill:#fff">Tests</text>
+  <text x="170" y="162" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;fill:#fff">Unit Tests</text>
+  <path d="M26 30 L 26 184" stroke="#8a97a8" stroke-width="2" marker-end="url(#w4ar4)"/>
+  <text x="26" y="24" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:700;fill:#e8ecf2">Slow</text>
+  <text x="26" y="200" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:700;fill:#e8ecf2">Fast</text>
+
+  <rect x="312" y="16" width="376" height="54" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="326" y="36" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">· Test the entire application, ensuring that all parts</text>
+  <text x="334" y="49" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">function together in a real-world scenario</text>
+  <text x="326" y="63" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">· <tspan font-weight="700" fill="#e8ecf2">Ex:</tspan> End to end data pipeline in a Job</text>
+
+  <rect x="312" y="78" width="376" height="44" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="326" y="97" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">· Test the interaction between different components</text>
+  <text x="326" y="114" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">· <tspan font-weight="700" fill="#e8ecf2">Ex:</tspan> Notebooks / SDP / Jobs interactions</text>
+
+  <rect x="312" y="130" width="376" height="62" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="326" y="149" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">· Test <tspan font-weight="700" fill="#e8ecf2">individual</tspan> functions or methods in isolation</text>
+  <text x="326" y="166" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">· Fast, low cost, high coverage, and automated</text>
+  <text x="326" y="183" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">· <tspan font-weight="700" fill="#e8ecf2">Ex:</tspan> Custom pyspark functions</text>
+</svg>
+<ul>
+<li><strong>Unit Tests (base de la pyramide)</strong> — testent des fonctions ou méthodes individuelles <strong>en isolation</strong>. Comme ce sont de petites fonctions individuelles, elles s'exécutent typiquement <strong>rapidement, fréquemment et automatiquement</strong>. Les tests unitaires forment la fondation parce qu'ils sont <strong>peu coûteux</strong> et fournissent la <strong>couverture la plus large</strong>. Exemple : tester qu'une méthode PySpark fonctionne comme attendu.</li>
+<li><strong>Integration Tests</strong> — testent l'interaction entre différents composants ou systèmes. Ils sont typiquement <strong>plus lents et plus coûteux</strong> que les tests unitaires, mais donnent une plus grande assurance que les composants fonctionnent correctement ensemble. Dans Databricks, ils tournent typiquement autour des <strong>Notebooks, de SDP et/ou des Lakeflow Jobs</strong>. Exemple : tester qu'une méthode PySpark et un SDP fonctionnent correctement ensemble.</li>
+<li><strong>System Tests</strong> — testent <strong>toute l'application</strong>, en s'assurant que toutes les parties fonctionnent ensemble dans un scénario réel. Ils sont typiquement <strong>lents, coûteux</strong> et souvent exécutés dans un environnement proche de la production. Exemple : pour notre pipeline de données de bout en bout, tester que le pipeline fonctionne comme attendu au sein d'un Job, en produisant les résultats souhaités.</li>
 </ul>`
       },
       {
-        id: "w4l6", title: "Planifier le projet & isoler les environnements",
+        id: "w4l9", title: "Continuous Delivery vs Continuous Deployment",
         html: `
-<h4>Planifier le projet (exemple fil rouge)</h4>
-<ul>
-<li><strong>Livrable :</strong> visualiser des données santé.</li>
-<li><strong>Tâches :</strong> ingérer des fichiers CSV incrémentaux quotidiens vers une table Bronze ; créer une table Silver propre ; créer des tables Gold à partager avec les consommateurs.</li>
-<li><strong>Assets Databricks :</strong> Workspace, Notebooks, SDP, Lakeflow Jobs, Compute.</li>
-</ul>
-<h4>Configurer les environnements de données</h4>
-<table class="tbl">
-<thead><tr><th>Environnement</th><th>Caractéristiques</th></tr></thead>
-<tbody>
-<tr><td><strong>Dev Data</strong></td><td>Souvent un <strong>petit sous-ensemble statique</strong> de la prod ; peut être anonymisé ou synthétique ; supporte un développement/test rapide ; préserve confidentialité et intégrité.</td></tr>
-<tr><td><strong>Stage Data</strong></td><td>Reflète la <strong>structure et le volume</strong> de la prod (typiquement statique) ; peut être anonymisé/nettoyé des informations sensibles ; assure des tests et validations réalistes.</td></tr>
-<tr><td><strong>Prod Data</strong></td><td>Données <strong>vivantes et pleinement opérationnelles</strong> ; contiennent de vraies données utilisateur ; continuellement mises à jour ; exigent de hauts standards de sécurité, confidentialité et conformité.</td></tr>
-</tbody>
-</table>
-<h4>Isoler les environnements</h4>
-<ul>
-<li>Au niveau <strong>Workspaces</strong> : utiliser plusieurs workspaces (un par environnement DEV/STG/PRD) avec stockage cloud séparé sous Unity Catalog.</li>
-<li>Au niveau <strong>Catalogues</strong> : un catalogue UC par environnement (DEV/STG/PRD catalog), avec un même <em>Metastore</em> et un administrateur de metastore.</li>
-<li><strong>UC Access Control :</strong> les utilisateurs n'accèdent aux données/métadonnées que selon les règles d'accès convenues.</li>
-</ul>
-<p><strong>Architecture du projet :</strong> fichiers CSV quotidiens → Spark Declarative Pipeline → catalogues Dev (petit sous-ensemble) / Stage (sous-ensemble plus large) / Prod ; orchestration par Workflow ; <strong>tests unitaires + tests d'intégration</strong> ; puis livrable de visualisation.</p>`
+<h4>Continuous Delivery (CD)</h4>
+<div class="callout"><strong>Continuous Delivery :</strong> pousser <strong>automatiquement</strong> les changements vers les environnements de <strong>staging/pré-production</strong>, <span style="color:#ff6a52"><strong>avec la capacité de déployer manuellement en production</strong></span> à tout moment.</div>
+<svg viewBox="0 0 700 110" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>.st{font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8}.badge{font-family:'JetBrains Mono',monospace;font-size:7.5px;font-weight:700}</style>
+  <path d="M14 46 L 690 46 L 690 62 L 14 62 z" fill="#ff4a2e" opacity=".5"/>
+  <rect x="24" y="34" width="96" height="40" rx="7" fill="#232c38" stroke="#2b3542"/><text x="72" y="59" text-anchor="middle" class="st">Develop</text>
+  <rect x="132" y="34" width="96" height="40" rx="7" fill="#232c38" stroke="#2b3542"/><text x="180" y="59" text-anchor="middle" class="st">Build</text>
+  <rect x="240" y="34" width="96" height="40" rx="7" fill="#232c38" stroke="#2b3542"/><text x="288" y="59" text-anchor="middle" class="st">Test</text>
+  <rect x="348" y="34" width="96" height="40" rx="7" fill="#232c38" stroke="#2b3542"/><text x="396" y="52" text-anchor="middle" class="st">Version</text><text x="396" y="65" text-anchor="middle" class="st">Control</text>
+  <rect x="456" y="34" width="96" height="40" rx="7" fill="#ff4a2e"/><text x="504" y="52" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Deploy to</text><text x="504" y="65" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Stage</text>
+  <rect x="564" y="34" width="96" height="40" rx="7" fill="#1B3139"/><text x="612" y="52" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Deploy to</text><text x="612" y="65" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Production</text>
+  <rect x="152" y="14" width="34" height="14" rx="3" fill="#1B3139"/><text x="169" y="24" text-anchor="middle" class="badge" fill="#fff">AUTO</text>
+  <rect x="260" y="14" width="34" height="14" rx="3" fill="#1B3139"/><text x="277" y="24" text-anchor="middle" class="badge" fill="#fff">AUTO</text>
+  <rect x="368" y="14" width="34" height="14" rx="3" fill="#1B3139"/><text x="385" y="24" text-anchor="middle" class="badge" fill="#fff">AUTO</text>
+  <rect x="474" y="14" width="46" height="14" rx="3" fill="#e3b23c"/><text x="497" y="24" text-anchor="middle" class="badge" fill="#0d1014">MANUAL</text>
+  <text x="230" y="98" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;fill:#8a97a8">Continuous Integration</text>
+  <text x="560" y="98" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;fill:#e8ecf2">Continuous Delivery</text>
+</svg>
+<p>La Continuous Delivery consiste à <strong>automatiser le processus de push des changements vers le staging ou la pré-production</strong>. Cette configuration permet des mises à jour sans couture et offre la <strong>flexibilité de déployer manuellement en production quand c'est nécessaire</strong>, garantissant des releases fluides et contrôlées. Par exemple : une fois les étapes de continuous integration terminées et les tests effectués, <strong>nous pouvons décider</strong> de déployer notre pipeline de données en production.</p>
+
+<h4>Continuous Deployment (CD)</h4>
+<div class="callout"><strong>Continuous Deployment :</strong> <span style="color:#ff6a52"><strong>processus entièrement automatisé</strong></span> où chaque changement qui passe les tests est <strong>immédiatement déployé en production</strong>.</div>
+<svg viewBox="0 0 700 110" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>.st2{font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8}.badge2{font-family:'JetBrains Mono',monospace;font-size:7.5px;font-weight:700;fill:#fff}</style>
+  <path d="M14 46 L 690 46 L 690 62 L 14 62 z" fill="#ff4a2e" opacity=".5"/>
+  <rect x="24" y="34" width="96" height="40" rx="7" fill="#232c38" stroke="#2b3542"/><text x="72" y="59" text-anchor="middle" class="st2">Develop</text>
+  <rect x="132" y="34" width="96" height="40" rx="7" fill="#232c38" stroke="#2b3542"/><text x="180" y="59" text-anchor="middle" class="st2">Build</text>
+  <rect x="240" y="34" width="96" height="40" rx="7" fill="#232c38" stroke="#2b3542"/><text x="288" y="59" text-anchor="middle" class="st2">Test</text>
+  <rect x="348" y="34" width="96" height="40" rx="7" fill="#232c38" stroke="#2b3542"/><text x="396" y="52" text-anchor="middle" class="st2">Version</text><text x="396" y="65" text-anchor="middle" class="st2">Control</text>
+  <rect x="456" y="34" width="96" height="40" rx="7" fill="#ff4a2e"/><text x="504" y="52" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Deploy to</text><text x="504" y="65" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Stage</text>
+  <rect x="564" y="34" width="96" height="40" rx="7" fill="#ff4a2e"/><text x="612" y="52" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Deploy to</text><text x="612" y="65" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Production</text>
+  <rect x="152" y="14" width="34" height="14" rx="3" fill="#1B3139"/><text x="169" y="24" text-anchor="middle" class="badge2">AUTO</text>
+  <rect x="260" y="14" width="34" height="14" rx="3" fill="#1B3139"/><text x="277" y="24" text-anchor="middle" class="badge2">AUTO</text>
+  <rect x="368" y="14" width="34" height="14" rx="3" fill="#1B3139"/><text x="385" y="24" text-anchor="middle" class="badge2">AUTO</text>
+  <rect x="476" y="14" width="34" height="14" rx="3" fill="#1B3139"/><text x="493" y="24" text-anchor="middle" class="badge2">AUTO</text>
+  <text x="230" y="98" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;fill:#8a97a8">Continuous Integration</text>
+  <text x="560" y="98" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;fill:#e8ecf2">Continuous Deployment</text>
+</svg>
+<p>Le Continuous Deployment pousse l'automatisation <strong>un cran plus loin</strong>. Une fois qu'un changement passe tous les tests, il est <strong>automatiquement déployé en production</strong>, garantissant que les nouvelles fonctionnalités ou correctifs sont livrés rapidement et sans couture, <strong>sans intervention manuelle</strong>.</p>
+<p>Par exemple : si vos processus de continuous integration sont alignés et bien implémentés, nous pouvons déployer automatiquement notre pipeline de données du développement au staging, puis à la production, en évitant les étapes de déploiement manuelles. <strong>Implémenter cette technique exige des tests bien pensés</strong> pour s'assurer que le pipeline doit bien être déployé.</p>
+
+<h4>High-Level CI/CD Workflow Overview</h4>
+<svg viewBox="0 0 700 110" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <path d="M14 46 L 690 46 L 690 62 L 14 62 z" fill="#ff4a2e" opacity=".6"/>
+  <rect x="24" y="32" width="96" height="42" rx="7" fill="#1B3139"/><text x="72" y="58" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Develop</text>
+  <rect x="132" y="32" width="96" height="42" rx="7" fill="#1B3139"/><text x="180" y="58" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Build</text>
+  <rect x="240" y="32" width="96" height="42" rx="7" fill="#1B3139"/><text x="288" y="58" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Test</text>
+  <rect x="348" y="32" width="96" height="42" rx="7" fill="#1B3139"/><text x="396" y="52" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Version</text><text x="396" y="65" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Control</text>
+  <rect x="456" y="32" width="96" height="42" rx="7" fill="#ff6a52"/><text x="504" y="52" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Deploy to</text><text x="504" y="65" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Stage</text>
+  <rect x="564" y="32" width="96" height="42" rx="7" fill="#ff6a52"/><text x="612" y="52" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Deploy to</text><text x="612" y="65" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#fff">Production</text>
+  <line x1="446" y1="16" x2="446" y2="90" stroke="#8a97a8" stroke-width="1.4"/>
+  <text x="228" y="96" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;fill:#c9d3e0">Continuous Integration (CI)</text>
+  <text x="560" y="90" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;fill:#c9d3e0">Continuous Delivery /</text>
+  <text x="560" y="104" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;fill:#c9d3e0">Continuous Deployment (CD)</text>
+</svg>
+<div class="callout">Au final, le processus CI/CD <strong>fluidifie le développement de vos pipelines de données</strong> en automatisant le test et le déploiement, menant à des releases plus rapides et plus fiables. Cette approche <strong>minimise les erreurs manuelles</strong>, améliore la collaboration et garantit un logiciel de haute qualité livré rapidement et de façon cohérente.</div>`
       },
       {
-        id: "w4l7", title: "Tests unitaires PySpark",
+        id: "w4l10", title: "Planifier le projet & les environnements de données",
         html: `
-<h4>Bénéfices des tests unitaires</h4>
-<ul>
-<li>Tester <strong>une seule fonction</strong> spécifique, sur un petit volume de données.</li>
-<li><strong>Attraper les bugs</strong> avant de les déployer.</li>
-<li>Refactoring plus facile ; débogage facilité.</li>
+<p>Dans cette leçon, vous apprendrez à <strong>planifier un projet de visualisation de données</strong> en structurant les environnements, en gérant les données à travers dev, stage et prod, et en mettant en place un pipeline CI/CD dans Databricks pour des déploiements fluides et sécurisés.</p>
+
+<h4>Requirements — le projet fil rouge</h4>
+<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-bottom:14px">
+<div>
+<p style="margin:0 0 6px"><strong>Deliverable</strong></p>
+<ul style="margin:0 0 12px"><li><strong>Visualize Health Data</strong></li></ul>
+<p style="margin:0 0 6px"><strong>Tasks</strong></p>
+<ul style="margin:0">
+<li>Ingérer des <strong>fichiers CSV incrémentaux quotidiens</strong> vers une table <strong>bronze</strong>.</li>
+<li>Créer une table <strong>silver</strong> propre.</li>
+<li>Créer des tables <strong>gold</strong> à partager avec les consommateurs.</li>
 </ul>
-<h4>pyspark.testing.utils</h4>
-<p>Fournit des fonctions utilitaires pour faciliter les tests unitaires PySpark :</p>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e8ecf2;margin-bottom:8px;text-align:center">Databricks Assets</div>
+<div style="border:1px dashed #8a97a8;border-radius:7px;padding:10px">
+  <div style="text-align:center;font-size:12px;color:#c9d3e0;margin-bottom:8px">Workspace</div>
+  <div style="background:#ff8a76;color:#0d1014;border-radius:4px;padding:5px;text-align:center;font-size:11.5px;font-weight:600;margin-bottom:5px">Notebooks</div>
+  <div style="background:#ff8a76;color:#0d1014;border-radius:4px;padding:5px;text-align:center;font-size:11.5px;font-weight:600;margin-bottom:5px">SDP</div>
+  <div style="background:#ff8a76;color:#0d1014;border-radius:4px;padding:5px;text-align:center;font-size:11.5px;font-weight:600;margin-bottom:5px">Lakeflow Jobs</div>
+  <div style="background:#ff8a76;color:#0d1014;border-radius:4px;padding:5px;text-align:center;font-size:11.5px;font-weight:600">Compute</div>
+</div>
+</div>
+</div>
+<p>Ce projet se concentre sur la <strong>visualisation de données de santé</strong> en suivant un pipeline de données structuré. On commence par ingérer des fichiers CSV incrémentaux quotidiens dans une table <strong>Bronze</strong>, puis on raffine ces données brutes dans une table <strong>Silver</strong> propre. À partir de là, on crée une table <strong>Gold</strong> résumée, partagée avec les consommateurs et utilisée pour construire la visualisation finale. Tout au long du processus, on utilise divers assets : <strong>notebooks, Spark Declarative Pipelines, Lakeflow Jobs et ressources de compute</strong>.</p>
+
+<h4>Setting Up Your Data Environments</h4>
+<p><em>Au sein d'un pipeline CI/CD :</em></p>
+<div class="cards-3">
+  <div class="mini-card"><h4>Dev Data</h4><p>Souvent un <strong>petit sous-ensemble statique</strong> des données de production.<br/>Peut être <strong>anonymisé</strong> ou constitué de <strong>jeux de données synthétiques</strong>.<br/>Supporte un <strong>développement et un test rapides</strong>.<br/>Garantit la <strong>confidentialité et l'intégrité</strong> des données.</p></div>
+  <div class="mini-card"><h4>Stage Data</h4><p>Les données de staging <strong>reflètent la structure et le volume</strong> de la production, typiquement <strong>statiques</strong>.<br/>Peuvent être <strong>anonymisées</strong> ou avoir les informations sensibles <strong>nettoyées</strong> (<em>scrubbed</em>).<br/>Garantissent des <strong>tests et validations réalistes</strong>.</p></div>
+  <div class="mini-card"><h4>Prod Data</h4><p>Données de production : <strong>vivantes et pleinement opérationnelles</strong>.<br/>Contiennent de <strong>vraies données utilisateur</strong>.<br/><strong>Continuellement mises à jour</strong>.<br/>Exigent de <strong>hauts standards de sécurité, de confidentialité et de conformité</strong>.</p></div>
+</div>
+<div class="callout">Chaque environnement doit avoir des données <strong>adaptées à son objectif spécifique</strong>, équilibrant réalisme, sécurité et conformité à chaque étape. La façon dont cela est implémenté dépendra de <strong>votre organisation et de la sensibilité de vos données</strong>.</div>`
+      },
+      {
+        id: "w4l11", title: "Isoler les environnements & architecture du projet",
+        html: `
+<h4>Isolating Environments</h4>
+<p>Isoler ses environnements pour les différentes étapes de développement est <strong>clé pour développer un pipeline CI/CD</strong>. Cela garantit que le code est développé et testé en <strong>développement et staging avant de toucher l'environnement de production</strong>.</p>
+<svg viewBox="0 0 700 190" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <rect x="24" y="20" width="230" height="150" rx="8" fill="#232c38" stroke="#8a97a8" stroke-dasharray="4 3"/>
+  <text x="139" y="60" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:22px;fill:#ff6a52">▤</text>
+  <text x="139" y="88" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;fill:#e8ecf2">Workspaces</text>
+  <text x="139" y="118" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#8a97a8">Utilizing multiple workspaces,</text>
+  <text x="139" y="134" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#8a97a8">one for each environment</text>
+  <rect x="284" y="34" width="132" height="34" rx="5" fill="#ff4a2e"/><text x="350" y="57" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;fill:#fff">DEV</text>
+  <rect x="284" y="78" width="132" height="34" rx="5" fill="#ff4a2e"/><text x="350" y="101" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;fill:#fff">STAGE</text>
+  <rect x="284" y="122" width="132" height="34" rx="5" fill="#ff4a2e"/><text x="350" y="145" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;fill:#fff">PROD</text>
+  <rect x="446" y="20" width="230" height="150" rx="8" fill="#232c38" stroke="#8a97a8" stroke-dasharray="4 3"/>
+  <text x="561" y="60" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:22px;fill:#ff6a52">▥</text>
+  <text x="561" y="88" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;fill:#e8ecf2">Catalogs</text>
+  <text x="561" y="118" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#8a97a8">Utilizing multiple catalogs,</text>
+  <text x="561" y="134" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#8a97a8">one for each environment</text>
+</svg>
+<p>La configuration <strong>minimale</strong> consiste à avoir deux environnements : « <strong>Development &amp; Stage</strong> » et « <strong>Production</strong> », mais cela peut varier selon les exigences de votre organisation.</p>
+
+<h4>Méthode 1 · Workspace Isolation</h4>
+<p><strong>Vous pouvez isoler vos environnements dev, stage et prod au niveau du Workspace et du stockage.</strong></p>
+<svg viewBox="0 0 700 180" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w4ar5" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#3fcf8e"/></marker></defs>
+  <rect x="20" y="46" width="290" height="80" rx="7" fill="#232c38" stroke="#8a97a8" stroke-dasharray="4 3"/>
+  <text x="165" y="78" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#c9d3e0">You can <tspan font-weight="700" fill="#e8ecf2">isolate</tspan> your dev, stage</text>
+  <text x="165" y="96" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#c9d3e0">and prod environments at the</text>
+  <text x="165" y="112" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#c9d3e0">Workspace and storage level.</text>
+
+  <text x="500" y="24" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;fill:#ff6a52">Databricks Workspaces</text>
+  <rect x="340" y="36" width="98" height="40" rx="6" fill="#232c38" stroke="#ff4a2e"/>
+  <text x="389" y="54" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;fill:#e8ecf2">DEV</text><text x="389" y="68" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8">Workspace</text>
+  <rect x="450" y="36" width="98" height="40" rx="6" fill="#232c38" stroke="#ff4a2e"/>
+  <text x="499" y="54" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;fill:#e8ecf2">STG</text><text x="499" y="68" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8">Workspace</text>
+  <rect x="560" y="36" width="98" height="40" rx="6" fill="#232c38" stroke="#ff4a2e"/>
+  <text x="609" y="54" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;fill:#e8ecf2">PRD</text><text x="609" y="68" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8">Workspace</text>
+  <path d="M389 80 L 389 96" stroke="#3fcf8e" stroke-width="1.4" marker-end="url(#w4ar5)"/>
+  <path d="M499 80 L 499 96" stroke="#3fcf8e" stroke-width="1.4" marker-end="url(#w4ar5)"/>
+  <path d="M609 80 L 609 96" stroke="#3fcf8e" stroke-width="1.4" marker-end="url(#w4ar5)"/>
+  <rect x="340" y="100" width="98" height="40" rx="6" fill="#232c38" stroke="#2272b4"/>
+  <text x="389" y="118" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;fill:#e8ecf2">DEV</text><text x="389" y="132" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8">storage</text>
+  <rect x="450" y="100" width="98" height="40" rx="6" fill="#232c38" stroke="#2272b4"/>
+  <text x="499" y="118" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;fill:#e8ecf2">STG</text><text x="499" y="132" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8">storage</text>
+  <rect x="560" y="100" width="98" height="40" rx="6" fill="#232c38" stroke="#2272b4"/>
+  <text x="609" y="118" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;fill:#e8ecf2">PRD</text><text x="609" y="132" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8">storage</text>
+  <text x="500" y="162" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;fill:#2272b4">Cloud storage w/ Unity Catalog</text>
+</svg>
+<p>Dans Databricks, une des méthodes pour isoler vos environnements consiste à créer un <strong>Workspace séparé</strong> pour les environnements dev, stage et prod. Cela garantit que <strong>tout le développement est isolé de votre environnement de production</strong>.</p>
+
+<h4>Méthode 2 · Unity Catalog Isolation</h4>
+<svg viewBox="0 0 700 200" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <text x="30" y="60" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:600;fill:#ff6a52">Storage isolation</text>
+  <text x="30" y="76" style="font-family:'Inter',sans-serif;font-size:9px;font-style:italic;fill:#8a97a8">This example separates the storage</text>
+  <text x="30" y="88" style="font-family:'Inter',sans-serif;font-size:9px;font-style:italic;fill:#8a97a8">locations on catalog level</text>
+  <text x="30" y="122" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:600;fill:#e3b23c">UC Access Control</text>
+  <text x="30" y="138" style="font-family:'Inter',sans-serif;font-size:9px;font-style:italic;fill:#8a97a8">Users should only gain access to data/</text>
+  <text x="30" y="150" style="font-family:'Inter',sans-serif;font-size:9px;font-style:italic;fill:#8a97a8">metadata based on agreed access rules</text>
+
+  <rect x="248" y="14" width="440" height="172" rx="8" fill="none" stroke="#ff4a2e"/>
+  <text x="468" y="34" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:600;fill:#e8ecf2">Workspace</text>
+  <text x="262" y="54" style="font-family:'Inter',sans-serif;font-size:9.5px;font-style:italic;fill:#ff6a52">Metastore Admin</text>
+  <rect x="258" y="60" width="120" height="42" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="318" y="78" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2">Unity Catalog</text>
+  <text x="318" y="92" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2">Metastore</text>
+  <rect x="392" y="62" width="88" height="34" rx="5" fill="#232c38" stroke="#3fcf8e"/><text x="436" y="84" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2">DEV catalog</text>
+  <rect x="490" y="62" width="88" height="34" rx="5" fill="#232c38" stroke="#3fcf8e"/><text x="534" y="84" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2">STG catalog</text>
+  <rect x="588" y="62" width="88" height="34" rx="5" fill="#232c38" stroke="#3fcf8e"/><text x="632" y="84" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2">PRD catalog</text>
+  <path d="M436 98 L 436 122 M534 98 L 534 122 M632 98 L 632 122" stroke="#e3b23c" stroke-width="1.4"/>
+  <text x="436" y="132" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:11px;fill:#e3b23c">🔒</text>
+  <text x="534" y="132" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:11px;fill:#e3b23c">🔒</text>
+  <text x="632" y="132" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:11px;fill:#e3b23c">🔒</text>
+  <rect x="392" y="140" width="88" height="34" rx="5" fill="#232c38" stroke="#2272b4"/><text x="436" y="162" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2">DEV storage</text>
+  <rect x="490" y="140" width="88" height="34" rx="5" fill="#232c38" stroke="#2272b4"/><text x="534" y="162" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2">STG storage</text>
+  <rect x="588" y="140" width="88" height="34" rx="5" fill="#232c38" stroke="#2272b4"/><text x="632" y="162" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2">PRD storage</text>
+</svg>
+<p>Une autre méthode pour isoler vos environnements dans Databricks est l'<strong>isolation par Unity Catalog</strong>. Avec cette méthode, vous <strong>créez un catalogue pour chaque environnement</strong> (dev, stage et prod) : l'environnement dev contient les données de dev, stage les données de staging, et prod les données de production.</p>
+<p>Avec cette méthode, vous pouvez aussi utiliser le <strong>contrôle d'accès Unity Catalog</strong> pour vos développeurs, en ne leur donnant que les <strong>permissions requises</strong> pour chaque environnement.</p>
+
+<h4>Course Project Architecture</h4>
+<svg viewBox="0 0 700 240" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w4ar6" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <rect x="14" y="14" width="672" height="212" rx="8" fill="none" stroke="#8a97a8" stroke-dasharray="4 3"/>
+  <text x="34" y="40" style="font-family:'Space Grotesk',sans-serif;font-size:13px;fill:#e8ecf2">Catalogs</text>
+  <rect x="30" y="50" width="150" height="34" rx="5" fill="#232c38" stroke="#ff4a2e"/><text x="105" y="72" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#e8ecf2">Dev</text>
+  <text x="30" y="98" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">Small subset of prod</text>
+  <rect x="30" y="108" width="150" height="34" rx="5" fill="#232c38" stroke="#ff4a2e"/><text x="105" y="130" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#e8ecf2">Stage</text>
+  <text x="30" y="156" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">Larger subset of prod</text>
+  <rect x="30" y="166" width="150" height="34" rx="5" fill="#232c38" stroke="#ff4a2e"/><text x="105" y="188" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#e8ecf2">Prod</text>
+  <text x="30" y="214" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">Daily CSV files</text>
+
+  <path d="M184 67 L 210 67 L 210 116 L 236 116" stroke="#ff6a52" stroke-width="1.4" fill="none" marker-end="url(#w4ar6)"/>
+  <path d="M184 125 L 236 122" stroke="#ff6a52" stroke-width="1.4" fill="none" marker-end="url(#w4ar6)"/>
+  <path d="M184 183 L 210 183 L 210 130 L 236 130" stroke="#ff6a52" stroke-width="1.4" fill="none" marker-end="url(#w4ar6)"/>
+
+  <rect x="222" y="42" width="452" height="172" rx="8" fill="none" stroke="#1B3139" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="448" y="66" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;fill:#e8ecf2">Workflow</text>
+  <rect x="238" y="98" width="70" height="52" rx="6" fill="#232c38" stroke="#8a97a8" stroke-dasharray="3 2"/>
+  <text x="273" y="120" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Unit</text>
+  <text x="273" y="134" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Tests</text>
+  <text x="400" y="88" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">+ Integration Tests</text>
+  <rect x="330" y="96" width="140" height="56" rx="6" fill="#ff8a76"/>
+  <text x="400" y="116" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;fill:#0d1014">Spark</text>
+  <text x="400" y="130" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;fill:#0d1014">Declarative</text>
+  <text x="400" y="144" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;fill:#0d1014">Pipeline</text>
+  <text x="574" y="88" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">Deliverable</text>
+  <rect x="504" y="96" width="140" height="56" rx="6" fill="#ff8a76"/>
+  <text x="574" y="120" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;fill:#0d1014">Data</text>
+  <text x="574" y="136" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;fill:#0d1014">Visualization</text>
+  <path d="M312 124 L 326 124 M474 124 L 500 124" stroke="#ff6a52" stroke-width="1.6" marker-end="url(#w4ar6)"/>
+  <text x="400" y="176" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:16px;fill:#ff6a52">⚡</text>
+  <text x="574" y="176" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:16px;fill:#ff6a52">⚡</text>
+</svg>
+<p>Dans ce projet, nous créons <strong>un catalogue par environnement</strong> : dev, stage et prod.</p>
 <ul>
-<li><code>assertDataFrameEqual(actual, expected[, …])</code></li>
-<li><code>assertSchemaEqual(actual, expected)</code></li>
+<li>Le catalogue <strong>dev</strong> contiendra un <strong>petit sous-ensemble statique</strong> de nos données de production, utilisé pour le développement et les tests initiaux.</li>
+<li>Le catalogue <strong>stage</strong> contiendra un <strong>sous-ensemble plus large</strong> des données de production, permettant des tests plus complets à mesure que nous avançons dans le processus CI/CD.</li>
+<li>Enfin, le catalogue <strong>prod</strong> contiendra les <strong>données de production vivantes</strong> sur lesquelles nous nous appuyons pour les opérations finales.</li>
 </ul>
-<h4>Exemple — tester une fonction qui crée une colonne</h4>
-<p>But du test : comparer le résultat <em>réel</em> de la fonction au résultat <em>attendu</em>.</p>
+<p>Notre workflow commence par développer sur les données de dev, en exécutant des <strong>tests unitaires et d'intégration</strong> à mesure que nous progressons dans le pipeline. Le pipeline est mis en place avec des <strong>Databricks Lakeflow Jobs</strong>, qui exécutent les tests unitaires, le Spark Declarative Pipeline et les visualisations finales. En testant le pipeline à chaque étape, nous nous assurons que tout fonctionne correctement <strong>avant de déployer en production</strong>.</p>`
+      },
+      {
+        id: "w4l12", title: "Tests unitaires pour PySpark",
+        html: `
+<p>Dans cette leçon, vous apprendrez à écrire et exécuter des tests unitaires pour PySpark en utilisant <code>pyspark.testing.utils</code> et <code>pytest</code>, en explorant leurs bénéfices, fonctions clés et exemples pratiques pour garantir la qualité et la fiabilité du code.</p>
+
+<h4>UNIT TESTS Benefits</h4>
+<ul>
+<li>Tester <strong>une seule fonction spécifique</strong>, sur un <strong>petit volume de données</strong> — ce qui rend l'isolation des problèmes facile.</li>
+<li><strong>Attraper les bugs avant de les déployer</strong> dans votre projet — cela fait gagner du temps et réduit les erreurs.</li>
+<li>Le <strong>refactoring de votre code est plus facile</strong>, puisque vous pouvez garantir que vos changements ne cassent rien.</li>
+<li>Les tests rendent votre <strong>débogage plus facile</strong>, en pointant exactement où les choses tournent mal.</li>
+</ul>
+<div class="callout">En bref, les tests unitaires sont <strong>essentiels pour garder votre code fiable et facile à maintenir</strong>.</div>
+
+<h4>Pyspark.testing.utils — fonctions de test</h4>
+<p><code>pyspark.testing.utils</code> fournit des <strong>fonctions utilitaires</strong> pour faciliter les tests unitaires en PySpark. Les utilitaires de test intégrés de PySpark simplifient le processus, en particulier pour tester les transformations et actions Spark.</p>
+<table class="tbl">
+<thead><tr><th style="width:46%">Fonction</th><th>Rôle</th></tr></thead>
+<tbody>
+<tr><td><code>assertDataFrameEqual(actual, expected[, …])</code></td><td>Fonction utilitaire pour vérifier l'<strong>égalité entre un DataFrame réel et un DataFrame attendu</strong>, avec des paramètres optionnels.</td></tr>
+<tr><td><code>assertSchemaEqual(actual, expected)</code></td><td>Fonction utilitaire pour vérifier l'<strong>égalité entre les schémas</strong> de DataFrames réel et attendu.</td></tr>
+</tbody>
+</table>
+<div class="callout">Il existe une <strong>variété d'autres méthodes</strong> pour exécuter vos tests unitaires ; nous nous concentrons ici sur les <strong>pyspark testing utils</strong>.<br/><em>Documentation : Testing — PySpark 4.0.1 documentation.</em></div>
+
+<h4>Unit Test Example</h4>
+<p><strong>1. Vous avez la fonction suivante qui crée une colonne :</strong></p>
 <pre><code>from pyspark.sql.functions import col, when
 
 def add_new_col(df, new, s_col):
-    return df.withColumn(new,
-             when(col(s_col) == 0, 'Normal').otherwise('Unknown'))
-
-def test_add_new_col():
-    # 1) DataFrame d'échantillon couvrant les cas
-    data = [(0,), (1,), (-1,), (None,)]
-    df = spark.createDataFrame(data, ["value"])
-
-    # 2) Exécuter la fonction et stocker le résultat
-    actual_df = add_new_col(df, "new_value", "value")
-
-    # 3) Construire le résultat attendu
-    expected_data = [(0,'Normal'), (1,'Unknown'), (-1,'Unknown'), (None,'Unknown')]
-    expected_df = spark.createDataFrame(expected_data, ["value","new_value"])
-
-    # 4) Comparer : si différent, une erreur est renvoyée
-    assertDataFrameEqual(actual_df, expected_df)</code></pre>
-<h4>pytest</h4>
-<p>Framework de test Python populaire pour écrire des cas simples et scalables :</p>
-<ul>
-<li><strong>Syntaxe simple</strong> — définir des fonctions commençant par <code>test_</code>.</li>
-<li><strong>Assertions</strong> — instructions <code>assert</code> avec messages d'erreur détaillés.</li>
-<li><strong>Découverte automatique</strong> — trouve et exécute tous les tests avec une config minimale.</li>
-<li><strong>Riche écosystème</strong> — plugins pour couverture, tests parallèles, etc.</li>
-</ul>`
-      },
-      {
-        id: "w4l8", title: "Tests d'intégration (SDP & Jobs)",
-        html: `
-<p>Deux méthodes pour valider le bon fonctionnement du pipeline.</p>
-<h4>Méthode 1 — Expectations SDP</h4>
-<ul>
-<li>Utiliser les <strong>expectations SDP</strong> pour vérifier les résultats du pipeline (technique de démonstration).</li>
-<li>Exemples de vérifications : <strong>valider le nombre de lignes</strong>, valider les <strong>valeurs distinctes</strong> dans les nouvelles colonnes.</li>
-<li>Le <strong>même code SDP</strong> (notebooks définissant la logique de transformation via des fonctions custom) est utilisé en dev, stage et prod.</li>
-</ul>
-<h4>Méthode 2 — Tâches de Lakeflow Job</h4>
-<p>Implémenter les tests d'intégration comme un <strong>Databricks Job multi-tâches</strong> (comme on le fait habituellement pour du code non-SDP). On ajoute des notebooks/fichiers dans des tâches :</p>
-<ul>
-<li><strong>Tests unitaires</strong> d'abord — confirmer que toutes les fonctions créées marchent ; si les tests passent, on continue dans le job.</li>
-<li>Exécuter un <strong>Spark Declarative Pipeline</strong> pour créer les tables nécessaires (sans expectations).</li>
-<li><strong>Tests d'intégration</strong> pouvant inclure : valider le nombre de lignes, vérifier que les tables ont été créées, que les colonnes contiennent les bonnes valeurs distinctes, des valeurs dans une plage donnée, et l'absence de doublons.</li>
-</ul>`
-      },
-      {
-        id: "w4l9", title: "Version control avec Git",
-        html: `
-<h4>Difficultés organisationnelles sans version control</h4>
-<ul>
-<li>Des <strong>silos</strong> se forment et isolent le développement et les opérations.</li>
-<li>Le développement indépendant abaisse la qualité (code dupliqué, standards incohérents, revue absente…).</li>
-<li><strong>Versionnage instable</strong> : difficile de tracer, annuler et auditer les changements.</li>
-<li>Sans version control, gérer des mises à jour fréquentes <strong>augmente le risque</strong>.</li>
-<li>Branching, merging et intégration CI/CD deviennent difficiles → scalabilité du développement réduite.</li>
-</ul>
-<h4>Sécuriser les changements par le branching</h4>
-<p>Concept complémentaire au CI/CD qui <strong>permet une CI efficace</strong> : versionner les changements et les passer au contrôle qualité <strong>avant de fusionner dans <code>main</code></strong> et de déployer (ex. <strong>Gitflow</strong>).</p>
-<h4>Git avec Databricks</h4>
-<p><strong>Git</strong> est un framework libre et open-source pour suivre les changements de code source. Bénéfices : collaboration, version control, branching & merging, nature distribuée, open-source largement adopté. Intégration Databricks : <strong>client Git visuel + API</strong>, support des opérations courantes, support des principaux fournisseurs (GitHub, GitLab, <strong>Azure DevOps</strong>, AWS CodeCommit…), <strong>diff visuel</strong>, conçu pour l'authoring collaboratif.</p>
-<p><strong>Authentification GitHub :</strong> générer un <strong>Personal Access Token (PAT)</strong> et connecter Databricks avec ce token.</p>
-<h4>Databricks Git Folders</h4>
-<p>Permettent de : cloner des dépôts distants, committer & pousser via l'UI, tirer les mises à jour de branche, gérer les branches, valider visuellement au commit.</p>
-<h4>Repos API & fichiers arbitraires</h4>
-<ul>
-<li><strong>Repos API</strong> : gérer les Repos programmatiquement, effectuer des opérations Git, spécifier branche/tag/hash pour les jobs — par ex. automatiser la création de Repos, maintenir un dossier de prod à une version donnée, mettre à jour vers une branche/commit et exécuter des jobs.</li>
-<li><strong>Fichiers arbitraires</strong> dans les Repos : portabilité du code, fichiers de librairie (packages Python/R), portabilité de la spécification d'environnement, build de packages depuis le même repo, petites données, <strong>imports relatifs</strong> (.txt, .yml, .py, .csv…).</li>
-</ul>`
-      },
-      {
-        id: "w4l10", title: "Déploiement continu : API, CLI, SDK, DABs",
-        html: `
-<h4>Options de déploiement d'assets Databricks</h4>
-<table class="tbl">
-<thead><tr><th>Option</th><th>Usage</th></tr></thead>
+    return (df
+            .withColumn(new,
+                when(col(s_col) == 0, 'Normal')
+                .otherwise('Unknown')))</code></pre>
+<p><strong>2. Vos résultats souhaités :</strong></p>
+<table class="tbl" style="max-width:320px">
+<thead><tr><th><code>original</code></th><th><code>desired</code></th></tr></thead>
 <tbody>
-<tr><td><strong>REST API</strong></td><td>Manière <strong>programmatique</strong> d'interagir avec les ressources Databricks.</td></tr>
-<tr><td><strong>Databricks CLI</strong></td><td>Interface en ligne de commande qui <strong>enveloppe la REST API</strong> ; idéale pour les tâches ponctuelles, l'expérimentation et le scripting shell.</td></tr>
-<tr><td><strong>Databricks SDK</strong></td><td>Disponible pour plusieurs langages (<strong>Python, Java, Go, R</strong>) ; permet de développer des applications et des jobs custom avec une gestion d'erreurs robuste.</td></tr>
+<tr><td><code>0</code></td><td><code>Normal</code></td></tr>
+<tr><td><code>1</code></td><td><code>Unknown</code></td></tr>
+<tr><td><code>-1</code></td><td><code>Unknown</code></td></tr>
+<tr><td><code>null</code></td><td><code>Unknown</code></td></tr>
 </tbody>
 </table>
-<h4>Declarative Automation Bundles (DABs)</h4>
-<p>Databricks <strong>recommande les DABs</strong> pour créer, développer, déployer et tester les jobs et autres ressources Databricks. Ils supportent les pratiques de génie logiciel : <strong>version control, code review, testing, continuous integration</strong>.</p>
-<p><strong>Que sont les DABs ?</strong></p>
+
+<h4>Unit Test Goal</h4>
+<div class="callout">Comparer le <strong>résultat réel</strong> de la fonction avec un <strong>résultat attendu défini</strong>.</div>
+<p><strong>3. Créer le test unitaire :</strong></p>
+<pre><code>def test_add_new_col():
+    data = [(0,), (1,), (-1,), (None,)]
+    columns = ["value"]
+    df = spark.createDataFrame(data, columns)
+
+    actual_df = add_new_col(df, "new_value", "value")
+
+    expected_data = [(0, 'Normal'), (1, 'Unknown'),
+                     (-1, 'Unknown'), (None, 'Unknown')]
+    expected_df = spark.createDataFrame(expected_data,
+                                        ["value", "new_value"])
+
+    assertDataFrameEqual(actual_df, expected_df)</code></pre>
+<table class="tbl">
+<thead><tr><th style="width:44%">Ligne de code</th><th>Ce qu'elle fait</th></tr></thead>
+<tbody>
+<tr><td><code>def test_add_new_col():</code></td><td>Créer une <strong>fonction de test unitaire</strong> pour tester la fonction. Nommer la fonction de test en conséquence.</td></tr>
+<tr><td><code>data = [...]</code> / <code>df = spark.createDataFrame(...)</code></td><td>Créer un <strong>DataFrame d'échantillon</strong> pour tester tous les cas d'usage auxquels vous pouvez penser.</td></tr>
+<tr><td><code>actual_df = add_new_col(...)</code></td><td><strong>Exécuter votre fonction</strong> sur les données d'échantillon et stocker le résultat.</td></tr>
+<tr><td><code>expected_data</code> / <code>expected_df</code></td><td>Créer un <strong>DataFrame de résultat attendu</strong> à partir des données d'échantillon.</td></tr>
+<tr><td><code>assertDataFrameEqual(actual_df, expected_df)</code></td><td><strong>Comparer les deux DataFrames</strong>. S'ils ne sont pas identiques, une <strong>erreur sera renvoyée</strong>.</td></tr>
+</tbody>
+</table>
+<p>Un processus CI/CD bien implémenté permet des releases <strong>plus rapides et plus fiables</strong>, réduit les erreurs en production grâce aux tests automatisés, et facilite les <strong>rollbacks</strong> avec des pratiques de déploiement sûres.</p>
+
+<h4>Unit Testing Framework — pytest</h4>
+<p><strong>Pytest</strong> est un framework de test populaire pour Python qui rend facile l'écriture de <strong>cas de test simples et scalables</strong>. Il apporte une variété de bénéfices pour exécuter vos tests unitaires.</p>
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px">
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e8ecf2;margin-bottom:6px">Uses Simple Syntax</div>
+<p style="font-size:13px;margin:0">Syntaxe minimale : définir simplement des fonctions commençant par <strong><code>test_</code></strong>. Pas de configuration complexe à gérer — pytest les détecte et les exécute automatiquement.</p>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e8ecf2;margin-bottom:6px">Provides Assertions</div>
+<p style="font-size:13px;margin:0">Utiliser des instructions <strong><code>assert</code></strong> pour fournir des <strong>messages d'erreur détaillés</strong> en cas d'échec. Pytest s'appuie sur les <code>assert</code> intégrés de Python (ou d'autres, comme ceux de PySpark), ce qui rend le débogage bien plus rapide.</p>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e8ecf2;margin-bottom:6px">Automatic Discovery</div>
+<p style="font-size:13px;margin:0">Trouve et exécute tous les tests <strong>automatiquement</strong> avec une configuration simple. Nommez simplement vos fichiers et fonctions de test avec le préfixe <code>test_</code>, et pytest s'occupe du reste.</p>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e8ecf2;margin-bottom:6px">Rich Ecosystem</div>
+<p style="font-size:13px;margin:0"><strong>Étendre</strong> les fonctionnalités avec des <strong>plugins</strong> pour la couverture, les tests parallèles, et plus encore. Que vous ayez besoin de rapports de couverture, d'exécution parallèle ou d'intégration avec d'autres outils, il existe un plugin pour presque tout.</p>
+</div>
+</div>
+<div class="callout">Ce cours fournit une <strong>introduction simple à pytest</strong>. Il existe de nombreux frameworks de test disponibles : <strong>sélectionnez celui qui répond le mieux aux besoins de votre organisation</strong>.</div>`
+      },
+      {
+        id: "w4l13", title: "Exécuter les tests d'intégration avec SDP et Jobs",
+        html: `
+<p>Dans cette leçon, vous apprendrez à exécuter des tests d'intégration dans Databricks en utilisant les <strong>expectations des Lakeflow Spark Declarative Pipelines</strong> et les <strong>tâches de Databricks Lakeflow Jobs</strong> pour valider les pipelines de données de bout en bout.</p>
+<p>Dans Databricks, <strong>deux façons simples</strong> d'exécuter des tests d'intégration sont avec les Lakeflow Spark Declarative Pipelines et les Lakeflow Jobs.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #ff4a2e;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#ff6a52;margin-bottom:6px">Spark Declarative Pipelines (SDP)</div>
+<p style="font-size:13px;margin:0">Utiliser les <strong>SDP expectations</strong> pour vérifier les résultats du pipeline <em>(technique de démonstration)</em>. C'est la méthode que nous utiliserons dans notre projet.</p>
+</div>
+<div style="background:#1c232d;border:1px solid #2b3542;border-left:3px solid #e3b23c;border-radius:9px;padding:13px">
+<div style="font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:#e3b23c;margin-bottom:6px">Lakeflow Jobs</div>
+<p style="font-size:13px;margin:0">L'implémenter comme un <strong>Databricks Job avec plusieurs tâches</strong> — de façon similaire à ce qui est typiquement fait pour du code non-SDP.</p>
+</div>
+</div>
+<p>Bien que les tests d'intégration eux-mêmes puissent être similaires, vous utilisez <strong>des outils différents dans Databricks</strong> pour les exécuter. <strong>Choisissez l'outil qui correspond le mieux à vos besoins.</strong></p>
+
+<h4>SDP — Method 1 — Expectations</h4>
+<svg viewBox="0 0 700 230" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w4ar7" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <style>.tt4{font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:#e8ecf2}</style>
+  <rect x="212" y="10" width="440" height="42" rx="7" fill="#232c38" stroke="#2b3542"/>
+  <text x="432" y="27" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:700;fill:#e8ecf2">Shared SDP Code</text>
+  <text x="432" y="41" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">Same SDP code (notebooks) defining transformation logic (using custom functions). Used in dev, stage and prod.</text>
+
+  <rect x="14" y="66" width="150" height="132" rx="7" fill="#232c38" stroke="#2b3542"/>
+  <text x="89" y="84" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;font-weight:700;fill:#e8ecf2">Switch Input Source</text>
+  <text x="89" y="96" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">Abstract input files based on</text>
+  <text x="89" y="106" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">pipeline configuration variables</text>
+  <rect x="26" y="114" width="126" height="24" rx="4" fill="#d7ead9"/><text x="89" y="130" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#0d1014">Dev CSV</text>
+  <rect x="26" y="142" width="126" height="24" rx="4" fill="#f5d97a"/><text x="89" y="158" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#0d1014">Stage CSV</text>
+  <rect x="26" y="170" width="126" height="24" rx="4" fill="#a9c8e8"/><text x="89" y="186" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#0d1014">Production CSV Files</text>
+  <path d="M168 132 L 190 132" stroke="#8a97a8" stroke-width="1.4" marker-end="url(#w4ar7)"/>
+
+  <rect x="196" y="112" width="110" height="34" rx="5" fill="#232c38" stroke="#e8ecf2" stroke-width="1.4"/>
+  <text x="251" y="126" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Streaming table</text>
+  <text x="251" y="139" text-anchor="middle" class="tt4">health_bronze</text>
+  <rect x="330" y="88" width="110" height="34" rx="5" fill="#232c38" stroke="#e8ecf2" stroke-width="1.4"/>
+  <text x="385" y="102" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Streaming table</text>
+  <text x="385" y="115" text-anchor="middle" class="tt4">health_silver</text>
+  <rect x="464" y="66" width="110" height="34" rx="5" fill="#232c38" stroke="#e8ecf2" stroke-width="1.4"/>
+  <text x="519" y="80" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Materialized view</text>
+  <text x="519" y="93" text-anchor="middle" class="tt4">chol_age_agg</text>
+  <path d="M310 128 L 326 108 M444 102 L 460 86" stroke="#8a97a8" stroke-width="1.3" marker-end="url(#w4ar7)"/>
+  <path d="M300 56 L 260 106 M400 56 L 388 84 M470 56 L 510 62" stroke="#8a97a8" stroke-width="1.2" fill="none" marker-end="url(#w4ar7)"/>
+
+  <rect x="196" y="158" width="110" height="30" rx="5" fill="#d9d4ec" stroke="#7a6bb5"/>
+  <text x="251" y="178" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:8px;fill:#0d1014">test_dev_health_b…</text>
+  <rect x="330" y="132" width="110" height="30" rx="5" fill="#d9d4ec" stroke="#7a6bb5"/>
+  <text x="385" y="152" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:8px;fill:#0d1014">test_dev_health_si…</text>
+  <rect x="590" y="66" width="100" height="30" rx="5" fill="#d9d4ec" stroke="#7a6bb5"/>
+  <text x="640" y="86" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:8px;fill:#0d1014">test_calc_columns</text>
+  <text x="251" y="202" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#a99ce0">Validate # of rows</text>
+  <text x="385" y="176" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#a99ce0">Validate # of rows</text>
+  <text x="640" y="110" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#a99ce0">Validates distinct values</text>
+  <text x="640" y="122" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#a99ce0">in the new columns</text>
+  <text x="432" y="218" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#c9d3e0">Test tables leverage <tspan font-weight="700">expectations in dev and stage</tspan></text>
+</svg>
 <ul>
-<li>Ce sont des <strong>fichiers YAML</strong> qui spécifient les artefacts, ressources et configurations d'un projet Databricks → configuration aisée d'interactions complexes notebooks/pipelines et <strong>reproductibilité</strong> des jobs.</li>
-<li>Ils <strong>encapsulent</strong> toutes les configurations et artefacts nécessaires.</li>
-<li>Ils fournissent une <strong>définition exacte</strong> des ressources Databricks utilisées dans le projet, avec support de la <strong>validation</strong> et des instructions de déploiement.</li>
-<li>Principe : <strong>« Write code once, deploy everywhere »</strong>.</li>
+<li>Dans cet exemple, on utilise SDP pour <strong>ingérer des fichiers CSV depuis chaque catalogue</strong> (dev, stage et prod) selon la <strong>variable de configuration du pipeline</strong> : il lira simplement les données de l'environnement cible correspondant.</li>
+<li><strong>Quel que soit l'environnement cible</strong> (dev, stage ou prod), <strong>le même SDP est exécuté</strong>. La même logique de transformation SDP, qui inclut des fonctions custom, est appliquée dans chaque environnement.</li>
+<li>Les données du catalogue cible sont ingérées dans la table <code>health_bronze</code>, puis nettoyées dans la table <code>health_silver</code>, et enfin agrégées dans une materialized view <code>chol_age_agg</code> (table gold) pour chaque environnement.</li>
+<li>Les <strong>boîtes violettes</strong> sous le SDP partagé représentent les <strong>materialized views de test</strong> créées avec des <strong>SDP expectations</strong> pendant les exécutions dev et stage. Comme nous utilisons des <strong>données statiques</strong> pour dev et stage, nous connaissons la sortie attendue — ce qui nous permet de tester notre code SDP partagé.</li>
 </ul>
-<h4>Développement et CI/CD avec DABs</h4>
-<p>Depuis un environnement de développement local, le <strong>Project Bundle</strong> se déploie vers les workspaces de <strong>développement, staging et production</strong> :</p>
+<div class="callout">Dans ce cas, nous effectuons des expectations simples à des <strong>fins de démonstration</strong>, comme compter le nombre de lignes dans les tables pour confirmer une ingestion correcte. <strong>Typiquement, vous créeriez des tests bien plus ciblés.</strong></div>
+
+<h4>Jobs — Method 2 — Tasks</h4>
+<svg viewBox="0 0 700 220" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w4ar8" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <rect x="14" y="10" width="200" height="46" rx="5" fill="#00a972"/>
+  <text x="26" y="26" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#fff">Performing unit tests to confirm</text>
+  <text x="26" y="38" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#fff">all created functions work</text>
+  <text x="26" y="50" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#fff">correctly.</text>
+  <rect x="224" y="10" width="200" height="46" rx="5" fill="#00a972"/>
+  <text x="236" y="26" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#fff">Executing a Spark Declarative</text>
+  <text x="236" y="38" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#fff">Pipeline to create the necessary</text>
+  <text x="236" y="50" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#fff">tables without using expectations</text>
+  <rect x="434" y="10" width="200" height="46" rx="5" fill="#00a972"/>
+  <text x="446" y="26" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#fff">Add notebooks or files within a</text>
+  <text x="446" y="38" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#fff">task to perform your integration</text>
+  <text x="446" y="50" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#fff">tests within a job</text>
+  <path d="M114 60 L 114 84 M324 60 L 324 84 M534 60 L 534 84" stroke="#00a972" stroke-width="1.6" marker-end="url(#w4ar8)"/>
+
+  <rect x="34" y="90" width="150" height="34" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="109" y="105" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Unit_Tests</text>
+  <text x="109" y="117" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">…Run Unit Tests</text>
+  <rect x="244" y="90" width="150" height="34" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="319" y="105" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Health_ETL</text>
+  <text x="319" y="117" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Pipeline: sdk_health_etl…</text>
+  <rect x="454" y="90" width="150" height="34" rx="5" fill="#232c38" stroke="#00a972" stroke-dasharray="4 3"/>
+  <text x="529" y="105" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Integration_Tests</text>
+  <text x="529" y="117" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">…peter_test</text>
+  <rect x="620" y="132" width="70" height="34" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="655" y="152" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#e8ecf2">Visualization</text>
+  <path d="M188 107 L 240 107 M398 107 L 450 107 M608 112 L 640 128" stroke="#8a97a8" stroke-width="1.3" marker-end="url(#w4ar8)"/>
+
+  <rect x="34" y="136" width="176" height="70" rx="5" fill="#a9c8e8"/>
+  <text x="122" y="154" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;fill:#0d1014">Unit tests</text>
+  <text x="44" y="172" style="font-family:'Inter',sans-serif;font-size:9px;fill:#0d1014">· Testing individual units of code</text>
+  <text x="52" y="183" style="font-family:'Inter',sans-serif;font-size:9px;fill:#0d1014">in isolation</text>
+  <text x="44" y="196" style="font-family:'Inter',sans-serif;font-size:9px;fill:#0d1014">· If the unit test pass continue on</text>
+  <text x="52" y="206" style="font-family:'Inter',sans-serif;font-size:9px;fill:#0d1014">into the Job</text>
+
+  <rect x="380" y="130" width="224" height="86" rx="5" fill="#a99ce0"/>
+  <text x="492" y="148" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;fill:#0d1014">Tests can include:</text>
+  <text x="390" y="164" style="font-family:'Inter',sans-serif;font-size:9px;fill:#0d1014">· Validate # of rows</text>
+  <text x="390" y="177" style="font-family:'Inter',sans-serif;font-size:9px;fill:#0d1014">· Tables were created successfully</text>
+  <text x="390" y="190" style="font-family:'Inter',sans-serif;font-size:9px;fill:#0d1014">· Columns contain correct distinct values</text>
+  <text x="390" y="203" style="font-family:'Inter',sans-serif;font-size:9px;fill:#0d1014">· Columns contain values between a specific range</text>
+  <text x="390" y="214" style="font-family:'Inter',sans-serif;font-size:9px;fill:#0d1014">· Columns contain no duplicates</text>
+</svg>
+<p>Au lieu d'utiliser SDP et les expectations pour les tests d'intégration, vous pouvez aussi utiliser les <strong>Databricks Lakeflow Jobs avec des tâches</strong>. En regardant le Job complet de ce projet simple :</p>
+<ol>
+<li>On commence par exécuter les <strong>tests unitaires</strong> pour tester les fonctions individuelles en isolation. <strong>Si un test unitaire échoue, le job échoue.</strong></li>
+<li>Ensuite, on exécute le <strong>SDP</strong> pour ingérer les données. Dans cet exemple, on exécute le <strong>même SDP que précédemment mais sans les expectations</strong>.</li>
+<li>Après cela, on effectue les <strong>tests d'intégration</strong> en utilisant des <strong>notebooks définis comme tâches</strong> au sein du Lakeflow Job. Pour ce job, vous devrez configurer les <strong>bons paramètres pour votre environnement cible</strong> (dev, stage ou production).</li>
+<li>Enfin, une fois que les tests unitaires, le pipeline de données et les tests d'intégration se sont exécutés avec succès, la <strong>visualisation finale est créée</strong>.</li>
+</ol>
+<p>Vous pouvez exécuter une <strong>variété de tests d'intégration</strong> : compter les lignes d'une table, vérifier que les tables ont été créées avec succès, vérifier que les tables contiennent les colonnes ou valeurs distinctes spécifiées, s'assurer que les valeurs de colonne tombent dans une certaine plage, confirmer qu'il n'y a pas de doublons, et plus encore.</p>`
+      },
+      {
+        id: "w4l14", title: "Version control avec Git — enjeux & branching",
+        html: `
+<p>Le <strong>version control Git</strong> est important parce qu'il fournit une manière <strong>structurée de gérer, suivre et collaborer</strong> sur les changements de code dans les projets logiciels. C'est fondamentalement un <strong>outil essentiel du développement logiciel moderne et du DevOps</strong>.</p>
+
+<h4>Complications with Version Control — Organizational Challenges</h4>
 <ul>
-<li>Les utilisateurs <strong>committent</strong> les changements dans le <em>Project Repository</em> (version control) et peuvent <strong>déployer manuellement</strong> en dev pour voir/tester.</li>
-<li>Des <strong>notifications déclenchent le CI/CD</strong> : le code et les tests d'intégration sont déployés en <strong>staging</strong>.</li>
-<li>Le code est déployé en <strong>production après revue et approbation</strong>.</li>
-<li>On peut configurer des <strong>service principals</strong>, lancer des jobs, et faire des éditions directes pour les éléments non sous source control.</li>
+<li>Des <strong>silos</strong> se forment au fil du temps, isolant le développement et les opérations d'équipe.</li>
+<li>Le <strong>développement indépendant</strong> conduit à une qualité de développement logiciel plus faible, par manque de version control centralisé (<strong>code dupliqué, standards incohérents, revue de code</strong>, etc.).</li>
+<li><strong>Versionnage instable</strong> — il peut devenir difficile de <strong>tracer, annuler (revert) et auditer</strong> les changements.</li>
+<li>Sans version control approprié, gérer des <strong>mises à jour fréquentes augmente le risque</strong>.</li>
+<li>Le <strong>branching, le merging et l'intégration CI/CD</strong> peuvent devenir difficiles, ce qui <strong>diminue la capacité à faire passer le développement à l'échelle</strong>.</li>
 </ul>
+<div class="callout">En résumé : l'absence de version control centralisé mène à des silos de développement, entraînant du code dupliqué, des standards incohérents et une qualité logicielle moindre. Un versionnage instable rend le suivi, le revert et l'audit des changements difficiles, augmentant les risques lors de la gestion de mises à jour fréquentes. De plus, le branching, le merging et l'intégration CI/CD deviennent ardus, <strong>limitant au final la scalabilité</strong>.</div>
+
+<h4>Secure code changes through branching</h4>
+<ul>
+<li>Concept <strong>complémentaire au CI/CD</strong> → <strong>permet une CI efficace</strong>.</li>
+<li><strong>Versionner les changements</strong> et les faire passer par un <strong>contrôle qualité avant de fusionner</strong> dans la branche <code>main</code> et de déployer.</li>
+<li><strong>Exemple : Gitflow.</strong></li>
+</ul>
+<svg viewBox="0 0 700 180" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w4ar9" markerWidth="7" markerHeight="7" refX="4" refY="6" orient="auto"><path d="M0,0 L7,0 L3.5,7 z" fill="#c9d3e0"/></marker>
+  <marker id="w4ar10" markerWidth="7" markerHeight="7" refX="4" refY="1" orient="auto"><path d="M0,7 L7,7 L3.5,0 z" fill="#c9d3e0"/></marker></defs>
+  <rect x="164" y="14" width="46" height="20" rx="4" fill="#a9c8e8"/><text x="187" y="28" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#0d1014">v0.1</text>
+  <rect x="366" y="14" width="46" height="20" rx="4" fill="#a9c8e8"/><text x="389" y="28" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#0d1014">v0.2</text>
+  <rect x="620" y="14" width="46" height="20" rx="4" fill="#a9c8e8"/><text x="643" y="28" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#0d1014">v1.0</text>
+  <path d="M187 38 L 187 54" stroke="#c9d3e0" stroke-width="1.6" marker-end="url(#w4ar9)"/>
+  <path d="M389 38 L 389 54" stroke="#c9d3e0" stroke-width="1.6" marker-end="url(#w4ar9)"/>
+  <path d="M643 38 L 643 54" stroke="#c9d3e0" stroke-width="1.6" marker-end="url(#w4ar9)"/>
+
+  <text x="118" y="78" text-anchor="end" style="font-family:'Inter',sans-serif;font-size:13px;fill:#e8ecf2">Main</text>
+  <text x="118" y="128" text-anchor="end" style="font-family:'Inter',sans-serif;font-size:13px;fill:#e8ecf2">Branches</text>
+  <path d="M126 108 L 126 84" stroke="#c9d3e0" stroke-width="1.6" marker-end="url(#w4ar10)"/>
+
+  <line x1="187" y1="74" x2="643" y2="74" stroke="#c9d3e0" stroke-width="1.6"/>
+  <line x1="187" y1="148" x2="643" y2="148" stroke="#c9d3e0" stroke-width="1.6"/>
+  <path d="M187 148 Q 240 148 260 122 Q 280 96 300 96 L 340 96 Q 370 96 389 74" stroke="#c9d3e0" stroke-width="1.6" fill="none"/>
+  <path d="M420 148 Q 470 148 500 122 Q 530 108 560 108 L 600 108 Q 625 108 643 74" stroke="#c9d3e0" stroke-width="1.6" fill="none"/>
+  <path d="M340 148 Q 360 174 390 174 L 420 174 Q 448 174 470 152" stroke="#c9d3e0" stroke-width="1.6" fill="none"/>
+
+  <circle cx="187" cy="74" r="10" fill="#a9c8e8"/><circle cx="389" cy="74" r="10" fill="#a9c8e8"/><circle cx="643" cy="74" r="10" fill="#a9c8e8"/>
+  <circle cx="290" cy="96" r="10" fill="#fff" stroke="#c9d3e0"/>
+  <circle cx="187" cy="148" r="10" fill="#a99ce0"/><circle cx="270" cy="148" r="10" fill="#a99ce0"/>
+  <circle cx="340" cy="148" r="10" fill="#a99ce0"/><circle cx="470" cy="148" r="10" fill="#a99ce0"/><circle cx="643" cy="148" r="10" fill="#a99ce0"/>
+  <circle cx="390" cy="174" r="10" fill="#3fcf8e"/><circle cx="420" cy="174" r="10" fill="#3fcf8e"/>
+  <circle cx="558" cy="110" r="10" fill="#2fc7c0"/><circle cx="590" cy="110" r="10" fill="#2fc7c0"/>
+  <text x="350" y="176" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">Source: Openclipart.org</text>
+</svg>
+<p>Ceci est un exemple de version control et de gestion du code dans le temps avec <strong>Gitflow</strong>, une <strong>stratégie de branching courante</strong> qui organise les branches pour les <strong>features, releases et hotfixes</strong>.</p>
+<ul>
+<li>On voit ici différentes versions d'une fonctionnalité (<strong>v0.1, v0.2 et v1.0</strong>).</li>
+<li>En partant de la première version <strong>v0.1 sur la branche main</strong>, le branchement se fait vers la <strong>branche de feature</strong>, où le test peut être correctement effectué <strong>en isolation</strong>.</li>
+</ul>`
+      },
+      {
+        id: "w4l15", title: "Git avec Databricks : PAT, Git Folders, Repos API",
+        html: `
+<h4>Overview of Git with Databricks</h4>
+<p><strong>Git</strong> est un framework logiciel <strong>libre et open-source</strong> conçu pour <strong>suivre les changements du code source</strong> pendant le développement logiciel.</p>
+<div class="cards-3">
+  <div class="mini-card"><h4>Benefits of Git</h4><p>· Collaboration<br/>· Version Control<br/>· Branching and Merging<br/>· Distributed Nature<br/>· Open Source and Widely Adopted</p></div>
+  <div class="mini-card"><h4>Common Git Tools and Git-Based Services</h4><p>GitHub, GitLab, Bitbucket, <strong>Azure DevOps</strong>…<br/><em>Intégrez les outils tiers dans vos Lakeflow Jobs qui font sens pour les besoins de votre organisation.</em></p></div>
+  <div class="mini-card"><h4>Git Integration on Databricks</h4><p>· <strong>Visual Git client and API</strong><br/>· Supports Common Operations<br/>· Supports common Git providers<br/>· <strong>Visual diff comparison</strong><br/>· Designed for authoring and collaborative Lakeflow Jobs</p></div>
+</div>
+<p><strong>Git Benefits :</strong> le version control permet de suivre les changements de code, facilitant le <strong>rollback</strong> et la collaboration. Le <strong>branching et le merging</strong> permettent à plusieurs développeurs de travailler en parallèle et d'intégrer les changements efficacement. Une <strong>nature distribuée</strong> garantit que chaque développeur dispose d'un dépôt local complet, améliorant flexibilité et fiabilité. Git est optimisé pour la <strong>gestion haute performance de gros projets</strong>, et ses fonctionnalités de sécurité utilisent des <strong>contrôles d'intégrité cryptographiques</strong> pour prévenir la corruption des données.</p>
+<p><strong>Git Tools &amp; Services :</strong></p>
+<ol>
+<li><strong>GitHub, GitLab, Bitbucket, Azure DevOps</strong> — dépôts cloud avec CI/CD, suivi des tickets et collaboration d'équipe.</li>
+<li><strong>Git CLI &amp; GUI Clients</strong> (par ex. SourceTree, GitKraken, VS Code Git Integration) — fournissent différentes interfaces pour gérer les dépôts.</li>
+<li><strong>CI/CD Integration</strong> — pipelines de test et de déploiement automatisés.</li>
+<li><strong>Code Review &amp; Collaboration</strong> — des fonctionnalités comme les <em>pull requests</em> et les approbations de merge fluidifient le travail d'équipe.</li>
+<li><strong>Security &amp; Access Control</strong> — permissions basées sur les rôles et logs d'audit renforcent la sécurité du dépôt.</li>
+</ol>
+<p>Côté Databricks : le <strong>Visual Git Client</strong> fournit une interface conviviale pour les opérations Git courantes, en développant le code directement dans les notebooks Databricks. Les <strong>capacités CI/CD</strong> — la <em>Repos REST API</em> permet d'intégrer les projets data et IA dans des pipelines CI/CD, autorisant les utilisateurs à automatiser leurs Lakeflow Jobs Git.</p>
+
+<h4>Generating GitHub Personal Access Token (PAT) — Authentication</h4>
+<p>Pour générer un <strong>Personal Access Token (PAT)</strong> dans GitHub :</p>
+<ol>
+<li>Aller dans <strong>Settings → Developer settings</strong> ;</li>
+<li>choisir soit les tokens <strong>fine-grained</strong>, soit les tokens <strong>classic</strong> ;</li>
+<li>cliquer sur <strong>Generate new token</strong> ;</li>
+<li>configurer les <strong>permissions de dépôt requises</strong>, copier le token, et l'utiliser dans Databricks pour l'intégration.</li>
+</ol>
+
+<h4>Connecting to Databricks with GitHub PAT — Seamless Integration</h4>
+<p>Mettre en place un PAT et se connecter à ses dépôts est simple : <strong>cliquer sur votre icône utilisateur</strong>, aller dans <strong>Settings → Developer settings → Personal access tokens</strong>, puis <strong>copier le token</strong> dans la zone de texte prévue. Une fois sauvegardé, votre compte est <strong>lié et prêt à être utilisé</strong> avec votre dépôt.</p>
+
+<h4>Databricks Git Folders</h4>
+<p>Les <strong>Databricks Git folders</strong> fluidifient le développement des Lakeflow Jobs en <strong>intégrant étroitement les systèmes de version control dans l'écosystème Databricks</strong>, rendant plus facile la gestion collaborative du code tout en respectant les bonnes pratiques.</p>
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:14px;margin-bottom:14px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+  <div style="display:flex;gap:9px;align-items:center"><span style="background:#ff4a2e;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:0 0 22px">1</span><span style="font-size:13px;color:#e8ecf2">Clone remote repositories</span></div>
+  <div style="display:flex;gap:9px;align-items:center"><span style="background:#ff4a2e;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:0 0 22px">2</span><span style="font-size:13px;color:#e8ecf2">Commit and push changes using UI</span></div>
+  <div style="display:flex;gap:9px;align-items:center"><span style="background:#ff4a2e;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:0 0 22px">3</span><span style="font-size:13px;color:#e8ecf2">Pull branch updates</span></div>
+  <div style="display:flex;gap:9px;align-items:center"><span style="background:#ff4a2e;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:0 0 22px">4</span><span style="font-size:13px;color:#e8ecf2">Branch Management</span></div>
+  <div style="display:flex;gap:9px;align-items:center"><span style="background:#ff4a2e;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:0 0 22px">5</span><span style="font-size:13px;color:#e8ecf2">Visual validation when committing</span></div>
+</div>
+</div>
+<p><strong>Cas d'usage :</strong></p>
+<ul>
+<li>Développement <strong>collaboratif</strong> de modèles de machine learning et de pipelines ETL.</li>
+<li><strong>Source-controlling</strong> des requêtes SQL pour les Lakeflow Jobs analytiques.</li>
+<li><strong>Automatisation des déploiements</strong> via des pipelines CI/CD.</li>
+</ul>
+<p>Il suffit de <strong>coller l'URL depuis GitHub</strong> dans la fenêtre de création de votre Git folder.</p>
+
+<h4>Git-based Repos in Databricks — Repos API to automate CI/CD</h4>
+<svg viewBox="0 0 700 210" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w4ar11" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <text x="150" y="20" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#c9d3e0">Development / Experimentation</text>
+  <text x="290" y="20" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#c9d3e0">Production Jobs</text>
+  <rect x="76" y="34" width="270" height="34" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <rect x="86" y="42" width="56" height="18" rx="4" fill="#232c38" stroke="#8a97a8"/><text x="114" y="55" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:#e8ecf2">dev</text>
+  <text x="200" y="55" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;fill:#ff6a52">Repos Service</text>
+  <rect x="260" y="42" width="56" height="18" rx="4" fill="#232c38" stroke="#8a97a8"/><text x="288" y="55" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:#e8ecf2">main</text>
+  <text x="42" y="52" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">Git</text>
+  <text x="42" y="62" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">Folder</text>
+  <line x1="14" y1="80" x2="400" y2="80" stroke="#ff6a52" stroke-width="1" stroke-dasharray="5 4"/>
+  <path d="M120 72 L 120 106" stroke="#8a97a8" stroke-width="6" marker-end="url(#w4ar11)"/>
+  <path d="M290 138 L 290 72" stroke="#8a97a8" stroke-width="6" marker-end="url(#w4ar11)"/>
+  <rect x="86" y="112" width="70" height="34" rx="5" fill="#232c38" stroke="#2b3542"/><text x="121" y="160" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">Version</text>
+  <rect x="176" y="112" width="70" height="34" rx="5" fill="#232c38" stroke="#2b3542"/><text x="211" y="160" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">Review</text>
+  <rect x="266" y="112" width="70" height="34" rx="5" fill="#232c38" stroke="#2b3542"/><text x="301" y="160" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">Test</text>
+  <path d="M160 129 L 172 129 M250 129 L 262 129" stroke="#8a97a8" stroke-width="1.4" marker-end="url(#w4ar11)"/>
+  <text x="60" y="182" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;font-weight:700;fill:#e8ecf2">Git / CI/CD Systems</text>
+  <text x="60" y="198" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">Azure DevOps · GitHub · GitLab · Bitbucket</text>
+
+  <text x="392" y="60" style="font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;fill:#2272b4">Repos API</text>
+  <path d="M350 52 L 384 52 M384 52 L 384 128 M384 78 L 400 78 M384 52 L 400 52 M384 128 L 400 128" stroke="#00a972" stroke-width="1.2" fill="none"/>
+  <rect x="404" y="24" width="284" height="18" rx="3" fill="#ff4a2e"/><text x="414" y="37" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#fff">Programmatically manage Repos</text>
+  <text x="414" y="54" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">E.g., set up automation to automatically create Databricks</text>
+  <text x="414" y="64" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">Repos for all of your repositories</text>
+  <rect x="404" y="74" width="284" height="18" rx="3" fill="#ff4a2e"/><text x="414" y="87" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#fff">Perform Git operations on Repos</text>
+  <text x="414" y="104" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">E.g., set up automation to always keep Repos in a</text>
+  <text x="414" y="114" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">production folder at a specified version</text>
+  <rect x="404" y="124" width="284" height="18" rx="3" fill="#ff4a2e"/><text x="414" y="137" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#fff">Specify Git branch, tag, hash for Jobs</text>
+  <text x="414" y="154" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">E.g., update the Repo to a specific branch and commit and</text>
+  <text x="414" y="164" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">run Jobs against the notebooks in the repo</text>
+</svg>
+<p>La <strong>Repos API</strong> fournit un <strong>accès programmatique</strong> aux Repos basés sur Git. Avec l'API, les clients peuvent <strong>intégrer les Databricks Repos à leur workflow CI/CD</strong> : créer/mettre à jour/supprimer des Repos programmatiquement, effectuer des opérations Git, et <strong>spécifier les versions Git</strong> lors de l'exécution de Jobs basés sur des notebooks dans les Repos.</p>
+<div class="callout"><strong>Valeur de la fonctionnalité :</strong> avant cela, de nombreux clients construisaient des contournements avec la Databricks CLI pour extraire les notebooks de Databricks, les committer dans Git, les récupérer depuis Git et les repousser vers Databricks — <em>une solution peu robuste</em>. Avec les Repos et la Repos API, Databricks fournit une <strong>fonctionnalité native</strong> pour extraire le code d'un dépôt Git, re-committer les mises à jour dans Git, et mettre à jour ces Repos programmatiquement via la Repos API.</div>
+
+<h4>Arbitrary files support in Repos</h4>
+<table class="tbl">
+<thead><tr><th style="width:18%">Type de fichier</th><th>Ce que cela apporte</th></tr></thead>
+<tbody>
+<tr><td><code>.py</code></td><td><strong>Portability of code</strong> — portabilité du code.<br/><strong>Library files</strong> — utiliser des fichiers Python/R comme <strong>packages</strong>.</td></tr>
+<tr><td><code>.txt</code> / <code>.yml</code></td><td><strong>Environment specification portability</strong> — portabilité de la spécification d'environnement.<br/><strong>Build packages from the same repo</strong> — construire des packages depuis le même dépôt.</td></tr>
+<tr><td><code>.csv</code></td><td><strong>Small data ease of use</strong> — facilité d'usage pour de petites données.<br/><strong>Relative imports</strong> — imports relatifs.</td></tr>
+<tr><td><code>...</code></td><td><strong>Whatever you can do with files « just works »</strong> — tout ce que vous pouvez faire avec des fichiers fonctionne tout simplement.</td></tr>
+</tbody>
+</table>
+<p>Les <strong>fichiers arbitraires</strong> sont supportés dans les repos, permettant la <strong>portabilité du code</strong> pour les fichiers de librairie comme Python et R. Cela rend possible de <strong>construire des packages depuis le même dépôt</strong>, d'utiliser des <strong>imports relatifs</strong>, et de structurer votre projet de la façon qui convient le mieux à vos besoins.</p>`
+      },
+      {
+        id: "w4l16", title: "Déployer les assets Databricks : REST API, CLI, SDK",
+        html: `
+<p>Dans cette leçon, vous obtiendrez une vue d'ensemble du <strong>déploiement des assets Databricks</strong> : les options de déploiement, les <strong>Declarative Automation Bundles</strong>, et comment les intégrer dans un workflow de développement et CI/CD.</p>
+
+<h4>Deployment Options</h4>
+<div class="cards-3">
+  <div class="mini-card"><h4>REST API</h4><p>Manière <strong>programmatique</strong> d'interagir avec les ressources Databricks.<br/><em>Outils : Postman et Databricks.</em></p></div>
+  <div class="mini-card"><h4>Databricks CLI</h4><p><strong>Interface en ligne de commande qui enveloppe la REST API.</strong><br/>Idéale pour les <strong>tâches ponctuelles</strong>, l'<strong>expérimentation</strong> et le <strong>scripting shell</strong>.</p></div>
+  <div class="mini-card"><h4>Databricks SDKs</h4><p>Disponible pour <strong>plusieurs langages de programmation</strong> (Python, Java, Go, R).<br/>Permet le développement d'applications, de Lakeflow Jobs Databricks custom et une <strong>gestion d'erreurs robuste</strong>.<br/>Manière programmatique d'interagir avec les ressources Databricks.</p></div>
+</div>
+
+<h4>Comparaisons clés</h4>
+<table class="tbl">
+<thead><tr><th style="width:26%">Critère</th><th>Classement</th></tr></thead>
+<tbody>
+<tr><td><strong>Ease of use</strong> (facilité d'usage)</td><td><strong>SDK &gt; CLI &gt; REST API</strong></td></tr>
+<tr><td><strong>Flexibility</strong> (flexibilité)</td><td><strong>REST API &gt; SDK &gt; CLI</strong></td></tr>
+</tbody>
+</table>
+<ul>
+<li><strong>REST API</strong> : la plus flexible mais complexe — la meilleure pour les <strong>intégrations custom</strong>.</li>
+<li><strong>CLI</strong> : simplifie les opérations de la REST API mais a une <strong>flexibilité limitée</strong>.</li>
+<li><strong>SDK</strong> : le plus <em>developer-friendly</em> — le meilleur pour <strong>embarquer les fonctionnalités Databricks dans des applications</strong>.</li>
+</ul>`
+      },
+      {
+        id: "w4l17", title: "Declarative Automation Bundles (DABs)",
+        html: `
+<p>Databricks <strong>recommande les Declarative Automation Bundles</strong> pour créer, développer, déployer et tester les jobs et autres ressources Databricks.</p>
+
+<h4>DABs &amp; les pratiques de génie logiciel</h4>
+<svg viewBox="0 0 700 190" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>.dt4{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;fill:#fff}.dd4{font-family:'Inter',sans-serif;font-size:8.5px;fill:#fff}</style>
+  <rect x="14" y="10" width="672" height="34" rx="5" fill="#ff5a44"/>
+  <text x="350" y="33" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;fill:#fff">Declarative Automation Bundles</text>
+
+  <rect x="18" y="52" width="162" height="86" rx="5" fill="#00a972"/>
+  <text x="28" y="70" class="dt4">Version Control</text>
+  <text x="28" y="88" class="dd4">The practice of tracking and</text>
+  <text x="28" y="100" class="dd4">managing changes to code and</text>
+  <text x="28" y="112" class="dd4">other development artifacts</text>
+  <text x="28" y="124" class="dd4">over time.</text>
+
+  <rect x="188" y="52" width="162" height="86" rx="5" fill="#98102A"/>
+  <text x="198" y="70" class="dt4">Code Review</text>
+  <text x="198" y="88" class="dd4">Systematic examination of source</text>
+  <text x="198" y="100" class="dd4">code with the goal of identifying</text>
+  <text x="198" y="112" class="dd4">and squashing bugs, improve</text>
+  <text x="198" y="124" class="dd4">quality, and enforce standards.</text>
+
+  <rect x="358" y="52" width="162" height="86" rx="5" fill="#FFAB00"/>
+  <text x="368" y="70" style="font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;fill:#0d1014">Testing</text>
+  <text x="368" y="88" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#0d1014">The process of validating expected</text>
+  <text x="368" y="100" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#0d1014">output from relevant functions and</text>
+  <text x="368" y="112" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#0d1014">adhering to predetermine</text>
+  <text x="368" y="124" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#0d1014">requirements.</text>
+
+  <rect x="528" y="52" width="158" height="86" rx="5" fill="#5b7280"/>
+  <text x="538" y="70" class="dt4">Continuous Integration</text>
+  <text x="538" y="88" class="dd4">The process of automating</text>
+  <text x="538" y="100" class="dd4">development, testing, and</text>
+  <text x="538" y="112" class="dd4">deployment to ensure</text>
+  <text x="538" y="124" class="dd4">reliability.</text>
+
+  <rect x="14" y="146" width="672" height="34" rx="5" fill="#2272b4"/>
+  <text x="350" y="169" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;fill:#fff">Software Engineering Practices</text>
+</svg>
+<p>Les <strong>DABs</strong> sont conçus pour faciliter l'adoption des bonnes pratiques de génie logiciel, en particulier pour les projets data et IA. Voici les <strong>4 composants centraux</strong> des pratiques SWE supportés par les DABs :</p>
+<ul>
+<li><strong>Version Control</strong> — comment suivons-nous les changements et maintenons-nous un historique des modifications de code ?</li>
+<li><strong>Code Review</strong> — comment maintenons-nous la qualité du code et respectons-nous les standards de codage ?</li>
+<li><strong>Testing</strong> — notre comportement de codage est-il cohérent et prévisible ?</li>
+<li><strong>Continuous Integration</strong> — automatisons-nous les différents processus d'intégration des changements de code dans notre dépôt ?</li>
+</ul>
+<p>Les Declarative Automation Bundles fournissent une <strong>approche structurée</strong> pour gérer les projets Databricks tout en respectant les bonnes pratiques de génie logiciel. En combinant les <strong>principes d'infrastructure-as-code</strong> avec des capacités d'automatisation, ils fluidifient la collaboration, améliorent l'assurance qualité et permettent une livraison efficace de solutions pilotées par la donnée :</p>
+<ul>
+<li>Les DABs s'intègrent sans couture aux <strong>Lakeflow Jobs basés sur Git</strong>, permettant aux utilisateurs de <strong>versionner leurs ressources Databricks aux côtés du code source</strong>.</li>
+<li>En traitant les ressources Databricks <strong>comme du code</strong>, les DABs permettent la <strong>revue par les pairs</strong> via les workflows Git standards comme les <em>pull requests</em>.</li>
+<li>Les développeurs peuvent utiliser la <strong>Databricks CLI</strong> avec les DABs pour <strong>exécuter des tests sur les bundles dans des environnements isolés</strong>, garantissant que les Lakeflow Jobs se comportent comme prévu.</li>
+<li>Les DABs s'intègrent aux outils CI/CD comme <strong>GitHub Actions</strong> ou <strong>Azure DevOps</strong> pour automatiser la <strong>validation, le déploiement et l'exécution</strong> des Lakeflow Jobs Databricks.</li>
+</ul>
+
+<h4>What are DABs ?</h4>
+<div class="cards-3">
+  <div class="mini-card"><h4>Write code once, deploy everywhere</h4><p>Des fichiers <strong>YAML</strong> qui spécifient les <strong>artifacts</strong>, <strong>resources</strong> et <strong>configurations</strong> d'un projet Databricks. Cela mène à une configuration aisée d'interactions complexes notebook/pipeline et à la <strong>reproductibilité</strong> de vos Lakeflow Jobs.</p></div>
+  <div class="mini-card"><h4>What are Declarative Automation Bundles?</h4><p>Les DABs sont un outil conçu pour <strong>fluidifier ce processus pour les projets Databricks</strong>. Ces bundles <strong>encapsulent toutes les configurations et artefacts nécessaires</strong>.</p></div>
+  <div class="mini-card"><h4>How do bundles work?</h4><p>Les bundles fournissent une <strong>définition exacte</strong> des ressources Databricks à utiliser au sein de votre projet, avec support de la <strong>validation</strong> et des <strong>instructions de déploiement</strong>.</p></div>
+</div>
+<p>Créer du code qui peut être <strong>déployé sur plusieurs environnements sans modification</strong> : cela garantit la cohérence, réduit les erreurs manuelles et accélère la livraison en automatisant les processus de déploiement. Les DABs permettent aux développeurs de définir les ressources Databricks (comme les <strong>jobs, pipelines et notebooks</strong>) sous forme de <strong>fichiers source et de métadonnées au format YAML</strong>.</p>
+<div class="callout"><strong>Comment ça marche concrètement :</strong> les DABs fonctionnent en définissant d'abord vos ressources et exigences dans un fichier <code>databricks.yml</code>. Vous <strong>validez ensuite le bundle</strong> en utilisant la <strong>Databricks CLI</strong> et le <strong>déployez</strong> vers le workspace de votre choix. Une fois déployés, les Lakeflow Jobs ou pipelines décrits dans le bundle peuvent être <strong>exécutés</strong>.</div>
+
+<h4>Development and CI/CD with DABs</h4>
+<svg viewBox="0 0 700 250" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w4ar12" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <text x="80" y="22" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#c9d3e0">Data workers</text>
+  <text x="80" y="42" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:14px;fill:#ff6a52">◉ ◉</text>
+  <rect x="14" y="52" width="152" height="146" rx="7" fill="#232c38" stroke="#2272b4" stroke-dasharray="4 3"/>
+  <text x="90" y="70" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;font-weight:700;fill:#e8ecf2">Local development</text>
+  <text x="90" y="82" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;font-weight:700;fill:#e8ecf2">environment</text>
+  <rect x="28" y="94" width="124" height="70" rx="6" fill="#1c232d" stroke="#2272b4"/>
+  <text x="90" y="112" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:700;fill:#2272b4">Project Bundle</text>
+  <text x="90" y="138" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:14px;fill:#8a97a8">▤ ▥ ▦ ▧</text>
+  <text x="90" y="182" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Users can do direct edits for</text>
+  <text x="90" y="192" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">items that aren't source controlled</text>
+
+  <rect x="380" y="14" width="306" height="118" rx="8" fill="none" stroke="#ff4a2e" stroke-dasharray="5 4"/>
+  <text x="533" y="32" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:700;fill:#e8ecf2">Databricks workspaces</text>
+  <rect x="390" y="40" width="94" height="84" rx="6" fill="#232c38" stroke="#ff4a2e"/>
+  <text x="437" y="58" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#ff6a52">Development</text>
+  <text x="437" y="69" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#ff6a52">workspace</text>
+  <rect x="398" y="80" width="78" height="34" rx="5" fill="#1c232d" stroke="#2272b4"/>
+  <text x="437" y="96" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#2272b4">Development</text>
+  <text x="437" y="107" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#2272b4">deployment</text>
+  <rect x="490" y="40" width="94" height="84" rx="6" fill="#232c38" stroke="#ff4a2e"/>
+  <text x="537" y="58" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#ff6a52">Staging workspace</text>
+  <rect x="498" y="80" width="78" height="34" rx="5" fill="#1c232d" stroke="#2272b4"/>
+  <text x="537" y="96" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#2272b4">Staging</text>
+  <text x="537" y="107" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#2272b4">deployment</text>
+  <rect x="590" y="40" width="90" height="84" rx="6" fill="#232c38" stroke="#ff4a2e"/>
+  <text x="635" y="58" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#ff6a52">Production</text>
+  <text x="635" y="69" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#ff6a52">workspace</text>
+  <rect x="598" y="80" width="74" height="34" rx="5" fill="#1c232d" stroke="#2272b4"/>
+  <text x="635" y="96" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#2272b4">Production</text>
+  <text x="635" y="107" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#2272b4">deployment</text>
+
+  <path d="M170 110 L 386 78" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#w4ar12)"/>
+  <text x="248" y="66" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Users can manually deploy to</text>
+  <text x="248" y="76" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">see and test changes in dev</text>
+
+  <rect x="286" y="176" width="180" height="58" rx="7" fill="#232c38" stroke="#2b3542"/>
+  <text x="376" y="194" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:700;fill:#e8ecf2">Version Control</text>
+  <rect x="316" y="202" width="120" height="24" rx="5" fill="#1c232d" stroke="#2272b4"/>
+  <text x="376" y="218" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;fill:#2272b4">Project Repository</text>
+  <path d="M170 160 L 282 200" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#w4ar12)"/>
+  <text x="180" y="184" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Users can commit</text>
+  <text x="180" y="194" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">changes to source control</text>
+
+  <rect x="516" y="168" width="170" height="66" rx="7" fill="#232c38" stroke="#2b3542"/>
+  <text x="601" y="186" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:700;fill:#e8ecf2">CI/CD</text>
+  <text x="601" y="204" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Configure service principles,</text>
+  <text x="601" y="215" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">kick off jobs, and other tasks</text>
+  <path d="M470 205 L 512 205" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#w4ar12)"/>
+  <text x="470" y="198" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Notifications trigger CI/CD</text>
+  <path d="M580 164 L 545 130" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#w4ar12)"/>
+  <text x="392" y="148" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Code and integration tests</text>
+  <text x="392" y="158" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">are deploy to staging</text>
+  <path d="M636 164 L 636 130" stroke="#8a97a8" stroke-width="1.2" marker-end="url(#w4ar12)"/>
+  <text x="576" y="148" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Code is deployed to production</text>
+  <text x="576" y="158" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">after review and approval</text>
+</svg>
+<p>Vue de haut niveau de l'architecture pour le développement et le CI/CD avec les DABs :</p>
+<ol>
+<li>Si vous travaillez <strong>localement</strong>, vous construisez le <strong>Project Bundle</strong> avec votre équipe en utilisant une configuration d'environnement local.</li>
+<li>Ensuite, vous effectuez le <strong>version control</strong> avec le <em>project repository</em>, où les utilisateurs committent leurs changements.</li>
+<li>Les utilisateurs peuvent <strong>déployer manuellement</strong> pour tester les changements dans leur <strong>workspace de développement</strong>.</li>
+<li>Quand les utilisateurs committent des changements, une <strong>notification est déclenchée</strong> pour implémenter le pipeline CI/CD vers le <strong>staging</strong> puis la <strong>production</strong> — le code et les tests d'intégration sont déployés en staging, puis le code est déployé en production <strong>après revue et approbation</strong>.</li>
+</ol>
+<div class="callout"><strong>En résumé :</strong> les Declarative Automation Bundles (DABs) sont un outil conçu pour <strong>simplifier la gestion et le déploiement des projets data et IA</strong> sur la plateforme Databricks. Ils suivent une approche <strong>Infrastructure-as-Code (IaC)</strong>, permettant aux utilisateurs de définir et gérer les ressources Databricks — jobs, pipelines, notebooks et modèles de machine learning — via des <strong>fichiers de configuration YAML</strong>. Ces bundles fluidifient la collaboration, les tests, le déploiement et le version control à travers les différents environnements.</div>
 <div class="callout"><strong>Renommage examen :</strong> les <em>Databricks Asset Bundles</em> sont désignés dans cet examen sous le nom <strong>Declarative Automation Bundles (DABs)</strong>.</div>`
       }
     ]
