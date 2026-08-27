@@ -1371,83 +1371,245 @@ const MODULES = [
 <p><strong>Plan du cours (4 sections) :</strong> Introduction au Data Engineering dans Databricks ; Ingestion depuis le stockage cloud avec les <em>Standard Connectors</em> ; Ingestion de données d'entreprise avec les <em>Managed Connectors</em> ; Alternatives d'ingestion.</p>`
       },
       {
-        id: "w1l2", title: "Le Data Engineering dans Databricks",
+        id: "w1l2", title: "Le Data Engineering dans Databricks — la pile Lakeflow",
         html: `
-<p>Databricks propose un <strong>data engineering unifié pour la Data Intelligence Platform</strong>, regroupé sous la marque <strong>Lakeflow</strong>. L'ensemble s'empile en couches, des fondations vers le haut :</p>
-<table class="tbl">
-<thead><tr><th>Couche</th><th>Rôle</th></tr></thead>
-<tbody>
-<tr><td><strong>Optimized Storage</strong></td><td>Stockage optimisé via <strong>Delta Lake</strong>, <strong>Parquet</strong> ou <strong>Iceberg</strong>.</td></tr>
-<tr><td><strong>Unified Governance</strong></td><td>Gouvernance unifiée assurée par <strong>Unity Catalog</strong> : contrôle d'accès, audit, lignage, monitoring qualité, découverte — partagés entre workspaces.</td></tr>
-<tr><td><strong>Data Processing Engine</strong></td><td>Moteur de traitement leader du marché : <strong>Apache Spark + Structured Streaming</strong>.</td></tr>
-</tbody>
-</table>
-<p>Au-dessus de ces fondations, <strong>Lakeflow</strong> est la solution de data engineering de bout en bout. Elle expose trois composants complémentaires :</p>
-<div class="cards-3">
-<div class="mini-card"><h4>Connect</h4><p>Connecteurs d'ingestion efficaces (<em>efficient ingestion connectors</em>) depuis applications, bases, stockage cloud, message buses et fichiers locaux.</p></div>
-<div class="mini-card"><h4>Declarative Pipelines</h4><p><em>Previously DLT</em> — framework SQL/Python pour pipelines batch et streaming ; développement ETL accéléré.</p></div>
-<div class="mini-card"><h4>Jobs</h4><p><em>Previously Workflows</em> — orchestration fiable des charges de traitement pour l'analytique et l'IA.</p></div>
+<p>Dans cette leçon, nous explorons comment Databricks fluidifie le data engineering en permettant une <strong>ingestion et une gestion de données sans couture</strong> grâce à <strong>Lakeflow Connect</strong> et à des solutions de stockage avancées comme <strong>Delta Lake, Parquet et Iceberg</strong>.</p>
+<p>Tout commence par le <strong>stockage optimisé</strong> (<em>optimized storage</em>) utilisant Delta Lake, Parquet ou Iceberg. Au-dessus de cette couche de stockage se trouve la <strong>gouvernance unifiée</strong> avec <strong>Unity Catalog</strong> — un catalogue de données centralisé qui fournit le contrôle d'accès, l'audit, le lignage des données (<em>data lineage</em>), le monitoring de la qualité et la découverte des données à travers les workspaces Databricks.</p>
+
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:16px;margin:0 0 14px">
+<div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.4px;color:#ff6a52;text-transform:uppercase;margin-bottom:4px">Lakeflow</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.8px;color:#8a97a8;text-transform:uppercase;margin-bottom:12px">Unified data engineering for the Data Intelligence Platform</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:9px">
+  <div style="background:#232c38;border:1px solid #2b3542;border-top:3px solid #e3b23c;border-radius:7px;padding:11px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12.5px;color:#e3b23c">CONNECT</div>
+    <div style="font-size:12px;color:#8a97a8;margin-top:5px">Efficient ingestion connectors</div>
+  </div>
+  <div style="background:#232c38;border:1px solid #2b3542;border-top:3px solid #ff4a2e;border-radius:7px;padding:11px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12.5px;color:#e8ecf2">DECLARATIVE PIPELINES</div>
+    <div style="font-size:11px;color:#6b7686;margin-top:2px">(Previously DLT)</div>
+    <div style="font-size:12px;color:#8a97a8;margin-top:5px">Accelerated ETL development</div>
+  </div>
+  <div style="background:#232c38;border:1px solid #2b3542;border-top:3px solid #ff4a2e;border-radius:7px;padding:11px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12.5px;color:#e8ecf2">JOBS</div>
+    <div style="font-size:11px;color:#6b7686;margin-top:2px">(Previously Workflows)</div>
+    <div style="font-size:12px;color:#8a97a8;margin-top:5px">Reliable orchestration for analytics and AI</div>
+  </div>
 </div>
-<div class="callout"><strong>Renommages essentiels pour l'examen :</strong> <strong>DLT → (Lakeflow) Declarative Pipelines</strong> ; <strong>Workflows → Lakeflow Jobs</strong>. Ce cours se concentre sur l'<strong>ingestion de données avec Lakeflow Connect</strong>.</div>`
+<div style="background:#232c38;border:1px solid #2b3542;border-radius:7px;padding:9px 12px;text-align:center;font-size:12.5px;color:#aeb9c7;margin-bottom:9px">
+  <strong style="color:#e8ecf2">INDUSTRY LEADING DATA PROCESSING ENGINE</strong><br/><span style="font-size:11.5px;color:#8a97a8">(Apache Spark + Structured Streaming)</span>
+</div>
+<div style="background:#232c38;border:1px solid #2b3542;border-radius:7px;padding:8px 12px;text-align:center;font-size:12.5px;color:#aeb9c7;margin-bottom:7px">UNIFIED GOVERNANCE</div>
+<div style="background:#232c38;border:1px solid #2b3542;border-radius:7px;padding:8px 12px;text-align:center;font-size:12.5px;color:#aeb9c7">OPTIMIZED STORAGE</div>
+</div>
+
+<p>Databricks propose ensuite <strong>Lakeflow</strong>, une solution de data engineering <strong>de bout en bout</strong> qui permet aux data engineers, développeurs logiciels, développeurs SQL, analystes et data scientists de livrer des données de haute qualité pour l'analytique, l'IA et les applications opérationnelles en aval. Lakeflow fournit une plateforme unifiée d'<strong>ingestion</strong>, de <strong>transformation</strong> et d'<strong>orchestration</strong>, et inclut les composants suivants :</p>
+<ul>
+<li><strong>Lakeflow Connect</strong> — un ensemble de connecteurs d'ingestion efficaces qui simplifient l'ingestion depuis des applications d'entreprise populaires, des bases de données, du stockage cloud, des bus de messages et des fichiers locaux.</li>
+<li><strong>Lakeflow Declarative Pipelines</strong> — un framework pour construire des pipelines de données <strong>batch et streaming</strong> en SQL et Python, conçu pour accélérer le développement ETL.</li>
+<li><strong>Lakeflow Jobs</strong> — un outil d'automatisation de workflows pour Databricks qui orchestre les charges de traitement de données. Il permet la coordination de plusieurs tâches au sein de workflows complexes, autorisant la planification, l'optimisation et la gestion de processus répétables.</li>
+</ul>
+<div class="callout"><strong>Périmètre de ce cours :</strong> ce cours se concentre sur l'<strong>ingestion de données avec Lakeflow Connect</strong> dans la Databricks Data Intelligence Platform.<br/><br/><strong>Renommages essentiels pour l'examen :</strong> <strong>DLT → (Lakeflow) Declarative Pipelines</strong> ; <strong>Workflows → Lakeflow Jobs</strong>.</div>`
       },
       {
         id: "w1l3", title: "Qu'est-ce que Lakeflow Connect ?",
         html: `
-<p><strong>Le problème :</strong> pour ingérer leurs données, les organisations finissent par assembler un <strong>patchwork de solutions</strong>. Les sources sont multiples — fichiers on-prem, systèmes legacy, bases de données, stockage cloud, applications SaaS, flux d'événements temps réel — et chacune est branchée via des outils tiers différents ou des solutions maison. Ce patchwork est coûteux, fragile et difficile à gouverner.</p>
-<p><strong>La réponse :</strong> Lakeflow Connect apporte des <strong>connecteurs intégrés</strong> à la Data Intelligence Platform. Les données arrivent depuis les bases on-prem, le stockage cloud, les applications SaaS et les flux d'événements, et bénéficient en sortie d'une gouvernance unifiée, d'un compute et stockage efficaces, et de cas d'usage variés (Streaming Analytics, Data Science & ML, Data Sharing, BI & Reporting).</p>
-<p><strong>Bénéfices clés :</strong></p>
+<p>Dans Lakeflow Connect, l'ingestion de données est fluidifiée par des connecteurs <strong>simples et efficaces</strong> qui permettent de faire entrer des données depuis des fichiers, du stockage cloud, des bases de données, des applications d'entreprise et des sources streaming directement dans le Databricks Lakehouse — le tout au sein d'une <strong>plateforme unifiée et managée</strong>.</p>
+
+<h4>Le problème : un patchwork de solutions pour l'ingestion</h4>
+<p><em>Organizations are Resorting to a Patchwork of Solutions for Data Ingestion.</em> Traditionnellement, les organisations recourent à un patchwork de solutions pour l'ingestion de données lorsqu'elles travaillent avec des <strong>systèmes d'entreprise, du stockage cloud et du streaming</strong>.</p>
+<svg viewBox="0 0 700 220" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w1ar1" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <style>.src1{font-family:'Inter',sans-serif;font-size:10.5px;fill:#e8ecf2}.tool1{font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8}</style>
+  <rect x="14" y="14" width="108" height="40" rx="6" fill="#232c38" stroke="#2b3542"/><text x="68" y="32" text-anchor="middle" class="src1">On Prem</text><text x="68" y="46" text-anchor="middle" class="src1">Files</text>
+  <rect x="132" y="14" width="108" height="40" rx="6" fill="#232c38" stroke="#2b3542"/><text x="186" y="38" text-anchor="middle" class="src1">Database</text>
+  <rect x="250" y="14" width="108" height="40" rx="6" fill="#232c38" stroke="#2b3542"/><text x="304" y="32" text-anchor="middle" class="src1">Legacy</text><text x="304" y="46" text-anchor="middle" class="src1">System</text>
+  <rect x="368" y="14" width="108" height="40" rx="6" fill="#232c38" stroke="#2b3542"/><text x="422" y="32" text-anchor="middle" class="src1">Cloud</text><text x="422" y="46" text-anchor="middle" class="src1">Storage</text>
+  <rect x="486" y="14" width="100" height="40" rx="6" fill="#232c38" stroke="#2b3542"/><text x="536" y="32" text-anchor="middle" class="src1">SaaS</text><text x="536" y="46" text-anchor="middle" class="src1">Application</text>
+  <rect x="596" y="14" width="90" height="40" rx="6" fill="#232c38" stroke="#2b3542"/><text x="641" y="28" text-anchor="middle" class="src1">Real-time</text><text x="641" y="41" text-anchor="middle" class="src1">Event</text><text x="641" y="52" text-anchor="middle" class="src1">Stream</text>
+
+  <rect x="14" y="82" width="108" height="36" rx="6" fill="#232c38" stroke="#e3b23c" stroke-dasharray="4 3"/><text x="68" y="98" text-anchor="middle" class="tool1">In-house</text><text x="68" y="111" text-anchor="middle" class="tool1">solution</text>
+  <rect x="132" y="82" width="108" height="36" rx="6" fill="#232c38" stroke="#e3b23c" stroke-dasharray="4 3"/><text x="186" y="98" text-anchor="middle" class="tool1">3rd party</text><text x="186" y="111" text-anchor="middle" class="tool1">tool #1</text>
+  <rect x="250" y="82" width="108" height="36" rx="6" fill="#232c38" stroke="#e3b23c" stroke-dasharray="4 3"/><text x="304" y="98" text-anchor="middle" class="tool1">In-house</text><text x="304" y="111" text-anchor="middle" class="tool1">solution</text>
+  <rect x="368" y="82" width="108" height="36" rx="6" fill="#232c38" stroke="#e3b23c" stroke-dasharray="4 3"/><text x="422" y="98" text-anchor="middle" class="tool1">3rd party</text><text x="422" y="111" text-anchor="middle" class="tool1">tool #1</text>
+  <rect x="486" y="82" width="100" height="36" rx="6" fill="#232c38" stroke="#e3b23c" stroke-dasharray="4 3"/><text x="536" y="98" text-anchor="middle" class="tool1">3rd party</text><text x="536" y="111" text-anchor="middle" class="tool1">tool #2</text>
+  <rect x="596" y="82" width="90" height="36" rx="6" fill="#232c38" stroke="#e3b23c" stroke-dasharray="4 3"/><text x="641" y="98" text-anchor="middle" class="tool1">3rd party</text><text x="641" y="111" text-anchor="middle" class="tool1">tool #3</text>
+
+  <path d="M68 58 L 68 78 M186 58 L 186 78 M304 58 L 304 78 M422 58 L 422 78 M536 58 L 536 78 M641 58 L 641 78" stroke="#8a97a8" stroke-width="1.3" marker-end="url(#w1ar1)"/>
+  <path d="M68 122 L 260 168 M186 122 L 300 168 M304 122 L 335 168 M422 122 L 380 168 M536 122 L 415 168 M641 122 L 450 168" stroke="#8a97a8" stroke-width="1.1" fill="none" marker-end="url(#w1ar1)"/>
+  <rect x="228" y="174" width="244" height="34" rx="7" fill="#232c38" stroke="#ff4a2e"/>
+  <text x="350" y="196" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;fill:#e8ecf2">Data Platform</text>
+</svg>
+
+<h4>La réponse : « Lakeflow Connect is all Ingestion »</h4>
+<svg viewBox="0 0 700 240" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w1ar2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <rect x="14" y="24" width="170" height="190" rx="14" fill="#232c38" stroke="#2b3542"/>
+  <text x="99" y="46" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;fill:#e8ecf2">Data Sources</text>
+  <rect x="28" y="58" width="142" height="26" rx="5" fill="#1c232d" stroke="#2b3542"/><text x="99" y="75" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">On prem</text>
+  <rect x="28" y="90" width="142" height="26" rx="5" fill="#1c232d" stroke="#2b3542"/><text x="99" y="107" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">Databases</text>
+  <rect x="28" y="122" width="142" height="26" rx="5" fill="#1c232d" stroke="#2b3542"/><text x="99" y="139" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">Cloud Storage</text>
+  <rect x="28" y="154" width="142" height="26" rx="5" fill="#1c232d" stroke="#2b3542"/><text x="99" y="171" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">SaaS applications</text>
+  <rect x="28" y="186" width="142" height="26" rx="5" fill="#1c232d" stroke="#2b3542"/><text x="99" y="203" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#c9d3e0">Event Streams</text>
+  <path d="M176 71 L 236 116 M176 103 L 236 122 M176 135 L 236 130 M176 167 L 236 136 M176 199 L 236 142" stroke="#8a97a8" stroke-width="1.2" fill="none"/>
+
+  <rect x="212" y="14" width="474" height="212" rx="9" fill="none" stroke="#ff4a2e" stroke-dasharray="5 4"/>
+  <text x="450" y="34" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;fill:#e8ecf2">Data Intelligence Platform</text>
+  <rect x="236" y="46" width="118" height="112" rx="6" fill="#ff4a2e"/>
+  <text x="295" y="94" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;fill:#fff">Lakeflow</text>
+  <text x="295" y="112" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;fill:#fff">Connect</text>
+  <path d="M358 62 L 380 62 M358 92 L 380 92 M358 122 L 380 122 M358 148 L 380 148" stroke="#8a97a8" stroke-width="3" marker-end="url(#w1ar2)"/>
+  <rect x="386" y="48" width="286" height="28" rx="5" fill="#232c38" stroke="#ff6a52"/><text x="529" y="67" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Streaming Analytics</text>
+  <rect x="386" y="78" width="286" height="28" rx="5" fill="#232c38" stroke="#ff6a52"/><text x="529" y="97" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Data Science &amp; ML</text>
+  <rect x="386" y="108" width="286" height="28" rx="5" fill="#232c38" stroke="#ff6a52"/><text x="529" y="127" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Data Sharing</text>
+  <rect x="386" y="138" width="286" height="28" rx="5" fill="#232c38" stroke="#ff6a52"/><text x="529" y="157" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">BI &amp; Reporting</text>
+  <rect x="236" y="170" width="436" height="22" rx="5" fill="#232c38" stroke="#2b3542"/><text x="454" y="185" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#aeb9c7">Unified Governance</text>
+  <rect x="236" y="196" width="436" height="22" rx="5" fill="#232c38" stroke="#2b3542"/><text x="454" y="211" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#aeb9c7">Efficient Compute &amp; Storage</text>
+</svg>
+<p>Avec Lakeflow Connect, vous pouvez réaliser des <strong>pipelines d'ingestion efficaces entièrement au sein de Databricks</strong>. La mise en place et la maintenance sont simples, avec une <strong>orchestration, une observabilité et une gouvernance unifiées</strong> — le tout dans la Databricks Data Intelligence Platform.</p>
+
+<h4>Built-in connectors — bénéfices clés</h4>
+<div class="cards-3">
+  <div class="mini-card"><h4>Managed and efficient solution</h4><p><strong>Lower costs and quicker time to value</strong> — une solution managée et efficace qui réduit les coûts et accélère la mise en valeur.</p></div>
+  <div class="mini-card"><h4>Self-serve interfaces for every practitioner</h4><p><strong>Decentralized data with an accelerated rate of innovation</strong> — des interfaces self-service qui permettent aux praticiens de toute l'organisation d'ingérer facilement des données depuis les applications d'entreprise.</p></div>
+  <div class="mini-card"><h4>Unified observability and governance</h4><p><strong>Secured and healthy pipelines and tables</strong> — observabilité et gouvernance unifiées pour garantir des pipelines et tables sécurisés, fiables et bien monitorés.</p></div>
+</div>
+
+<h4>Lakeflow Connect — Connectors Overview</h4>
+<p>Lakeflow Connect fournit des connecteurs simples et efficaces pour ingérer des données dans le Databricks Lakehouse depuis un large éventail de sources — applications d'entreprise, bases de données, stockage cloud, fichiers locaux, bus de messages, et plus. Il supporte <strong>trois grands types d'ingestion</strong> :</p>
 <table class="tbl">
-<thead><tr><th>Bénéfice</th><th>Conséquence</th></tr></thead>
+<thead><tr><th style="width:22%">Famille</th><th>Détail</th></tr></thead>
 <tbody>
-<tr><td>Solution <strong>managée et efficace</strong></td><td>Coûts plus bas et mise en valeur plus rapide (<em>quicker time to value</em>).</td></tr>
-<tr><td>Interfaces <strong>self-service</strong> pour chaque profil</td><td>Données démocratisées, rythme d'innovation accéléré.</td></tr>
-<tr><td><strong>Observabilité et gouvernance unifiées</strong></td><td>Pipelines et tables sécurisés et sains (<em>secured and healthy</em>).</td></tr>
+<tr>
+  <td><strong>Upload Files</strong></td>
+  <td>Téléverser des <strong>fichiers locaux</strong> vers Databricks :
+    <ul style="margin:4px 0 0;padding-left:16px"><li>téléverser un fichier vers un <strong>volume</strong> ;</li><li>créer une <strong>table à partir d'un fichier local</strong>.</li></ul>
+    Cela rend extrêmement facile de faire entrer rapidement des données locales dans la plateforme.
+  </td>
+</tr>
+<tr>
+  <td><strong>Standard Connectors</strong></td>
+  <td>Ingérer des données dans le lakehouse en utilisant diverses sources et méthodes.<br/>
+    <strong>Supported Sources :</strong> Cloud Object Storage · Kafka · Other Sources.<br/>
+    <strong>Ingestion Methods :</strong> Batch · Incremental Batch · Streaming.
+  </td>
+</tr>
+<tr>
+  <td><strong>Managed Connectors</strong></td>
+  <td>Ingérer des données dans le lakehouse depuis :
+    <ul style="margin:4px 0 0;padding-left:16px"><li>des applications <strong>Software as a Service (SaaS)</strong> ;</li><li>des <strong>bases de données</strong>.</li></ul>
+    Ils exploitent des <strong>lectures et écritures incrémentales efficaces</strong> pour rendre l'ingestion plus rapide, scalable et économique.
+  </td>
+</tr>
 </tbody>
 </table>
-<p><strong>Sources supportées :</strong> stockage objet cloud, Kafka, et d'autres sources. <strong>Méthodes d'ingestion :</strong> batch, batch incrémental, streaming.</p>
-<p><strong>Trois familles de connecteurs :</strong></p>
-<div class="cards-3">
-<div class="mini-card"><h4>Upload Files</h4><p>Téléverser un fichier local vers un <em>volume</em>, ou créer une table à partir d'un fichier local.</p></div>
-<div class="mini-card"><h4>Standard Connectors</h4><p>Ingestion depuis le stockage objet cloud, Kafka et autres sources ; lectures/écritures incrémentales efficaces — ingestion plus rapide, scalable et économique.</p></div>
-<div class="mini-card"><h4>Managed Connectors</h4><p>Ingestion depuis des applications SaaS et des bases de données d'entreprise.</p></div>
-</div>
 <div class="callout"><strong>Question type :</strong> « quelle famille de connecteurs pour ingérer depuis Salesforce / Workday / une base PostgreSQL ? » → <strong>Managed Connectors</strong>. « Pour lire des fichiers CSV/JSON depuis S3/ADLS/GCS ? » → <strong>Standard Connectors</strong>.</div>`
       },
       {
         id: "w1l4", title: "Méthodes d'ingestion : batch, batch incrémental, streaming",
         html: `
-<p>Avec les <strong>Standard Connectors</strong>, Lakeflow Connect propose trois approches, du retraitement complet au temps réel.</p>
-<h4>1) Batch</h4>
+<p>Lors de l'ingestion de données dans Databricks avec les <strong>Standard Connectors</strong> de Lakeflow Connect, vous pouvez choisir parmi plusieurs méthodes d'ingestion.</p>
+<svg viewBox="0 0 700 250" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w1ar3" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <style>.dayl{font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2}.cap1{font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8}</style>
+  <text x="118" y="20" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;fill:#ff6a52">Batch</text>
+  <rect x="20" y="30" width="196" height="200" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <text x="118" y="48" text-anchor="middle" class="cap1">Data Source · tout re-ingéré</text>
+  <text x="42" y="80" class="dayl">Day 1</text>
+  <rect x="90" y="66" width="46" height="20" rx="3" fill="#ff4a2e"/><path d="M142 76 L 162 76" stroke="#ff6a52" stroke-width="2" marker-end="url(#w1ar3)"/><rect x="168" y="66" width="34" height="20" rx="3" fill="#232c38" stroke="#ff6a52"/>
+  <text x="42" y="136" class="dayl">Day 2</text>
+  <rect x="90" y="112" width="46" height="20" rx="3" fill="#ff4a2e"/><rect x="90" y="134" width="46" height="14" rx="3" fill="#2272b4"/><path d="M142 130 L 162 130" stroke="#ff6a52" stroke-width="2" marker-end="url(#w1ar3)"/><rect x="168" y="120" width="34" height="20" rx="3" fill="#232c38" stroke="#ff6a52"/>
+  <text x="42" y="196" class="dayl">Day 3</text>
+  <rect x="90" y="164" width="46" height="18" rx="3" fill="#ff4a2e"/><rect x="90" y="184" width="46" height="14" rx="3" fill="#2272b4"/><rect x="90" y="200" width="46" height="14" rx="3" fill="#3fcf8e"/><path d="M142 188 L 162 188" stroke="#ff6a52" stroke-width="2" marker-end="url(#w1ar3)"/><rect x="168" y="178" width="34" height="20" rx="3" fill="#232c38" stroke="#ff6a52"/>
+
+  <text x="350" y="20" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;fill:#e3b23c">Incremental Batch</text>
+  <rect x="252" y="30" width="196" height="200" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <text x="350" y="48" text-anchor="middle" class="cap1">seules les nouvelles données</text>
+  <text x="274" y="80" class="dayl">Day 1</text>
+  <rect x="322" y="66" width="46" height="20" rx="3" fill="#ff4a2e"/><path d="M374 76 L 394 76" stroke="#e3b23c" stroke-width="2" marker-end="url(#w1ar3)"/><rect x="400" y="66" width="34" height="20" rx="3" fill="#232c38" stroke="#e3b23c"/>
+  <text x="274" y="136" class="dayl">Day 2</text>
+  <rect x="322" y="112" width="46" height="20" rx="3" fill="#3a4250"/><rect x="322" y="134" width="46" height="14" rx="3" fill="#2272b4"/><path d="M374 141 L 394 141" stroke="#e3b23c" stroke-width="2" marker-end="url(#w1ar3)"/><rect x="400" y="131" width="34" height="20" rx="3" fill="#232c38" stroke="#e3b23c"/>
+  <text x="274" y="196" class="dayl">Day 3</text>
+  <rect x="322" y="164" width="46" height="18" rx="3" fill="#3a4250"/><rect x="322" y="184" width="46" height="14" rx="3" fill="#3a4250"/><rect x="322" y="200" width="46" height="14" rx="3" fill="#3fcf8e"/><path d="M374 207 L 394 207" stroke="#e3b23c" stroke-width="2" marker-end="url(#w1ar3)"/><rect x="400" y="197" width="34" height="20" rx="3" fill="#232c38" stroke="#e3b23c"/>
+
+  <text x="580" y="20" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;fill:#3fcf8e">Streaming</text>
+  <rect x="484" y="30" width="196" height="200" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <text x="580" y="48" text-anchor="middle" class="cap1">en continu / micro-batchs</text>
+  <rect x="514" y="70" width="40" height="14" rx="3" fill="#3fcf8e"/><path d="M560 77 L 590 77" stroke="#3fcf8e" stroke-width="2" marker-end="url(#w1ar3)"/><rect x="596" y="67" width="34" height="20" rx="3" fill="#232c38" stroke="#3fcf8e"/>
+  <rect x="514" y="106" width="40" height="14" rx="3" fill="#3fcf8e"/><path d="M560 113 L 590 113" stroke="#3fcf8e" stroke-width="2" marker-end="url(#w1ar3)"/><rect x="596" y="103" width="34" height="20" rx="3" fill="#232c38" stroke="#3fcf8e"/>
+  <rect x="514" y="142" width="40" height="14" rx="3" fill="#3fcf8e"/><path d="M560 149 L 590 149" stroke="#3fcf8e" stroke-width="2" marker-end="url(#w1ar3)"/><rect x="596" y="139" width="34" height="20" rx="3" fill="#232c38" stroke="#3fcf8e"/>
+  <rect x="514" y="178" width="40" height="14" rx="3" fill="#3fcf8e"/><path d="M560 185 L 590 185" stroke="#3fcf8e" stroke-width="2" marker-end="url(#w1ar3)"/><rect x="596" y="175" width="34" height="20" rx="3" fill="#232c38" stroke="#3fcf8e"/>
+  <text x="580" y="218" text-anchor="middle" class="cap1">near real-time</text>
+</svg>
+
+<h4>1 · Batch</h4>
 <ul>
-<li>Charge des <strong>lots de lignes</strong> dans Databricks, souvent selon une <strong>planification</strong>.</li>
-<li>Le batch traditionnel <strong>retraite tous les enregistrements</strong> à chaque exécution (toutes les données sont ré-ingérées à chaque run du pipeline).</li>
-<li>Outils : <code>CREATE TABLE AS</code> (CTAS), <code>spark.read.load()</code>.</li>
+<li><strong>Load data as batches of rows into Databricks</strong>, souvent selon une <strong>planification</strong> (schedule).</li>
+<li><strong>Traditional batch ingestion processes all records each time it runs</strong> — toutes les données sont ré-ingérées à chaque exécution du pipeline.</li>
+<li>Techniques courantes :
+  <ul><li>l'instruction SQL <code>CREATE TABLE AS (CTAS)</code> ;</li><li>la méthode Python <code>spark.read.load()</code>.</li></ul>
+</li>
 </ul>
-<h4>2) Batch incrémental</h4>
+
+<h4>2 · Incremental Batch</h4>
 <ul>
-<li>Seules les <strong>nouvelles données</strong> sont ingérées (append) ; les enregistrements déjà chargés sont <strong>ignorés automatiquement</strong>.</li>
-<li>Ingestion plus rapide et plus économe en ressources car on traite moins de données.</li>
-<li>Outils : <code>COPY INTO</code> ; <code>spark.readStream</code> (Auto Loader avec <em>trigger</em> planifié/timed) ; Declarative Pipelines (<code>CREATE OR REFRESH STREAMING TABLE</code>).</li>
+<li><strong>Only new data is ingested, previously loaded records are skipped automatically</strong> — seules les nouvelles données sont ingérées (append), les enregistrements déjà chargés sont ignorés automatiquement.</li>
+<li>Fournit une ingestion <strong>plus rapide et plus économe en ressources</strong> en traitant moins de données.</li>
+<li>Techniques courantes :
+  <ul>
+    <li>l'instruction SQL <code>COPY INTO</code> ;</li>
+    <li>la méthode Python <code>spark.readStream</code> (Auto Loader avec un <em>timed trigger</em>) ;</li>
+    <li>Declarative Pipelines : <code>CREATE OR REFRESH STREAMING TABLE</code>.</li>
+  </ul>
+</li>
 </ul>
-<h4>3) Streaming</h4>
+<p>L'ingestion batch incrémentale détecte automatiquement les nouveaux enregistrements dans la source et saute ceux déjà ingérés. Elle est plus rapide et plus efficace car elle traite <strong>uniquement les nouveaux enregistrements</strong> au lieu de retraiter toute la source.</p>
+
+<h4>3 · Streaming</h4>
 <ul>
-<li>Charge en continu les lignes (ou lots de lignes) au fur et à mesure de leur génération, pour les interroger <strong>quasi en temps réel</strong> à leur arrivée.</li>
-<li>Le <strong>micro-batch</strong> traite de petits lots à intervalles très courts et fréquents (secondes/minutes) — équilibre entre latence et efficacité système.</li>
-<li>Idéal pour les sources comme <strong>Apache Kafka, Amazon Kinesis, Google Pub/Sub, Apache Pulsar</strong>.</li>
-<li>Outils : <code>spark.readStream</code> (Auto Loader avec <em>trigger</em> continu) ; Declarative Pipelines (mode <em>trigger</em> continu).</li>
+<li><strong>Continuously load data rows or batches of data rows as it is generated</strong>, de sorte que vous puissiez interroger les données <strong>quasi en temps réel</strong> à mesure qu'elles arrivent.</li>
+<li><strong>Micro-batch</strong> : traite de petits lots à des intervalles très courts et fréquents (secondes ou minutes) — cela établit un <strong>équilibre entre latence et efficacité système</strong>.</li>
+<li>Idéal pour charger des données streaming depuis des sources telles qu'<strong>Apache Kafka, Amazon Kinesis, Google Pub/Sub et Apache Pulsar</strong>.</li>
+<li>Techniques courantes :
+  <ul>
+    <li><code>spark.readStream</code> (Auto Loader avec un <em>continuous trigger</em>) ;</li>
+    <li>Declarative Pipelines (<em>trigger mode continuous</em>).</li>
+  </ul>
+</li>
 </ul>
+<p>L'ingestion streaming traite les données à leur arrivée, permettant une <strong>analyse à faible latence</strong> et une action immédiate.</p>
 <div class="callout"><strong>À retenir :</strong> <strong>batch</strong> = tout retraiter ; <strong>incrémental</strong> = uniquement le nouveau ; <strong>streaming</strong> = en continu, par micro-batchs.</div>`
       },
       {
-        id: "w1l5", title: "Revue de Delta Lake & architecture Médaillon",
+        id: "w1l5", title: "Revue de Delta Lake",
         html: `
-<p><strong>Delta Lake</strong> est un <strong>protocole open-source</strong> de lecture et d'écriture de fichiers vers le stockage cloud. On y ingère des données depuis des sources variées, et il s'appuie sur des fichiers <strong>Parquet</strong> (et est compatible avec le format <strong>Iceberg</strong>). Les tables Delta offrent un <em>open table format</em> qui supporte l'architecture Lakehouse.</p>
-<h4>Composants d'une table Delta</h4>
-<p>Une table Delta est stockée comme un <strong>répertoire</strong> (<code>DeltaTableName/</code>) qui contient :</p>
-<ul>
-<li>les <strong>données</strong> sous forme de fichiers Parquet — par ex. <code>…282e.snappy.parquet</code>, <code>…432c.snappy.parquet</code> ;</li>
-<li>un <strong>journal de transactions</strong> (transaction log) avec les métadonnées, dans le sous-dossier <code>_delta_log/</code> — fichiers <code>…0000.json</code>, <code>…0001.json</code>, <code>…0002.json</code>, etc.</li>
-</ul>
+<p><strong>Delta Lake</strong> délivre une gestion de données <strong>ouverte, fiable et scalable</strong> pour le Lakehouse, vous permettant d'ingérer des données depuis des sources externes et de les gérer efficacement à travers les couches <strong>Bronze (raw)</strong>, <strong>Silver (cleaned)</strong> et <strong>Gold (curated)</strong> — avec des transactions ACID complètes, le time travel, l'application du schéma et le support des charges batch et streaming.</p>
+
+<h4>Ingesting Data Into Delta Lake</h4>
+<p>Le but est d'ingérer des fichiers depuis des sources de données externes — comme le stockage objet cloud — dans Delta Lake sous forme de <strong>tables Delta</strong>. Rappelez-vous : <strong>Delta Lake est simplement un protocole open-source pour lire et écrire des fichiers vers le stockage cloud</strong>. Les tables Delta offrent un <em>open table format</em> qui supporte l'architecture Lakehouse. Le tout s'appuie sur des formats comme <strong>Parquet</strong> et <strong>Iceberg</strong> dans le <em>Cloud Data Lake</em>.</p>
+
+<h4>Delta Table Components Overview</h4>
+<p>Sous le capot, les tables Delta stockent les données dans un <strong>répertoire de dossiers</strong>. Dans ce répertoire, les données sont stockées sous forme de <strong>fichiers Parquet</strong>, et ce que Delta ajoute, ce sont les <strong>delta logs</strong> stockés en fichiers <strong>JSON</strong> aux côtés des fichiers Parquet. Les Delta logs gardent la trace de <strong>toutes les transactions</strong> sur les données (fichiers Parquet) et des <strong>versions de table</strong>.</p>
+<svg viewBox="0 0 700 200" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <style>.fn1{font-family:'JetBrains Mono',monospace;font-size:9.5px;fill:#c9d3e0}</style>
+  <text x="350" y="22" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8">Files are stored within a directory</text>
+  <rect x="120" y="32" width="460" height="140" rx="9" fill="#232c38" stroke="#ff4a2e"/>
+  <text x="350" y="54" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;fill:#e8ecf2">DeltaTableName /</text>
+  <rect x="140" y="66" width="200" height="92" rx="6" fill="#1c232d" stroke="#2272b4"/>
+  <text x="152" y="86" class="fn1">…282e.snappy.parquet</text>
+  <text x="152" y="104" class="fn1">…432c.snappy.parquet</text>
+  <text x="152" y="122" class="fn1">…380c.snappy.parquet</text>
+  <text x="152" y="140" class="fn1">…402z.snappy.parquet</text>
+  <rect x="360" y="66" width="200" height="92" rx="6" fill="#1c232d" stroke="#3fcf8e"/>
+  <text x="372" y="86" style="font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;fill:#3fcf8e">_delta_log/</text>
+  <text x="372" y="106" class="fn1">…0000.json</text>
+  <text x="372" y="124" class="fn1">…0001.json</text>
+  <text x="372" y="142" class="fn1">…0002.json</text>
+  <text x="240" y="182" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8">Data is stored as parquet files</text>
+  <text x="460" y="182" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10.5px;fill:#8a97a8">Transaction logs with metadata</text>
+  <text x="60" y="100" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:600;fill:#e8ecf2">Delta</text>
+  <text x="60" y="116" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:600;fill:#e8ecf2">Tables</text>
+  <text x="60" y="150" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">Cloud Data Lake</text>
+</svg>
 <pre><code>DeltaTableName/
 ├── …282e.snappy.parquet      ← données
 ├── …432c.snappy.parquet
@@ -1455,57 +1617,117 @@ const MODULES = [
     ├── 0000.json
     ├── 0001.json
     └── 0002.json</code></pre>
-<p>Le transaction log introduit la notion d'<strong>états de table</strong> (table states) : chaque INSERT / UPDATE / DELETE ajoute une transaction (fichier de log), ce qui maintient la table à jour et permet des <strong>vues cohérentes</strong> ainsi que le <strong>voyage dans le temps</strong>. Sans Delta, modifier un fichier de data lake imposait de le recréer manuellement et de suivre les versions à la main.</p>
-<h4>Fonctionnalités clés des tables Delta</h4>
+<p>Le transaction log fournit un large éventail de fonctionnalités à la table Delta. Avec lui, nous disposons désormais du concept d'<strong>états de table</strong> (<em>table states</em>) : si vous insérez, supprimez ou mettez à jour des données dans votre table, Delta <strong>ajoute simplement une transaction</strong> (le fichier de log) et votre table reste à jour et managée. Ainsi, avec le transaction log vous pouvez facilement obtenir des <strong>vues cohérentes</strong> de vos données — et vous pouvez même <strong>voyager dans le temps</strong> !</p>
+<div class="callout">Traditionnellement dans un data lake, modifier et gérer ses données était une tâche difficile. Par exemple, pour insérer, mettre à jour ou supprimer des enregistrements d'un fichier de data lake, il fallait typiquement <strong>recréer manuellement le fichier</strong> avec les modifications et suivre les mises à jour à la main. Avec Delta Lake, c'est bien plus performant et très facile à utiliser !</div>
+
+<h4>Delta Tables Key Features Review</h4>
+<p>Les tables Delta offrent une variété de fonctionnalités clés dans notre cloud data lake :</p>
 <ul>
-<li><strong>Transactions ACID</strong> — atomicité, cohérence, isolation, durabilité ; lectures/écritures concurrentes sans conflit.</li>
-<li><strong>Time Travel</strong> — interroger et revenir à des versions antérieures (audit, recovery).</li>
-<li><strong>DML</strong> — INSERT, UPDATE, DELETE, MERGE.</li>
-<li><strong>Schema Evolution & Enforcement</strong> — évolution et application du schéma sans casser les workflows existants.</li>
-<li>… et bien d'autres (batch + streaming unifiés, optimisation/performance, scalabilité). Delta Lake est <strong>open-source</strong>.</li>
+<li><strong>ACID Transactions</strong> — atomicité, cohérence, isolation et durabilité pour toutes les opérations, permettant à plusieurs utilisateurs de <strong>lire et écrire simultanément sans conflit</strong>.</li>
+<li><strong>Data Manipulation Language (DML)</strong> — supporte les opérations <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> et <code>MERGE</code>, permettant une gestion flexible des données.</li>
+<li><strong>Time Travel</strong> — permet d'interroger et de revenir à des versions antérieures des données, facilitant l'<strong>audit et la récupération</strong>.</li>
+<li><strong>Schema Evolution and Enforcement</strong> — applique un schéma défini pour l'intégrité des données tout en autorisant l'évolution du schéma, permettant des changements de structure <strong>sans casser les workflows existants</strong>.</li>
+<li><strong>Many more!</strong> — Delta Lake fournit aussi de nombreuses autres fonctionnalités comme le <strong>traitement batch et streaming unifié</strong>, l'<strong>optimisation et la performance</strong>, et la <strong>scalabilité</strong>.</li>
 </ul>
-<h4>Architecture Médaillon (multi-hop)</h4>
-<p>On améliore <strong>progressivement la structure et la qualité</strong> des données à mesure qu'elles traversent les couches :</p>
-<div class="medallion-row">
-<div class="med-tier bronze"><span class="badge">Bronze</span><p>Raw Data Ingestion — données brutes, non traitées, ingérées « as is ».</p></div>
-<div class="med-arrow">→</div>
-<div class="med-tier silver"><span class="badge">Silver</span><p>Cleaned Data — nettoyées, transformées, enrichies ; adaptées à l'analyse.</p></div>
-<div class="med-arrow">→</div>
-<div class="med-tier gold"><span class="badge">Gold</span><p>Business-Level Aggregates — curées, agrégées, haute qualité ; pour BI et analytique avancée.</p></div>
-</div>
-<p>Le traitement et la transformation peuvent se faire en <strong>batch</strong> ou en <strong>streaming</strong>. Les consommateurs en sortie : <strong>ML & IA</strong>, <strong>BI & Reporting</strong>, <strong>Streaming Analytics</strong>.</p>`
+<div class="callout"><strong>Delta Lake est également open source !</strong></div>`
       },
       {
-        id: "w1l6", title: "Ingestion depuis le stockage cloud — vue d'ensemble",
+        id: "w1l6", title: "Architecture Médaillon (Multi Hop)",
         html: `
-<p>Le but de cette section : convertir des <strong>formats de fichiers bruts</strong> (CSV, JSON, Parquet, etc.) présents dans le <strong>stockage objet cloud</strong> en <strong>tables Delta</strong> propres et exploitables — débloquant ACID, Time Travel et application du schéma.</p>
-<p>Trois patterns d'ingestion depuis le stockage objet cloud, réalisés via les <strong>Standard Connectors</strong> de Lakeflow Connect :</p>
+<p>À mesure que vous ingérez des données dans votre Delta Lake par des méthodes <strong>batch</strong> ou <strong>streaming</strong> (ou les deux), vous pouvez commencer à traiter et transformer vos données dans Databricks.</p>
+<p>Le but est d'<strong>améliorer incrémentalement et progressivement la structure et la qualité des données</strong> à mesure qu'elles traversent chaque couche : <strong>Bronze, Silver et Gold</strong>.</p>
+<svg viewBox="0 0 700 210" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w1ar4" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <text x="76" y="20" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;fill:#8a97a8">Ingest</text>
+  <text x="350" y="20" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;fill:#8a97a8">Data Processing and Transformation</text>
+  <text x="620" y="20" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;fill:#8a97a8">Consumers</text>
+  <rect x="14" y="48" width="124" height="44" rx="6" fill="#232c38" stroke="#2b3542"/><text x="76" y="75" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#e8ecf2">Batch</text>
+  <rect x="14" y="118" width="124" height="44" rx="6" fill="#232c38" stroke="#2b3542"/><text x="76" y="145" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:12px;fill:#e8ecf2">Streaming</text>
+  <rect x="164" y="32" width="372" height="146" rx="8" fill="#232c38" stroke="#ff4a2e" stroke-dasharray="4 3"/>
+  <text x="350" y="48" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">Data Quality Levels →</text>
+  <rect x="182" y="62" width="104" height="96" rx="6" fill="#1c232d" stroke="#c77b3b"/>
+  <text x="234" y="84" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#c77b3b">Bronze</text>
+  <text x="234" y="112" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Raw Data</text>
+  <text x="234" y="126" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Ingestion</text>
+  <rect x="298" y="62" width="104" height="96" rx="6" fill="#1c232d" stroke="#aeb9c7"/>
+  <text x="350" y="84" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#aeb9c7">Silver</text>
+  <text x="350" y="112" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Cleaned</text>
+  <text x="350" y="126" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Data</text>
+  <rect x="414" y="62" width="104" height="96" rx="6" fill="#1c232d" stroke="#e3b23c"/>
+  <text x="466" y="84" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;fill:#e3b23c">Gold</text>
+  <text x="466" y="112" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Business</text>
+  <text x="466" y="126" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#8a97a8">Level Aggs</text>
+  <path d="M290 110 L 294 110 M406 110 L 410 110" stroke="#8a97a8" stroke-width="1.4" marker-end="url(#w1ar4)"/>
+  <path d="M142 70 L 178 90 M142 140 L 178 120" stroke="#8a97a8" stroke-width="1.4" fill="none" marker-end="url(#w1ar4)"/>
+  <rect x="562" y="42" width="124" height="34" rx="6" fill="#232c38" stroke="#2b3542"/><text x="624" y="63" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">BI &amp; Reporting</text>
+  <rect x="562" y="88" width="124" height="34" rx="6" fill="#232c38" stroke="#2b3542"/><text x="624" y="109" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">ML &amp; AI</text>
+  <rect x="562" y="134" width="124" height="34" rx="6" fill="#232c38" stroke="#2b3542"/><text x="624" y="150" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Streaming</text><text x="624" y="163" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Analytics</text>
+  <path d="M522 110 L 540 60 M522 110 L 558 105 M522 110 L 540 150" stroke="#8a97a8" stroke-width="1.2" fill="none" marker-end="url(#w1ar4)"/>
+</svg>
+<div class="medallion-row">
+<div class="med-tier bronze"><span class="badge">Bronze</span><p><strong>Raw Data Ingestion</strong> — cette couche ingère des données brutes, non traitées, depuis diverses sources « <em>as is</em> », servant de <strong>stockage fondamental</strong> pour toutes les données.</p></div>
+<div class="med-arrow">→</div>
+<div class="med-tier silver"><span class="badge">Silver</span><p><strong>Cleaned Data</strong> — les données sont <strong>nettoyées, transformées et enrichies</strong>, fournissant un jeu de données plus raffiné et adapté à l'analyse.</p></div>
+<div class="med-arrow">→</div>
+<div class="med-tier gold"><span class="badge">Gold</span><p><strong>Business Level Aggs</strong> — données <strong>curées, agrégées et de haute qualité</strong>, optimisées pour le reporting et l'analytique avancée, souvent utilisées pour les applications de business intelligence.</p></div>
+</div>
+<p>Le traitement et la transformation peuvent se faire en <strong>batch</strong> ou en <strong>streaming</strong>. Les consommateurs en sortie sont : <strong>BI &amp; Reporting</strong>, <strong>ML &amp; AI</strong>, et <strong>Streaming Analytics</strong>.</p>`
+      },
+      {
+        id: "w1l7", title: "Ingestion depuis le stockage cloud — vue d'ensemble",
+        html: `
+<p>Dans l'ingestion de données depuis le stockage cloud, les <strong>fichiers bruts sont efficacement convertis en tables Delta</strong> à l'aide des outils Databricks — débloquant des capacités avancées de gestion et d'analytique au sein du Lakehouse.</p>
+<p>L'ingestion de données est un <strong>composant critique de l'architecture Lakehouse moderne</strong>, permettant aux organisations de tirer parti de gros volumes de données stockées dans les systèmes de stockage objet cloud. Les formats de fichiers courants comme <strong>CSV, JSON et Parquet</strong> sont fréquemment utilisés pour leur flexibilité et leur facilité d'usage.</p>
+<svg viewBox="0 0 700 190" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w1ar5" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#2272b4"/></marker></defs>
+  <rect x="90" y="30" width="110" height="110" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <text x="145" y="56" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#e8ecf2">CSV</text>
+  <text x="145" y="78" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#e8ecf2">JSON</text>
+  <text x="145" y="100" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#e8ecf2">Parquet</text>
+  <text x="145" y="122" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#8a97a8">etc.</text>
+  <text x="145" y="160" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#8a97a8">Cloud Storage</text>
+  <path d="M206 85 L 258 85" stroke="#2272b4" stroke-width="5" marker-end="url(#w1ar5)"/>
+  <rect x="272" y="24" width="156" height="122" rx="8" fill="#232c38" stroke="#2272b4"/>
+  <text x="350" y="46" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;fill:#e8ecf2">Data Ingestion</text>
+  <rect x="288" y="56" width="124" height="24" rx="4" fill="#2272b4"/><text x="350" y="72" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;fill:#fff">CREATE TABLE AS</text>
+  <rect x="288" y="86" width="124" height="24" rx="4" fill="#2272b4"/><text x="350" y="102" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;fill:#fff">COPY INTO</text>
+  <rect x="288" y="116" width="124" height="24" rx="4" fill="#2272b4"/><text x="350" y="132" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;fill:#fff">AUTO LOADER</text>
+  <path d="M434 85 L 486 85" stroke="#2272b4" stroke-width="5" marker-end="url(#w1ar5)"/>
+  <rect x="500" y="44" width="120" height="66" rx="7" fill="#232c38" stroke="#ff4a2e"/>
+  <text x="560" y="84" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:20px;fill:#ff6a52">▦</text>
+  <text x="560" y="130" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:13px;fill:#e8ecf2">Delta Table</text>
+  <rect x="150" y="158" width="400" height="24" rx="5" fill="#232c38" stroke="#2b3542"/>
+  <text x="350" y="174" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11.5px;fill:#e8ecf2">Convert <tspan font-weight="700">raw file formats</tspan> to <tspan font-weight="700">Delta tables</tspan></text>
+</svg>
+<p>Notre objectif est de <strong>convertir ces fichiers bruts en tables Delta</strong>, débloquant des fonctionnalités avancées telles que les <strong>transactions ACID, le time travel et l'application du schéma</strong>.</p>
+<p>Nous explorerons <strong>trois méthodes principales</strong> pour ingérer des fichiers depuis le stockage objet cloud vers des tables Delta :</p>
 <div class="cards-3">
 <div class="mini-card"><h4>CREATE TABLE AS</h4><p>(CTAS) — ingestion <strong>batch</strong>.</p></div>
 <div class="mini-card"><h4>COPY INTO</h4><p>Ingestion <strong>batch incrémental</strong>.</p></div>
 <div class="mini-card"><h4>Auto Loader</h4><p>Batch incrémental <strong>ou streaming</strong>.</p></div>
 </div>
-<p>Les leçons suivantes détaillent chacune de ces trois méthodes, puis fournissent un comparatif complet pour choisir la bonne selon le volume, la latence et la fréquence.</p>`
+<div class="callout">L'ingestion depuis le stockage objet cloud est réalisée à l'aide des <strong>Lakeflow Connect Standard Connectors</strong>.</div>`
       },
       {
-        id: "w1l7", title: "Méthode 1 — CREATE TABLE AS (CTAS)",
+        id: "w1l8", title: "Méthode 1 — Batch — CREATE TABLE AS (CTAS)",
         html: `
-<p><code>CREATE TABLE AS</code> (CTAS) crée <strong>par défaut une table Delta</strong> à partir de fichiers du stockage objet cloud.</p>
+<p><strong><code>CREATE TABLE AS</code> (CTAS) crée par défaut une table Delta</strong> à partir de fichiers stockés dans le stockage objet cloud.</p>
 <pre><code>CREATE TABLE new_table AS
 SELECT *
 FROM read_files(
-  '&lt;path_to_file(s)&gt;',
+  &lt;path_to_file(s)&gt;,
   format =&gt; '&lt;file_type&gt;',
   &lt;other_format_specific_options&gt;
 );</code></pre>
-<p>La fonction <code>read_files()</code> lit les fichiers situés sous un emplacement fourni et renvoie les données sous <strong>forme tabulaire</strong>. Caractéristiques :</p>
+<p>La fonction <code>read_files()</code> <strong>lit les fichiers sous un emplacement fourni et renvoie les données sous forme tabulaire</strong>. Elle offre plusieurs capacités :</p>
 <ul>
-<li>Supporte la lecture des formats <strong>JSON, CSV, XML, TEXT, BINARYFILE, PARQUET, AVRO et ORC</strong>.</li>
-<li>Peut <strong>détecter automatiquement le format</strong> du fichier et <strong>inférer un schéma unifié</strong> sur l'ensemble des fichiers.</li>
-<li>Permet de spécifier des <strong>options propres au format</strong> source pour adapter la lecture.</li>
-<li>Peut être utilisée dans des <strong>streaming tables</strong> pour ingérer de façon incrémentale des fichiers dans Delta Lake via <strong>Auto Loader</strong>.</li>
+<li><strong>Supporte la lecture de formats de fichiers</strong> comme <code>JSON</code>, <code>CSV</code>, <code>XML</code>, <code>TEXT</code>, <code>BINARYFILE</code>, <code>PARQUET</code>, <code>AVRO</code> et <code>ORC</code>.</li>
+<li><strong>Peut détecter le format de fichier automatiquement</strong> et <strong>inférer un schéma unifié</strong> à travers tous les fichiers.</li>
+<li>Permet de <strong>spécifier des options propres au format</strong> pour lire les données selon le format du fichier source — pour un contrôle accru.</li>
+<li><strong>Peut être utilisée dans des streaming tables</strong> pour ingérer incrémentalement des fichiers dans Delta Lake à l'aide d'<strong>Auto Loader</strong>.</li>
 </ul>
-<div class="callout"><strong>Résumé d'usage :</strong> idéal pour une ingestion ponctuelle, ad hoc, ou sur de plus petits jeux de données. Peut être planifié, mais relit alors et retraite toutes les données à chaque exécution (<strong>pas d'idempotence</strong>, latence élevée).</div><div class="demo"><span class="demo-label">Exemple — notebook (SQL)</span><p>Les fichiers <strong>Parquet</strong> embarquent leur schéma (noms + types) : <code>read_files()</code> l'infère automatiquement, sans définition manuelle.</p><pre><code>-- Supprime la table si elle existe (démo)
+<div class="callout"><strong>Résumé d'usage :</strong> idéal pour une ingestion ponctuelle, ad hoc, ou sur de plus petits jeux de données. Peut être planifié, mais relit alors et retraite toutes les données à chaque exécution (<strong>pas d'idempotence</strong>, latence élevée).</div>
+<div class="demo"><span class="demo-label">Exemple — notebook (SQL)</span><p>Les fichiers <strong>Parquet</strong> embarquent leur schéma (noms + types) : <code>read_files()</code> l'infère automatiquement, sans définition manuelle.</p><pre><code>-- Supprime la table si elle existe (démo)
 DROP TABLE IF EXISTS historical_users_bronze_ctas_rf;
 
 -- Crée la table Delta directement depuis des fichiers Parquet
@@ -1536,29 +1758,35 @@ spark.table(f"dbacademy.{DA.schema_name}.historical_users_bronze_python").displa
 </tbody></table></div>`
       },
       {
-        id: "w1l8", title: "Méthode 2 — COPY INTO (batch incrémental, legacy)",
+        id: "w1l9", title: "Méthode 2 — Batch incrémental — COPY INTO (legacy)",
         html: `
-<p><code>COPY INTO</code> réalise une <strong>ingestion incrémentale</strong> (bulk load) depuis des fichiers du stockage cloud vers une table Delta existante, en deux temps.</p>
-<h4>Étape 1 — créer une table pour recevoir les données</h4>
+<h4>Étape 1 — Créer une table vide dans laquelle copier les données</h4>
+<pre><code>CREATE TABLE new_table;</code></pre>
 <ul>
-<li>On peut créer une table <strong>sans schéma</strong> (il sera déduit), ou explicitement <strong>avec un schéma</strong>.</li>
+<li>Vous pouvez créer une <strong>table vide sans schéma</strong>.</li>
+<li>Vous pouvez aussi <strong>créer explicitement la table avec un schéma</strong>.</li>
 </ul>
-<h4>Étape 2 — copier de façon incrémentale</h4>
-<pre><code>CREATE TABLE new_table;
+<p>On utilise ensuite l'instruction <code>COPY INTO</code> pour copier les fichiers depuis le stockage cloud vers la table Delta. Cette commande réalise un <strong>chargement en masse (bulk load)</strong> depuis les fichiers du stockage objet cloud vers la table. La clause <code>FROM</code> spécifie l'emplacement des fichiers.</p>
 
-COPY INTO new_table
+<h4>Étape 2 — COPY INTO pour l'ingestion batch incrémentale</h4>
+<pre><code>COPY INTO new_table
 FROM '&lt;dir_path&gt;'
-FILEFORMAT = &lt;file_type&gt;
-FORMAT_OPTIONS (&lt;options&gt;)
-COPY_OPTIONS (&lt;options&gt;);</code></pre>
-<ul>
-<li>Opération <strong>idempotente et ré-essayable</strong> (<em>retriable</em>) : les fichiers <strong>déjà chargés sont ignorés</strong> → ingestion incrémentale, idéale quand l'emplacement cloud reçoit continuellement de nouveaux fichiers.</li>
-<li>Supporte les types de fichiers courants : Parquet, JSON, XML, etc.</li>
-<li><code>FROM</code> spécifie le chemin de l'emplacement cloud qui reçoit continuellement de nouveaux fichiers.</li>
-<li><code>FORMAT_OPTIONS()</code> contrôle la façon dont les fichiers sources sont <strong>analysés et interprétés</strong> ; les options disponibles dépendent du format de fichier.</li>
-<li><code>COPY_OPTIONS()</code> contrôle le comportement de l'opération <code>COPY INTO</code> elle-même — par ex. l'<strong>évolution de schéma</strong> (<code>mergeSchema</code>) et l'<strong>idempotence</strong> (<code>force</code>).</li>
-</ul>
-<div class="callout"><strong>Résumé d'usage :</strong> simple et répétable pour l'ingestion incrémentale de fichiers, parfait pour des jobs/pipelines planifiés. Désigné « legacy » : pour de gros volumes, Databricks recommande désormais <strong>Auto Loader + streaming tables</strong>.</div><div class="demo"><span class="demo-label">Exemple — notebook (SQL)</span><p>On crée une table avec un <strong>schéma explicite</strong> (ici 2 colonnes sur 3), puis on charge avec <code>COPY INTO</code> en autorisant l'évolution de schéma :</p><pre><code>DROP TABLE IF EXISTS historical_users_bronze_ci;
+FILEFORMAT=&lt;file_type&gt;
+FORMAT_OPTIONS(&lt;options&gt;)
+COPY_OPTIONS(&lt;options&gt;)</code></pre>
+<p><code>COPY INTO</code> est idéal lorsque l'emplacement de stockage cloud <strong>ajoute continuellement des fichiers</strong>, puisque c'est une opération <strong>retriable et idempotente</strong> conçue pour l'ingestion batch incrémentale. Concrètement : <strong>COPY INTO saute tous les fichiers déjà chargés dans la table</strong>, et seuls les nouveaux fichiers sont ingérés.</p>
+<table class="tbl">
+<thead><tr><th style="width:30%">Aspect</th><th>Détail</th></tr></thead>
+<tbody>
+<tr><td><strong>Idempotence</strong></td><td>Opération <strong>retriable et idempotente</strong> ; saute les fichiers qui ont déjà été chargés (incrémental).</td></tr>
+<tr><td><strong>Formats supportés</strong></td><td>Supporte divers types de fichiers courants comme <strong>parquet, JSON, XML</strong>, etc.</td></tr>
+<tr><td><code>FROM</code></td><td>Spécifie le <strong>chemin de l'emplacement de stockage cloud</strong> qui ajoute continuellement des fichiers.</td></tr>
+<tr><td><code>FORMAT_OPTIONS()</code></td><td>Contrôle <strong>comment les fichiers source sont parsés et interprétés</strong>. Les options disponibles dépendent du format de fichier.</td></tr>
+<tr><td><code>COPY_OPTIONS()</code></td><td>Contrôle le <strong>comportement de l'opération COPY INTO elle-même</strong>, comme l'évolution de schéma (<code>mergeSchema</code>) et l'idempotence (<code>force</code>).</td></tr>
+</tbody>
+</table>
+<div class="callout"><strong>Résumé d'usage :</strong> simple et répétable pour l'ingestion incrémentale de fichiers, parfait pour des jobs/pipelines planifiés. Désigné « legacy » : pour de gros volumes, Databricks recommande désormais <strong>Auto Loader + streaming tables</strong>.</div>
+<div class="demo"><span class="demo-label">Exemple — notebook (SQL)</span><p>On crée une table avec un <strong>schéma explicite</strong> (ici 2 colonnes sur 3), puis on charge avec <code>COPY INTO</code> en autorisant l'évolution de schéma :</p><pre><code>DROP TABLE IF EXISTS historical_users_bronze_ci;
 
 -- Table vide avec schéma défini (2 colonnes sur 3)
 CREATE TABLE historical_users_bronze_ci (
@@ -1572,38 +1800,55 @@ COPY INTO historical_users_bronze_ci
   COPY_OPTIONS ('mergeSchema' = 'true');   -- fusionne le schéma de chaque fichier</code></pre><p class="demo-note">Idempotence — relancer le même <code>COPY INTO</code> ré-ingère 0 ligne : <code>num_affected_rows</code>, <code>num_inserted_rows</code> et <code>num_skipped_corrupt_files</code> valent 0 tant que les fichiers source n'ont pas changé. Seuls les <strong>nouveaux fichiers</strong> sont chargés.</p></div>`
       },
       {
-        id: "w1l9", title: "Méthode 3 — Auto Loader",
+        id: "w1l10", title: "Méthode 3 — Batch incrémental ou streaming — Auto Loader",
         html: `
-<p><strong>Auto Loader</strong> traite de façon <strong>incrémentale et efficace</strong> les nouveaux fichiers de données à mesure qu'ils arrivent dans le stockage cloud, <strong>sans configuration additionnelle</strong>. Il détecte et ingère automatiquement les nouveaux fichiers dans des tables Delta.</p>
+<h4>Auto Loader — vue d'ensemble</h4>
 <ul>
-<li>Fonctionne en <strong>batch ou en streaming</strong>.</li>
-<li>Support <strong>Python et SQL</strong> (le SQL via Declarative Pipelines).</li>
-<li>Peut traiter des <strong>milliards de fichiers</strong> (built to scale).</li>
-<li>Construit sur <strong>Spark Structured Streaming</strong>.</li>
+<li><strong>Traite incrémentalement et efficacement les nouveaux fichiers de données</strong> (en batch ou en streaming) <strong>à mesure qu'ils arrivent dans le stockage cloud</strong>, sans configuration supplémentaire.</li>
+<li>Auto Loader <strong>supporte à la fois Python et SQL</strong> (en s'appuyant sur les Declarative Pipelines).</li>
+<li>Vous pouvez utiliser Auto Loader pour traiter des <strong>milliards de fichiers</strong> — il est conçu pour passer à l'échelle.</li>
+<li>Auto Loader est <strong>construit sur Spark Structured Streaming</strong>, ce qui permet cette ingestion efficace et fiable.</li>
 </ul>
+<p>Auto Loader est une fonctionnalité qui <strong>détecte et ingère automatiquement les nouveaux fichiers</strong> du stockage cloud vers les tables Delta Lake, simplifiant le traitement des données incrémentales ou streaming avec un minimum de configuration.</p>
+
 <h4>Auto Loader en Python</h4>
-<pre><code>(spark.readStream
-  .format("cloudFiles")
-  .option("cloudFiles.format", "json")
-  .option("cloudFiles.schemaLocation", "&lt;checkpoint_path&gt;")
-  .load("/Volumes/catalog/schema/files")
-.writeStream
-  .option("checkpointLocation", "&lt;checkpoint_path&gt;")
-  .trigger(processingTime="5 seconds")
-  .toTable("catalog.database.table")
+<pre><code>(spark
+  .readStream
+    .format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "&lt;checkpoint_path&gt;")
+    .load("/Volumes/catalog/schema/files")
+  .writeStream
+    .option("checkpointLocation", "&lt;checkpoint_path&gt;")
+    .trigger(processingTime = "5 seconds")
+    .toTable("catalog.database.table")
 )</code></pre>
-<p>Points clés du code : le format spécial <code>cloudFiles</code> (active Auto Loader), le <code>cloudFiles.schemaLocation</code> (où Auto Loader mémorise/fait évoluer le schéma), le <code>checkpointLocation</code> (suivi des fichiers déjà lus + état/progression), et le <code>trigger</code> qui fixe le rythme des micro-batchs. <code>.toTable()</code> écrit dans la table Delta cible.</p>
-<h4>Auto Loader en SQL (Declarative Pipelines)</h4>
+<ul>
+<li>On commence par <code>.readStream</code> et on fixe le format à <strong><code>"cloudFiles"</code></strong>, ce qui <strong>active Auto Loader</strong>.</li>
+<li>On spécifie ensuite le format de fichier (ici JSON), et on définit l'emplacement du schéma via <code>cloudFiles.schemaLocation</code>, utilisé pour <strong>suivre l'inférence et l'évolution du schéma</strong>.</li>
+<li>On utilise <code>.load()</code> pour pointer vers l'emplacement des fichiers — ici un chemin sous <code>/Volumes</code> référençant Unity Catalog.</li>
+<li>Côté écriture, on configure <code>.writeStream</code> avec un <strong>checkpoint location</strong> pour maintenir l'état et la progression, et on fixe un <strong>intervalle de trigger</strong> toutes les 5 secondes.</li>
+<li>Enfin, on utilise <code>.toTable()</code> pour écrire les données dans une table Delta spécifiée par catalogue, base de données et nom de table.</li>
+</ul>
+
+<h4>Auto Loader avec SQL (Declarative Pipelines)</h4>
 <pre><code>CREATE OR REFRESH STREAMING TABLE catalog.schema.table
-SCHEDULE EVERY 1 HOUR
+  SCHEDULE EVERY 1 HOUR
 AS
 SELECT *
 FROM STREAM read_files(
   '&lt;dir_path&gt;',
   format =&gt; '&lt;file_type&gt;'
-);</code></pre>
-<p>Pour utiliser Auto Loader en Databricks SQL, on emploie <code>read_files</code> avec le mot-clé <strong><code>STREAM</code></strong> dans la clause <code>FROM</code>. Une <strong>streaming table</strong> est enregistrée dans Unity Catalog et génère automatiquement un pipeline ; Databricks recommande les streaming tables (plutôt que <code>COPY INTO</code>) pour ingérer en SQL.</p>
-<div class="callout">Un approfondissement d'Auto Loader dépasse le périmètre du cours ; voir « Stream Processing and Analysis with Apache Spark », « Build Data Pipelines with Lakeflow Declarative Pipelines » et « Databricks Streaming and DLT (Advanced) ». <strong>Résumé d'usage :</strong> le meilleur choix pour le quasi temps réel ou l'incrémental à grande échelle, avec forte automatisation et détection/évolution automatiques de schéma.</div><div class="demo"><span class="demo-label">Exemple — Streaming Table en Databricks SQL</span><p>Créer une <strong>streaming table</strong> qui ingère incrémentalement des CSV via Auto Loader. La table s'appuie sur un <strong>pipeline DLT serverless</strong> créé et géré automatiquement (la création et le refresh ne consomment pas de warehouse DBSQL) :</p><pre><code>CREATE OR REFRESH STREAMING TABLE sql_csv_autoloader
+)</code></pre>
+<p><strong>Auto Loader avec Databricks SQL :</strong></p>
+<ul>
+<li>Databricks <strong>recommande d'utiliser des streaming tables</strong> pour ingérer des données avec Databricks SQL (<strong>au lieu de <code>COPY INTO</code></strong>). Une streaming table est une table enregistrée dans Unity Catalog qui inclut un support additionnel pour le traitement streaming ou incrémental. Quand vous créez une streaming table, <strong>un pipeline est automatiquement généré</strong> pour elle. Les streaming tables peuvent être utilisées pour le chargement incrémental depuis <strong>Kafka comme depuis le stockage objet cloud</strong>.</li>
+<li>Pour créer une streaming table à partir de fichiers dans un volume, vous utilisez <strong>Auto Loader</strong>. Databricks recommande d'utiliser <strong>Auto Loader avec les Lakeflow Declarative Pipelines</strong> pour la plupart des tâches d'ingestion depuis le stockage objet cloud. Ensemble, Auto Loader et les Declarative Pipelines sont conçus pour charger <strong>incrémentalement et idempotemment</strong> des jeux de données en croissance continue à mesure qu'ils arrivent.</li>
+<li>Les streaming tables dans Databricks SQL sont <strong>adossées à des Lakeflow Declarative Pipelines serverless</strong>. Votre workspace doit supporter les pipelines serverless pour utiliser cette fonctionnalité. Autrement, vous pouvez construire vos propres Lakeflow Declarative Pipelines pour le traitement incrémental, l'optimisation et le monitoring.</li>
+<li>Pour utiliser Auto Loader dans Databricks SQL, utilisez la fonction <code>read_files</code> <strong>avec le mot-clé <code>STREAM</code></strong> dans la clause <code>FROM</code>.</li>
+</ul>
+<div class="callout">Un approfondissement d'Auto Loader dépasse le périmètre de ce cours ; référez-vous à la documentation et aux tutoriels, ainsi qu'aux cours « <strong>Stream Processing and Analysis with Apache Spark™</strong> », « <strong>Build Data Pipelines with DLT</strong> » et « <strong>Databricks Streaming and DLT (Advanced)</strong> ».<br/><br/><strong>Résumé d'usage :</strong> le meilleur choix pour le quasi temps réel ou l'incrémental à grande échelle, avec forte automatisation et détection/évolution automatiques de schéma.</div>
+<div class="demo"><span class="demo-label">Exemple — Streaming Table en Databricks SQL</span><p>Créer une <strong>streaming table</strong> qui ingère incrémentalement des CSV via Auto Loader. La table s'appuie sur un <strong>pipeline DLT serverless</strong> créé et géré automatiquement (la création et le refresh ne consomment pas de warehouse DBSQL) :</p><pre><code>CREATE OR REFRESH STREAMING TABLE sql_csv_autoloader
 SCHEDULE EVERY 1 WEEK            -- planification du refresh (optionnel)
 AS
 SELECT *
@@ -1615,50 +1860,126 @@ FROM STREAM read_files(
 );</code></pre><p class="demo-note">Rafraîchir manuellement : <code>REFRESH STREAMING TABLE sql_csv_autoloader;</code>. Le mot-clé <code>STREAM</code> devant <code>read_files()</code> est ce qui active l'ingestion incrémentale Auto Loader.</p></div>`
       },
       {
-        id: "w1l10", title: "Comparatif : CTAS vs COPY INTO vs Auto Loader",
+        id: "w1l11", title: "Comparatif : CTAS vs COPY INTO vs Auto Loader",
         html: `
+<p>Voici un récapitulatif complet des trois méthodes d'ingestion depuis le stockage objet cloud.</p>
 <table class="tbl">
-<thead><tr><th>Critère</th><th>CTAS (+ spark.read)</th><th>COPY INTO</th><th>Auto Loader</th></tr></thead>
+<thead><tr>
+  <th style="width:16%">FEATURE</th>
+  <th>CREATE TABLE AS (CTAS) + spark.read</th>
+  <th>COPY INTO</th>
+  <th>Auto Loader</th>
+</tr></thead>
 <tbody>
-<tr><td>Type d'ingestion</td><td>Batch</td><td>Batch incrémental</td><td>Incrémental (batch ou streaming)</td></tr>
-<tr><td>Cas d'usage</td><td>Meilleur pour les petits jeux de données</td><td>Idéal pour des milliers de fichiers</td><td>Passe à des millions+ de fichiers/heure ; backfills de milliards de fichiers</td></tr>
-<tr><td>Syntaxe / Interface</td><td>Python (<code>spark.read</code>), SQL (CTAS)</td><td>SQL</td><td>Python (<code>spark.readStream</code>), SQL via Declarative Pipelines (<code>CREATE OR REFRESH STREAMING TABLE</code>, utilisables aussi en Databricks SQL)</td></tr>
-<tr><td>Idempotence</td><td>Non</td><td>Oui</td><td>Oui</td></tr>
-<tr><td>Évolution de schéma</td><td>Manuelle ou inférée à la lecture</td><td>Supportée via options</td><td>Détecte et fait évoluer automatiquement le schéma ; charge sans schéma prédéfini et gère les nouvelles colonnes</td></tr>
-<tr><td>Latence</td><td>Élevée</td><td>Modérée (planifiée)</td><td>Basse ou élevée selon la configuration</td></tr>
-<tr><td>Facilité d'usage</td><td>Simple</td><td>Simple, basé SQL</td><td>Intermédiaire à avancé (Python ou SQL, batch incrémental ou streaming)</td></tr>
+<tr>
+  <td><strong>Ingestion Type</strong></td>
+  <td>Batch</td>
+  <td>Incremental Batch</td>
+  <td>Incremental (Batch or Streaming)</td>
+</tr>
+<tr>
+  <td><strong>Use Cases</strong></td>
+  <td>Best for <strong>smaller datasets</strong></td>
+  <td>Ideal for <strong>thousands of files</strong></td>
+  <td>Scale to <strong>millions+ of files per hour</strong>, backfills with <strong>billions of files</strong></td>
+</tr>
+<tr>
+  <td><strong>Syntax / Interface</strong></td>
+  <td>· Python (<code>spark.read</code>)<br/>· SQL (CTAS)</td>
+  <td>SQL</td>
+  <td>· Python (<code>spark.readStream</code>)<br/>· SQL avec Declarative Pipelines (<code>CREATE OR REFRESH STREAMING TABLES</code>)<br/>  ○ Use streaming tables in Databricks SQL</td>
+</tr>
+<tr>
+  <td><strong>Idempotency</strong></td>
+  <td><strong>No</strong></td>
+  <td><strong>Yes</strong></td>
+  <td><strong>Yes</strong></td>
+</tr>
+<tr>
+  <td><strong>Schema Evolution</strong></td>
+  <td>Manual or inferred during read</td>
+  <td>Supported with options</td>
+  <td>Auto Loader <strong>détecte et fait évoluer les schémas automatiquement</strong>. Il supporte le chargement de données <strong>sans schéma prédéfini</strong> et gère les nouvelles colonnes à mesure qu'elles apparaissent.</td>
+</tr>
+<tr>
+  <td><strong>Latency</strong></td>
+  <td>High</td>
+  <td>Moderate (scheduled)</td>
+  <td>Low or high depending configuration</td>
+</tr>
+<tr>
+  <td><strong>Ease of Use</strong></td>
+  <td>Simple</td>
+  <td>Simple and SQL-based</td>
+  <td>Intermediate to advanced depending on the implementation (Python or SQL, incremental batch or streaming)</td>
+</tr>
+<tr>
+  <td><strong>Summary</strong></td>
+  <td>Best for <strong>one time, ad hoc ingestion</strong>. Can be scheduled to always read and process <strong>all data</strong>.</td>
+  <td><strong>Simple and repeatable</strong> for incremental file ingestion. Great for schedule jobs or pipelines.</td>
+  <td>Best for <strong>near real-time streaming or incremental ingestion</strong>, with high automation and scalability.</td>
+</tr>
 </tbody>
 </table>
-<p><strong>Synthèse :</strong> CTAS pour l'ingestion ponctuelle/ad hoc (planifiable mais relit tout) ; COPY INTO simple et répétable pour l'incrémental de fichiers (jobs/pipelines planifiés) ; Auto Loader pour le quasi temps réel ou l'incrémental à grande échelle, très automatisé et scalable.</p>
-<div class="callout"><strong>Question type :</strong> « des milliards de fichiers, schéma qui évolue, quasi temps réel » → <strong>Auto Loader</strong>. « Charger une fois un petit dataset pour exploration » → <strong>CTAS</strong>. « Job SQL planifié qui ne doit pas recharger les fichiers déjà vus » → <strong>COPY INTO</strong>.</div>`
+`
       },
       {
-        id: "w1l11", title: "Ajouter des colonnes de métadonnées à l'ingestion",
+        id: "w1l12", title: "Ajouter des colonnes de métadonnées à l'ingestion",
         html: `
-<p>Au moment d'ingérer vers une table Bronze, on enrichit souvent les données avec des <strong>métadonnées de fichier</strong> issues des fichiers d'entrée — utile pour la <strong>traçabilité, l'audit et le débogage</strong>.</p>
-<p>Exemple : partant d'un fichier brut avec les colonnes <code>users</code> et <code>unix_ts</code>, on ajoute à la table Bronze une colonne <strong>horodatage de dernière modification</strong> et une colonne <strong>nom du fichier source</strong> :</p>
-<table class="tbl">
-<thead><tr><th>users</th><th>unix_ts</th><th>last_mod_time</th><th>source</th></tr></thead>
+<p>Dans l'ingestion de données depuis le stockage cloud, des colonnes de métadonnées comme le <strong>nom du fichier source</strong> et l'<strong>heure de modification</strong> peuvent être ajoutées via la colonne <code>_metadata</code> — capturant un contexte essentiel pour chaque ligne lors de la création de la table dans le Lakehouse.</p>
+
+<h4>Adding a Metadata Column</h4>
+<p>Vous pouvez ajouter des informations de colonnes de métadonnées provenant des fichiers source lors de la création d'une table. Par exemple, supposons que votre emplacement de stockage cloud contienne un ensemble de <strong>fichiers bruts</strong> (CSV, TXT, JSON ou autres formats) et que vous vouliez ingérer ces fichiers dans une table de niveau <strong>bronze</strong>.</p>
+<div style="display:grid;grid-template-columns:1fr 1.5fr;gap:14px;margin-bottom:14px;align-items:start">
+<div>
+<p style="margin:0 0 6px;font-size:13px"><strong><code>raw_file</code></strong> (fichiers source)</p>
+<table class="tbl" style="font-size:12px">
+<thead><tr><th>users</th><th>unix_ts</th></tr></thead>
+<tbody>
+<tr><td>peter</td><td>1592187804331222</td></tr>
+<tr><td>zebi</td><td>1592200952155132</td></tr>
+<tr><td>…</td><td>…</td></tr>
+</tbody>
+</table>
+</div>
+<div>
+<p style="margin:0 0 6px;font-size:13px"><strong>Bronze Table</strong> — avec <span style="color:#e3b23c">colonnes de métadonnées</span></p>
+<table class="tbl" style="font-size:12px">
+<thead><tr><th>users</th><th>unix_ts</th><th style="color:#e3b23c">last_mod_time</th><th style="color:#e3b23c">source</th></tr></thead>
 <tbody>
 <tr><td>peter</td><td>1592187804331222</td><td>2024-10-01T18:04…</td><td>raw_file</td></tr>
 <tr><td>zebi</td><td>1592200952155132</td><td>2024-10-01T18:04…</td><td>raw_file</td></tr>
+<tr><td>…</td><td>…</td><td>…</td><td>…</td></tr>
 </tbody>
 </table>
-<p>On utilise la colonne spéciale <strong><code>_metadata</code></strong> : c'est une colonne <strong>cachée</strong>, disponible pour <strong>tous les formats de fichiers d'entrée</strong>. Pour l'inclure dans le DataFrame retourné, il faut la <strong>sélectionner explicitement</strong> dans la requête de lecture lors de la spécification de la source.</p>
-<p>Les métadonnées courantes accessibles depuis les fichiers d'entrée :</p>
+</div>
+</div>
+<p>Dans le cadre de cette ingestion, vous pouvez vouloir ajouter des colonnes de métadonnées spécifiques à chaque ligne de la table. Ces colonnes peuvent inclure des informations de la source d'ingestion, telles que :</p>
+<ul>
+<li>le <strong>dernier temps de modification du fichier</strong> dont provient la ligne (<em>Add the last file modification time</em>) ;</li>
+<li>le <strong>nom du fichier source</strong> (<em>Add the source file name</em>).</li>
+</ul>
+<div class="callout">Cela aide à <strong>préserver un contexte important sur l'origine des données</strong>, ce qui peut être précieux à des fins d'<strong>audit, de lignage et de débogage</strong>.</div>
+
+<h4>Common File Metadata Information From the Input Files</h4>
+<p>Pour ajouter des colonnes de métadonnées pendant l'ingestion, vous pouvez utiliser la colonne spéciale <code>_metadata</code>. C'est une <strong>colonne cachée</strong> disponible <strong>pour tous les formats de fichiers en entrée</strong>. Pour inclure la colonne <code>_metadata</code> dans le DataFrame retourné, vous devez <strong>la sélectionner explicitement</strong> dans votre requête de lecture au moment de spécifier la source.</p>
 <table class="tbl">
-<thead><tr><th>Champ</th><th>Contenu</th><th>Exemple</th></tr></thead>
+<thead><tr><th style="width:38%">Champ</th><th>Rôle</th><th>Exemple de valeur</th></tr></thead>
 <tbody>
-<tr><td><code>_metadata.file_name</code></td><td>Nom du fichier d'entrée</td><td><code>part-00002-7573-1-c000…</code></td></tr>
-<tr><td><code>_metadata.file_modification_time</code></td><td>Horodatage de dernière modification du fichier</td><td><code>2024-10-07T18:04:42.885+00:00</code></td></tr>
+<tr>
+  <td><code>_metadata.file_modification_time</code></td>
+  <td><em>Add last file modification timestamp</em> — fournit le <strong>dernier horodatage de modification</strong> du fichier d'entrée.</td>
+  <td><code>2024-10-07T18:04:42.885+00:00</code></td>
+</tr>
+<tr>
+  <td><code>_metadata.file_name</code></td>
+  <td><em>Add input file name</em> — renvoie le <strong>nom du fichier source</strong> pour chaque ligne.</td>
+  <td><code>part-00002-7573-1-c000.file_name</code></td>
+</tr>
 </tbody>
 </table>
-<pre><code>SELECT
-  *,
-  _metadata.file_name              AS source,
-  _metadata.file_modification_time AS last_mod_time
-FROM read_files('&lt;dir_path&gt;', format =&gt; 'csv');</code></pre>
-<p>Doc : <code>docs.databricks.com/.../ingestion/file-metadata-column</code></p><div class="demo"><span class="demo-label">Exemple — notebook (SQL)</span><p>Ingestion enrichie : conversion d'un timestamp Unix en <code>DATE</code>, ajout des métadonnées fichier et de l'horodatage d'ingestion :</p><pre><code>DROP TABLE IF EXISTS historical_users_bronze;
+<p>Documentation : <code>https://docs.databricks.com/aws/en/ingestion/file-metadata-column</code></p>
+<div class="demo"><span class="demo-label">Exemple — notebook (SQL)</span><p>Ingestion enrichie : conversion d'un timestamp Unix en <code>DATE</code>, ajout des métadonnées fichier et de l'horodatage d'ingestion :</p><pre><code>DROP TABLE IF EXISTS historical_users_bronze;
 
 CREATE TABLE historical_users_bronze AS
 SELECT
@@ -1675,27 +1996,70 @@ FROM read_files(
 SELECT * FROM historical_users_bronze LIMIT 10;</code></pre></div>`
       },
       {
-        id: "w1l12", title: "La colonne _rescued_data (lignes malformées)",
+        id: "w1l13", title: "La colonne _rescued_data (lignes malformées)",
         html: `
-<p><code>read_files()</code>, <code>spark.read</code> et Auto Loader fournissent une <strong>colonne <code>_rescued_data</code></strong> lorsque les données brutes ne correspondent pas au schéma attendu. Au lieu de <strong>perdre la ligne</strong> ou de faire échouer l'ingestion, la donnée problématique est « secourue » (rescued).</p>
-<p>La valeur non conforme est <strong>rescued dans la colonne <code>_rescued_data</code> sous forme de chaîne au format JSON</strong>, contenant la valeur et le chemin du fichier source (<code>_file_path</code>). Schéma de principe :</p>
-<pre><code>… | _rescued_data
-…   {"column": "&lt;data&gt;", "_file_path": "&lt;file_path&gt;"}
-…   null</code></pre>
-<h4>Exemple concret</h4>
-<p>La colonne <code>users</code> est lue en <strong>STRING</strong>, la colonne <code>cost</code> en <strong>BIGINT</strong>. Un fichier contient la valeur <code>$100</code> (une chaîne) pour Peter et <code>300</code> pour Zebi :</p>
-<table class="tbl">
-<thead><tr><th>users (STRING)</th><th>cost (BIGINT)</th><th>_rescued_data</th></tr></thead>
+<p>Dans l'ingestion de données, la <strong>rescued data column</strong> (<code>_rescued_data</code>) capture les champs <strong>non appariés ou non parsables sous forme de JSON</strong> — préservant les valeurs d'entrée non conformes dans vos tables Lakehouse au lieu de les supprimer.</p>
+
+<h4>Rescuing Malformed Rows on Ingestion</h4>
+<p>Pendant l'ingestion, il arrive que les données d'entrée <strong>ne correspondent pas au schéma</strong> de votre table. Les techniques d'ingestion comme <code>read_files()</code>, <code>spark.read</code> ou <strong>Auto Loader</strong> fournissent une <strong>rescued data column</strong> lors de l'ingestion. Cette colonne garantit que <strong>les colonnes qui ne correspondent pas au schéma sont secourues au lieu d'être supprimées</strong>.</p>
+<svg viewBox="0 0 700 170" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w1ar6" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#2272b4"/></marker></defs>
+  <rect x="14" y="30" width="96" height="106" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <text x="62" y="56" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">CSV</text>
+  <text x="62" y="78" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">JSON</text>
+  <text x="62" y="100" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#e8ecf2">Parquet</text>
+  <text x="62" y="122" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#8a97a8">etc.</text>
+  <path d="M116 82 L 150 82" stroke="#2272b4" stroke-width="4" marker-end="url(#w1ar6)"/>
+  <rect x="162" y="26" width="144" height="114" rx="8" fill="#232c38" stroke="#2272b4"/>
+  <text x="234" y="46" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:700;fill:#e8ecf2">Data Ingestion</text>
+  <rect x="176" y="56" width="116" height="22" rx="4" fill="#2272b4"/><text x="234" y="71" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9.5px;fill:#fff">CTAS</text>
+  <rect x="176" y="82" width="116" height="22" rx="4" fill="#2272b4"/><text x="234" y="97" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9.5px;fill:#fff">COPY INTO</text>
+  <rect x="176" y="108" width="116" height="22" rx="4" fill="#2272b4"/><text x="234" y="123" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9.5px;fill:#fff">AUTO LOADER</text>
+  <path d="M312 82 L 344 82" stroke="#2272b4" stroke-width="4" marker-end="url(#w1ar6)"/>
+  <rect x="356" y="20" width="330" height="126" rx="8" fill="#232c38" stroke="#ff4a2e"/>
+  <text x="521" y="38" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:700;fill:#e8ecf2">Bronze Table</text>
+  <rect x="370" y="46" width="60" height="20" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="400" y="60" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">…</text>
+  <rect x="438" y="46" width="234" height="20" rx="3" fill="#ff4a2e"/><text x="555" y="60" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#fff">_rescued_data</text>
+  <rect x="370" y="70" width="60" height="22" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="400" y="85" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">…</text>
+  <rect x="438" y="70" width="234" height="22" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="446" y="85" style="font-family:'JetBrains Mono',monospace;font-size:8px;fill:#e3b23c">{"column": "&lt;data&gt;", "_file_path":"&lt;file_path&gt;"}</text>
+  <rect x="370" y="96" width="60" height="22" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="400" y="111" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">…</text>
+  <rect x="438" y="96" width="234" height="22" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="446" y="111" style="font-family:'JetBrains Mono',monospace;font-size:8px;fill:#e3b23c">{"column": "&lt;data&gt;", "_file_path":"&lt;file_path&gt;"}</text>
+  <rect x="370" y="122" width="60" height="18" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="400" y="135" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:#8a97a8">…</text>
+  <rect x="438" y="122" width="234" height="18" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="446" y="135" style="font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:#8a97a8">null</text>
+</svg>
+
+<h4>Rescued Data Column Example</h4>
+<p>Supposons que votre emplacement de stockage cloud contienne un ensemble de fichiers bruts (CSV, TXT, JSON ou autres) avec une colonne <code>users</code> et une colonne <code>cost</code>. Lors de l'ingestion, la colonne <code>users</code> doit être lue comme <strong>STRING</strong>, et la colonne <code>cost</code> comme <strong>BIGINT</strong>.</p>
+<div style="display:grid;grid-template-columns:1fr 1.7fr;gap:14px;margin-bottom:14px;align-items:start">
+<div>
+<p style="margin:0 0 6px;font-size:13px"><strong>files</strong> (source)</p>
+<table class="tbl" style="font-size:12px">
+<thead><tr><th>users</th><th>cost</th></tr></thead>
 <tbody>
-<tr><td>peter</td><td>null</td><td><code>{"cost":"$100","_file_path":"…"}</code></td></tr>
-<tr><td>zebi</td><td>300</td><td>null</td></tr>
+<tr><td>peter</td><td style="color:#ff6a52">$100</td></tr>
+<tr><td>zebi</td><td>300</td></tr>
+<tr><td>…</td><td>…</td></tr>
 </tbody>
 </table>
+</div>
+<div>
+<p style="margin:0 0 6px;font-size:13px"><strong>Bronze Table</strong> — <code>users</code> : STRING · <code>cost</code> : BIGINT</p>
+<table class="tbl" style="font-size:12px">
+<thead><tr><th>users</th><th>cost</th><th>_rescued_data</th></tr></thead>
+<tbody>
+<tr><td>peter</td><td><em>null</em></td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e3b23c">{"cost": "$100", "_file_path":"&lt;file_path&gt;"}</td></tr>
+<tr><td>zebi</td><td>300</td><td><em>null</em></td></tr>
+<tr><td>…</td><td>…</td><td>…</td></tr>
+</tbody>
+</table>
+</div>
+</div>
 <ul>
-<li><code>$100</code> n'est pas un BIGINT valide → la valeur est placée dans <code>_rescued_data</code> (JSON) et <code>cost</code> passe à <code>null</code> pour cette ligne.</li>
-<li>Pour la ligne valide (<code>300</code>, conforme au type), <code>_rescued_data</code> vaut <code>null</code>.</li>
+<li><strong>Première ligne</strong> — la valeur « Peter » sera lue correctement dans la colonne <code>users</code> de la table bronze. Cependant, comme la colonne <code>cost</code> contient une chaîne comme <code>$100</code>, elle <strong>ne correspond pas au type BIGINT attendu</strong>. Résultat : cette valeur ne sera pas insérée dans la colonne <code>cost</code> — elle sera <strong>capturée dans la colonne <code>_rescued_data</code>, stockée sous forme de chaîne au format JSON</strong>.</li>
+<li><strong>Deuxième ligne</strong> — les deux valeurs sont valides : « zebi » est une STRING et 300 est un BIGINT. Cette ligne sera donc lue dans la table bronze sans problème, et la colonne <code>_rescued_data</code> <strong>restera vide (null)</strong> pour cette ligne — puisque <code>cost</code> est du bon type de données (BIGINT).</li>
 </ul>
-<div class="callout"><strong>À retenir :</strong> <code>_rescued_data</code> = filet de sécurité contre la perte de données. Les champs qui ne matchent pas le schéma ne sont pas droppés, ils sont capturés en JSON.</div><div class="demo"><span class="demo-label">Exemple — schéma explicite + _rescued_data</span><p>Définir un schéma explicite accélère la lecture (pas d'inférence) et fiabilise le parsing. La colonne <code>_rescued_data</code> est créée via l'option <code>rescueddatacolumn</code> :</p><pre><code>SELECT *
+<div class="callout"><strong>À retenir :</strong> <code>_rescued_data</code> = filet de sécurité contre la perte de données. Les champs qui ne matchent pas le schéma ne sont pas droppés, ils sont capturés en JSON.</div>
+<div class="demo"><span class="demo-label">Exemple — schéma explicite + _rescued_data</span><p>Définir un schéma explicite accélère la lecture (pas d'inférence) et fiabilise le parsing. La colonne <code>_rescued_data</code> est créée via l'option <code>rescueddatacolumn</code> :</p><pre><code>SELECT *
 FROM read_files(
   DA.paths_working_dir || '/csv_demo_files/malformed_example_1_data.csv',
   format =&gt; 'csv',
@@ -1732,63 +2096,151 @@ FROM read_files(
 );</code></pre></div>`
       },
       {
-        id: "w1l13", title: "Ingestion de JSON semi-structuré",
+        id: "w1l14", title: "JSON — structure et types de valeurs",
         html: `
-<p>Ingérer du semi-structuré (JSON) est courant pour les données d'événements, les logs ou les données d'API. L'objectif : parser et transformer ce JSON, potentiellement <strong>imbriqué</strong>, en tables Delta structurées.</p>
-<h4>Rappel sur le JSON</h4>
-<ul>
-<li>Les <strong>objets</strong> JSON sont délimités par des accolades <code>{ }</code>.</li>
-<li>Les <strong>clés</strong> sont toujours des chaînes entre guillemets.</li>
-<li>Les <strong>valeurs</strong> peuvent être : String, Number, Boolean, Array, Object — ou <code>null</code>. Les objets peuvent être <em>plats</em> ou <em>imbriqués</em>.</li>
-</ul>
+<p>L'ingestion de données semi-structurées comme le JSON permet un <strong>parsing et une transformation efficaces</strong> d'entrées complexes et imbriquées vers des tables Delta structurées pour l'analytique avancée dans le Lakehouse.</p>
+<p>Ingérer des données semi-structurées, comme des fichiers JSON, est une <strong>tâche courante pour les data engineers</strong>, en particulier avec des données d'événements, des logs ou des données issues d'API.</p>
+
+<h4>JSON Overview</h4>
 <pre><code>{
   "name": "John Doe",
   "age": 35,
-  "address": { "city": "Anytown", "state": "CA" },
+  "address": {
+    "city": "Anytown",
+    "state": "CA"
+  },
   "children": [
-    { "name": "Owen", "age": 10 },
-    { "name": "Eva",  "age": 8 }
+    {
+      "name": "Owen",
+      "age": 10
+    },
+    {
+      "name": "Eva",
+      "age": 8
+    }
   ]
 }</code></pre>
-<h4>Trois façons de manipuler du JSON selon le type de colonne</h4>
-<table class="tbl">
-<thead><tr><th>Type</th><th>Caractéristiques</th></tr></thead>
+<ul>
+<li>Les données JSON sont constituées d'<strong>objets JSON</strong>, typiquement <strong>entourés d'accolades <code>{}</code></strong> (<em>JSON objects are enclosed in brackets</em>).</li>
+<li>À l'intérieur des accolades, les objets JSON contiennent des <strong>paires clé-valeur</strong>. Chaque <strong>clé est toujours une chaîne entourée de guillemets</strong> (<em>Keys enclosed in quotation marks</em>). Chaque clé contient une valeur.</li>
+<li>La <strong>valeur</strong> d'une clé peut être : <strong>String</strong>, <strong>Number</strong>, <strong>Boolean</strong>, <strong>Array</strong>, ou un <strong>autre objet JSON</strong> — voire <code>null</code>.</li>
+</ul>
+<p>Dans l'exemple ci-dessus : <code>name</code> est une <strong>STRING</strong>, <code>age</code> est <strong>NUMERIC</strong>, <code>address</code> est un <strong>OBJECT</strong>, et <code>children</code> est un <strong>ARRAY of OBJECTS</strong>.</p>
+<div class="callout">Ces objets peuvent être <strong>plats</strong> (toutes les paires clé-valeur au même niveau) ou <strong>imbriqués</strong> (les valeurs sont elles-mêmes des objets JSON). La complexité dépend de la façon dont les données sont structurées à la source. <strong>Comprendre ce format est important car il affecte la façon dont nous parsons et transformons les données pendant l'ingestion.</strong></div>`
+      },
+      {
+        id: "w1l15", title: "JSON : les trois types de colonnes (STRING, STRUCT, VARIANT)",
+        html: `
+<h4>Working with a JSON-Formatted STRING Column</h4>
+<p>Après ingestion, il est courant qu'une ou plusieurs colonnes de votre table contiennent des <strong>chaînes au format JSON</strong> comme valeurs. Les colonnes de tables peuvent en effet <strong>contenir des chaînes JSON formatées comme valeurs</strong> :</p>
+<table class="tbl" style="font-size:11.5px">
+<thead><tr><th><code>json_column</code></th></tr></thead>
 <tbody>
-<tr><td><strong>1. STRING</strong></td><td>Le JSON est stocké comme une simple chaîne ; peut contenir n'importe quel JSON sans contrainte ; <strong>le moins performant</strong>. Accès aux sous-champs avec la <strong>syntaxe deux-points</strong> <code>:</code>.</td></tr>
-<tr><td><strong>2. STRUCT</strong></td><td>Le JSON est parsé en type STRUCT avec un <strong>schéma défini</strong> ; le STRUCT <strong>applique le schéma</strong> ; <strong>plus efficace</strong> en requête qu'une chaîne JSON.</td></tr>
-<tr><td><strong>3. VARIANT</strong></td><td>Peut stocker tout type de données, y compris du JSON ; idéal pour le semi-structuré ; <strong>très flexible</strong> (s'adapte sans schéma rigide) et <strong>meilleures performances</strong> que les méthodes existantes. <em>(Public Preview à partir du Q2 2025.)</em></td></tr>
+<tr><td style="font-family:'JetBrains Mono',monospace;font-size:10.5px">'{"name": "John Doe", "age": 35, "address": {"city": "Anytown", "state": "CA"}, "children": [{"name": "Owen", "age": 10}, {"name": "Eva", "age": 8}]}'</td></tr>
+<tr><td style="font-family:'JetBrains Mono',monospace;font-size:10.5px">'{"name": "Kristi Doe", "age": 40, "address": {"city": "Anytown", "state": "CA"}, "children": [{"name": "Steve", "age": 10}]}'</td></tr>
+<tr><td>…</td></tr>
 </tbody>
 </table>
-<h4>Accès aux sous-champs d'une colonne JSON STRING (syntaxe deux-points)</h4>
-<pre><code>SELECT json_column:name             -- → John Doe
-SELECT json_column:address:city     -- → Anytown</code></pre>
-<h4>Correspondance des types JSON → types SQL Databricks</h4>
+<p>C'est un scénario fréquent quand le JSON n'est pas entièrement parsé pendant l'ingestion, ou quand des données JSON sont <strong>embarquées dans un autre champ</strong> (comme un message de log ou une structure imbriquée). <strong>Le travail avec des données JSON peut se faire avec différents types de colonnes.</strong></p>
+
+<h4>1 · STRING Data Type</h4>
+<ul>
+<li>Le JSON peut être <strong>stocké comme une simple STRING</strong>.</li>
+<li>Peut contenir <strong>n'importe quelle chaîne JSON sans contraintes</strong> — c'est juste du texte brut du point de vue du système.</li>
+<li><strong>Moins performant</strong> (<em>less performant</em>) que les autres méthodes.</li>
+</ul>
+<p>Pour accéder aux sous-champs dans une colonne de chaîne JSON, utilisez la <strong>syntaxe deux-points (<code>:</code>)</strong> :</p>
+<pre><code>SELECT json_column:name           -- → John Doe
+
+SELECT json_column:address:city   -- → Anytown</code></pre>
+
+<h4>2 · STRUCT Data Type</h4>
+<ul>
+<li>Vous pouvez <strong>parser les données JSON en un type STRUCT</strong>, avec un <strong>schéma défini</strong>.</li>
+<li>Le <strong>STRUCT applique le schéma JSON</strong> (<em>enforces the JSON schema</em>), garantissant la cohérence des types et de la structure.</li>
+<li>Il est <strong>plus efficace pour les requêtes</strong> qu'une chaîne JSON formatée.</li>
+</ul>
+
+<h5>Correspondance des types JSON → Databricks SQL</h5>
 <table class="tbl">
-<thead><tr><th>Type JSON</th><th>Type SQL Databricks</th></tr></thead>
+<thead><tr><th>JSON String Types</th><th>Databricks SQL Data Type</th></tr></thead>
 <tbody>
-<tr><td>String</td><td>STRING</td></tr>
-<tr><td>Number</td><td>INT / FLOAT / DOUBLE</td></tr>
-<tr><td>Boolean</td><td>BOOLEAN</td></tr>
-<tr><td>Object</td><td>STRUCT&lt;&gt;</td></tr>
-<tr><td>Array</td><td>ARRAY&lt;&gt;</td></tr>
+<tr><td>String</td><td><code>STRING</code></td></tr>
+<tr><td>Number</td><td><code>INT</code> / <code>FLOAT</code> / <code>DOUBLE</code></td></tr>
+<tr><td>Boolean</td><td><code>BOOLEAN</code></td></tr>
+<tr><td>Object</td><td><code>STRUCT &lt;&gt;</code></td></tr>
+<tr><td>Array</td><td><code>ARRAY &lt;&gt;</code></td></tr>
 </tbody>
 </table>
-<h4>Convertir une chaîne JSON en STRUCT</h4>
-<p>On définit un schéma STRUCT correspondant à la structure du JSON. La clé <code>address</code> (objet) devient un <code>STRUCT&lt;city, state&gt;</code> et la clé <code>children</code> (tableau d'objets) un <code>ARRAY&lt;STRUCT&lt;name, age&gt;&gt;</code> :</p>
-<pre><code>STRUCT&lt;
+
+<h5>Définir la structure, clé par clé</h5>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;align-items:start">
+<pre style="margin:0"><code>{
+  "name": "John Doe",
+  "age": 35,
+  "address": {
+    "city": "Anytown",
+    "state": "CA"
+  },
+  "children": [
+    {
+      "name": "Owen",
+      "age": 10
+    },
+    {
+      "name": "Eva",
+      "age": 8
+    }
+  ]
+}</code></pre>
+<pre style="margin:0"><code>STRUCT&lt;
   name: STRING,
   age: INT,
-  address: STRUCT&lt;city: STRING, state: STRING&gt;,
-  children: ARRAY&lt;STRUCT&lt;name: STRING, age: INT&gt;&gt;
+  address: STRUCT&lt;
+    city: STRING,
+    state: STRING
+  &gt;,
+  children: ARRAY&lt;
+    STRUCT&lt;
+      name: STRING,
+      age: INT
+    &gt;
+  &gt;
 &gt;</code></pre>
-<p>Deux fonctions clés, en deux étapes :</p>
-<pre><code>-- 1) Déduire automatiquement le schéma d'un exemple de chaîne JSON
-SELECT schema_of_json('sample-json-string');
+</div>
+<ol>
+<li><strong>Define the schema of the JSON formatted string</strong> — la première étape est de définir le schéma (la structure) de la chaîne JSON. Cela permet de dire à Databricks comment interpréter chaque partie de la chaîne JSON et la convertir dans les types de données appropriés au sein d'un STRUCT.</li>
+<li><strong>Specify the STRUCT data type to hold the JSON formatted string</strong> — le type <code>STRUCT&lt;&gt;</code> contient <strong>toute la structure</strong> de la chaîne JSON. Il agit comme un <strong>conteneur pour tous les champs</strong> définis dans le JSON, préservant leurs types de données et leur hiérarchie dans une seule colonne.</li>
+<li><strong>Specify the STRING and INT data types for the name and age keys</strong> — on parcourt les paires clé-valeur une par une : la clé <code>name</code> contient une <strong>chaîne</strong>, la clé <code>age</code> contient un <strong>entier</strong>.</li>
+<li><strong>The address key holds a STRUCT data type with the keys city and state</strong> — la clé <code>address</code> contient un autre objet, qu'on représente par un <strong>STRUCT imbriqué</strong> avec deux clés, <code>city</code> et <code>state</code>, toutes deux de type string.</li>
+<li><strong>The children key holds an ARRAY of STRUCTS</strong> — la clé <code>children</code> contient un <strong>ARRAY de STRUCTS</strong>. Chaque STRUCT du tableau contient deux clés : <code>name</code> (string) et <code>age</code> (entier).</li>
+</ol>
 
--- 2) Convertir une colonne JSON en colonne STRUCT à partir du schéma obtenu
-SELECT from_json(json_col, 'json-struct-schema') AS struct_column
-FROM table;</code></pre>
-<div class="callout"><strong>Question type :</strong> « accéder à un sous-champ d'une colonne JSON stockée en STRING » → syntaxe <strong>deux-points</strong> (<code>col:champ:sous_champ</code>). « Convertir une colonne JSON STRING en colonne typée » → <code>schema_of_json()</code> puis <code>from_json()</code>.</div><div class="demo"><span class="demo-label">Exemple complet — JSON Kafka (notebook)</span><p><strong>1) Bronze brut</strong> — ingérer les fichiers JSON tels quels :</p><pre><code>DROP TABLE IF EXISTS kafka_events_bronze_raw;
+<h5>Étape 1 — dériver le schéma avec <code>schema_of_json</code></h5>
+<p>Au lieu de définir le schéma manuellement, vous pouvez utiliser la fonction intégrée <code>schema_of_json</code> pour <strong>dériver automatiquement le schéma</strong> depuis un exemple de chaîne JSON. Il suffit de passer un exemple de chaîne JSON en argument, et elle <strong>renvoie la structure inférée</strong> :</p>
+<pre><code>SELECT schema_of_json('sample-json-string')</code></pre>
+
+<h5>Étape 2 — convertir avec <code>from_json</code></h5>
+<p>Une fois la structure obtenue, utilisez la fonction Spark <code>from_json</code>. Elle prend la chaîne JSON <strong>et le schéma spécifié</strong> obtenu à l'étape précédente, et <strong>renvoie une colonne STRUCT</strong> contenant les données JSON parsées selon le schéma défini :</p>
+<pre><code>SELECT from_json(json_col, '&lt;json-struct-schema&gt;') AS struct_column
+FROM table</code></pre>
+
+<h4>3 · VARIANT Data Type</h4>
+<div class="callout"><strong>Public Preview as of 2025 Q2</strong> — gardez un œil sur sa disponibilité générale (GA) !</div>
+<ul>
+<li><strong>Can store any type of data, including JSON</strong> — idéal pour les données semi-structurées.</li>
+<li><strong>Highly flexible</strong> — s'adapte à différentes formes de données sans schémas rigides.</li>
+<li><strong>Improved performance over existing methods</strong> — performances améliorées par rapport aux méthodes existantes pour gérer le semi-structuré.</li>
+</ul>
+
+<h4>Récapitulatif des trois approches</h4>
+<div class="cards-3">
+  <div class="mini-card"><h4>1. STRING Data Type</h4><p>JSON stocké comme simple STRING · peut contenir n'importe quelle chaîne JSON sans contraintes · <strong>moins performant</strong>. Accès via la syntaxe <code>:</code>.</p></div>
+  <div class="mini-card"><h4>2. STRUCT Data Type</h4><p>Parser le JSON en STRUCT avec un <strong>schéma défini</strong> · le STRUCT <strong>applique le schéma</strong> · <strong>plus efficace</strong> pour les requêtes qu'une STRING JSON.</p></div>
+  <div class="mini-card"><h4>3. VARIANT Data Type</h4><p>Stocke <strong>tout type de données</strong>, y compris JSON · <strong>très flexible</strong> · <strong>performances améliorées</strong> par rapport aux méthodes existantes.</p></div>
+</div>
+<div class="callout"><strong>Question type :</strong> « accéder à un sous-champ d'une colonne JSON stockée en STRING » → syntaxe <strong>deux-points</strong> (<code>col:champ:sous_champ</code>). « Convertir une colonne JSON STRING en colonne typée » → <code>schema_of_json()</code> puis <code>from_json()</code>.</div>
+<div class="demo"><span class="demo-label">Exemple complet — JSON Kafka (notebook)</span><p><strong>1) Bronze brut</strong> — ingérer les fichiers JSON tels quels :</p><pre><code>DROP TABLE IF EXISTS kafka_events_bronze_raw;
 
 CREATE TABLE kafka_events_bronze_raw AS
 SELECT *
@@ -1869,53 +2321,244 @@ FROM (
 );</code></pre><p class="demo-note">Trois techniques possibles au choix : syntaxe deux-points (le plus simple), conversion VARIANT (<code>parse_json</code>), ou conversion STRUCT (<code>schema_of_json</code> + <code>from_json</code>).</p></div>`
       },
       {
-        id: "w1l14", title: "Connecteurs managés (données d'entreprise)",
+        id: "w1l16", title: "Données d'entreprise — les Managed Connectors",
         html: `
-<p>Au-delà du stockage cloud (CTAS, COPY INTO, Auto Loader), il reste à répondre à la question « <em>et pour ingérer depuis les bases de données et applications d'entreprise ?</em> ». C'est le rôle des <strong>Managed Connectors</strong> de Lakeflow Connect.</p>
-<h4>Bénéfices des Managed Connectors</h4>
+<p>L'ingestion de données d'entreprise est fluidifiée par les <strong>Lakeflow Connect Managed Connectors</strong> et <strong>Partner Connect</strong>, permettant une intégration rapide et fiable depuis des bases de données et des applications vers le Databricks Lakehouse — avec des options flexibles, entièrement managées et supportées par des partenaires.</p>
+
+<h4>Data Ingestion to Databricks Overview</h4>
+<p>Jusqu'ici, nous avons vu l'ingestion depuis le stockage objet cloud avec des techniques comme <code>CREATE TABLE</code>, <code>COPY INTO</code> et <strong>Auto Loader</strong>. Mais qu'en est-il de l'ingestion depuis des <strong>bases de données</strong> ou des <strong>applications d'entreprise</strong> ? Quelles techniques utiliser pour ces sources ?</p>
+<svg viewBox="0 0 700 220" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w1ar7" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#ff6a52"/></marker></defs>
+  <text x="80" y="22" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:700;fill:#3fcf8e">Data sources</text>
+  <text x="42" y="60" style="font-family:'Inter',sans-serif;font-size:10px;fill:#c9d3e0">Cloud</text><text x="42" y="72" style="font-family:'Inter',sans-serif;font-size:10px;fill:#c9d3e0">storage</text>
+  <text x="42" y="130" style="font-family:'Inter',sans-serif;font-size:10px;fill:#c9d3e0">Databases</text>
+  <text x="42" y="180" style="font-family:'Inter',sans-serif;font-size:10px;fill:#c9d3e0">Enterprise</text><text x="42" y="192" style="font-family:'Inter',sans-serif;font-size:10px;fill:#c9d3e0">applications</text>
+  <path d="M110 64 L 132 64 M110 128 L 132 128 M110 182 L 132 182" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#w1ar7)"/>
+  <rect x="138" y="34" width="106" height="66" rx="6" fill="#232c38" stroke="#ff4a2e"/>
+  <rect x="146" y="40" width="90" height="17" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="191" y="52" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:8px;fill:#e8ecf2">CREATE TABLE</text>
+  <rect x="146" y="59" width="90" height="17" rx="3" fill="#1c232d" stroke="#ff6a52"/><text x="191" y="71" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:8px;fill:#e8ecf2">COPY INTO</text>
+  <rect x="146" y="78" width="90" height="17" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="191" y="90" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:8px;fill:#e8ecf2">AUTO LOADER</text>
+  <text x="191" y="162" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;fill:#ff4a2e">?</text>
+
+  <rect x="256" y="26" width="286" height="176" rx="8" fill="#232c38" stroke="#2b3542"/>
+  <text x="399" y="44" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;fill:#e8ecf2">Databricks Data Intelligence Platform</text>
+  <rect x="268" y="52" width="262" height="18" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="399" y="65" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8">Orchestration</text>
+  <rect x="268" y="74" width="78" height="60" rx="4" fill="#ff4a2e"/><text x="307" y="99" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;font-weight:700;fill:#fff">Data</text><text x="307" y="112" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;font-weight:700;fill:#fff">Ingestion</text>
+  <rect x="352" y="74" width="78" height="60" rx="4" fill="#1c232d" stroke="#2b3542"/><text x="391" y="99" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">Data</text><text x="391" y="112" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#8a97a8">Transformation</text>
+  <rect x="436" y="74" width="94" height="28" rx="4" fill="#1c232d" stroke="#2b3542"/><text x="483" y="92" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8">Data warehousing</text>
+  <rect x="436" y="106" width="94" height="28" rx="4" fill="#1c232d" stroke="#2b3542"/><text x="483" y="124" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8">Machine learning</text>
+  <rect x="268" y="138" width="262" height="18" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="399" y="151" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8">Real-time processing</text>
+  <rect x="268" y="160" width="262" height="18" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="399" y="173" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8">Data Intelligence Engine</text>
+  <rect x="268" y="182" width="262" height="16" rx="3" fill="#1c232d" stroke="#2b3542"/><text x="399" y="194" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#6b7686">Serverless Compute | Unified Governance | Reliable Storage</text>
+
+  <text x="620" y="22" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:700;fill:#3fcf8e">Use cases</text>
+  <path d="M548 52 L 572 52 M548 96 L 572 96 M548 140 L 572 140 M548 184 L 572 184" stroke="#ff6a52" stroke-width="1.5" marker-end="url(#w1ar7)"/>
+  <text x="586" y="50" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">SQL analytics &amp; BI</text>
+  <text x="586" y="94" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">AI/ML apps</text>
+  <text x="586" y="138" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">Real-time apps</text>
+  <text x="586" y="182" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#c9d3e0">Data sharing</text>
+</svg>
+
+<h4>Lakeflow Connect Managed Connectors — BENEFITS</h4>
+<p>La première méthode pour ingérer des données d'entreprise est d'utiliser les <strong>Lakeflow Connect Managed Connectors</strong>. Ces connecteurs sont <strong>intégrés à Databricks</strong> et conçus pour simplifier l'ingestion depuis une large variété de bases de données et applications d'entreprise. Ils fournissent une expérience <strong>low-code et entièrement managée</strong>.</p>
 <ul>
-<li>Simplifient l'ingestion depuis une large variété de <strong>bases de données et applications d'entreprise</strong> (Salesforce, Workday, PostgreSQL, SQL Server, Dynamics 365, ServiceNow, Google Analytics, NetSuite, SharePoint…).</li>
-<li>Offrent une <strong>interface « point and click »</strong> (ou une API).</li>
-<li><strong>Entièrement managés par Databricks</strong> → moins de configuration manuelle et de code custom. Les connecteurs managés existent dans différents états de disponibilité (release states : Public Preview, GA…).</li>
+<li><strong>Simplifient le processus d'ingestion</strong> depuis une large variété de bases de données et applications d'entreprise.</li>
+<li>Fournissent une <strong>interface utilisateur (UI) facile à utiliser</strong> — ou vous pouvez utiliser l'<strong>API</strong>.</li>
+<li><strong>Entièrement managés par Databricks</strong>, réduisant le besoin de configuration manuelle ou de code custom.</li>
 </ul>
-<h4>Ingestion SaaS (applications)</h4>
-<p>Lakeflow Connect collecte les données depuis des sources externes vers des <strong>Streaming Delta Tables</strong> via un pipeline <strong>Serverless Declarative</strong> :</p>
+<p>Avec les managed connectors de Lakeflow Connect, vous pouvez facilement commencer à ingérer des données d'entreprise depuis des sources comme <strong>Workday, Salesforce, PostgreSQL, SQL Server</strong>, et plus. Ce sont des connecteurs <strong>hautement efficaces, managés par Databricks</strong>, conçus spécifiquement pour une ingestion rapide et fiable dans votre Lakehouse — en « <strong>point and click</strong> » ou via API.</p>
+<div class="callout"><strong>NOTE :</strong> les managed connectors de Lakeflow Connect sont dans <strong>différents états de disponibilité</strong> (release states). Certains peuvent être en <strong>public preview</strong>, d'autres en <strong>GA</strong>. Consultez la documentation officielle pour les derniers détails : <code>https://docs.databricks.com/aws/en/release-notes/release-types</code></div>
+
+<h4>Managed Connectors : SaaS Ingestion</h4>
+<svg viewBox="0 0 700 180" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w1ar8" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <text x="60" y="40" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:11px;fill:#c9d3e0">Services</text>
+  <rect x="20" y="48" width="80" height="34" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="60" y="70" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:12px;fill:#8a97a8">API</text>
+  <rect x="130" y="20" width="420" height="140" rx="9" fill="none" stroke="#ff4a2e" stroke-dasharray="5 4"/>
+  <text x="340" y="40" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;fill:#ff6a52">Lakeflow Connect</text>
+  <circle cx="176" cy="60" r="10" fill="#e3b23c"/><text x="176" y="64" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:700;fill:#0d1014">1</text>
+  <rect x="146" y="92" width="120" height="50" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="206" y="112" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Credentials</text>
+  <text x="206" y="126" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8">(Unity Catalog)</text>
+  <circle cx="296" cy="60" r="10" fill="#e3b23c"/><text x="296" y="64" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:700;fill:#0d1014">2</text>
+  <rect x="286" y="92" width="150" height="50" rx="6" fill="#232c38" stroke="#ff6a52"/>
+  <text x="361" y="108" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Managed Ingestion</text>
+  <text x="361" y="122" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">(Serverless Declarative</text>
+  <text x="361" y="133" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">Pipelines)</text>
+  <circle cx="470" cy="60" r="10" fill="#e3b23c"/><text x="470" y="64" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:700;fill:#0d1014">3</text>
+  <rect x="456" y="92" width="80" height="50" rx="6" fill="#232c38" stroke="#3fcf8e"/>
+  <text x="496" y="112" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#e8ecf2">Streaming</text>
+  <text x="496" y="125" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#e8ecf2">Delta Tables</text>
+  <path d="M104 66 L 140 92 M270 117 L 282 117 M440 117 L 452 117" stroke="#8a97a8" stroke-width="1.4" fill="none" marker-end="url(#w1ar8)"/>
+  <text x="566" y="60" style="font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8">1. Serverless DP job</text>
+  <text x="566" y="72" style="font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8">    → credentials UC</text>
+  <text x="566" y="92" style="font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8">2. Atteint la source</text>
+  <text x="566" y="104" style="font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8">    publique (API/OLAP)</text>
+  <text x="566" y="124" style="font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8">3. Transforme et stocke</text>
+  <text x="566" y="136" style="font-family:'Inter',sans-serif;font-size:9px;fill:#8a97a8">    en Streaming Delta Table</text>
+</svg>
+<p>Lakeflow Connect permet l'ingestion depuis des sources externes <strong>publiquement accessibles</strong> — API ou endpoints OLAP — vers des <strong>Streaming Delta Tables</strong>, en utilisant des <strong>pipelines déclaratifs serverless</strong>. Vous pouvez configurer ces pipelines via l'<strong>interface utilisateur (UI)</strong> ou l'<strong>API</strong>. Les managed connectors exploitent des lectures et écritures incrémentales efficaces pour rendre l'ingestion plus rapide, scalable et économique, tout en gardant vos données fraîches pour la consommation en aval.</p>
+<p><strong>Comment ça fonctionne :</strong></p>
 <ol>
-<li>Un job <em>Serverless Declarative Pipelines</em> récupère les <strong>credentials depuis Unity Catalog</strong>.</li>
-<li>Le job atteint la source de données publiquement accessible (API, port OLAP ouvert, etc.).</li>
-<li>Le service transforme les données et les stocke dans une <strong>Streaming Delta Table</strong>.</li>
+<li>Un job <strong>Lakeflow Serverless Declarative Pipelines</strong> collecte les <strong>credentials depuis Unity Catalog</strong>.</li>
+<li>Le job <strong>atteint la source de données publiquement accessible</strong> (par ex. API, port OLAP ouvert, etc.).</li>
+<li>Le service <strong>transforme les données et les stocke dans une Streaming Delta Table</strong>.</li>
 </ol>
-<p>Pour les connecteurs SaaS, tout le mouvement de données se fait dans le <em>data plane</em> ; le <em>control plane</em> ne sert qu'au setup, au monitoring (event logs) et à la gestion.</p>
-<h4>Ingestion base de données</h4>
-<p>Architecture similaire, mais depuis des bases externes (on-prem ou cloud), avec deux éléments supplémentaires :</p>
-<ol>
-<li>Une <strong>Ingestion Gateway</strong> (pipeline Declarative sur <em>compute classique</em>) récupère les credentials depuis Unity Catalog.</li>
-<li>Elle se connecte avec ces credentials et collecte les données depuis les sources base de données.</li>
-<li>L'état le plus récent et les données de <em>staging</em> (métadonnées, snapshots, change logs) sont sauvegardés dans un <strong>volume Unity Catalog</strong> (couche de staging intermédiaire, sécurisée par UC).</li>
-<li>Un job <em>Serverless Declarative Pipelines</em> traite les données collectées vers les <strong>Streaming Delta Tables</strong>.</li>
-</ol>
-<div class="callout"><strong>Pourquoi une Gateway ?</strong> (1) <strong>Réseau</strong> : beaucoup de bases sont derrière un firewall / non exposées à Internet ; la gateway peut être déployée dans votre réseau. (2) <strong>Charge</strong> : une seule gateway parle à la base puis « fan-out » vers N pipelines, limitant le nombre de connexions directes à la source.</div>
-<div class="callout"><strong>Partner Connect :</strong> s'il n'existe pas de Managed Connector pour votre source, vous pouvez utiliser un riche écosystème de partenaires (Informatica, Qlik, Rivery, Alteryx, Prophecy, Fivetran…) — comptes d'essai et connexion depuis l'UI Databricks.</div>`
+<p>Pour supporter ce flux, Databricks a introduit un <strong>nouveau type de pipeline : le managed ingestion pipeline</strong>. Son rôle principal est de se connecter à des sources SaaS publiques (comme Salesforce ou Workday), d'extraire les données et de les ingérer directement dans une streaming table. Ces pipelines sont <strong>largement prédéfinis et managés par Databricks</strong>, permettant une gestion sans couture des complexités propres à chaque source.</p>
+<div class="callout">Pour les connecteurs SaaS, <strong>tout le mouvement de données se produit dans le data plane</strong>. Le <strong>control plane</strong> n'est utilisé que pour la <strong>configuration du pipeline, le monitoring</strong> (par ex. la lecture des event logs) <strong>et la gestion</strong>.</div>`
       },
       {
-        id: "w1l15", title: "Alternatives d'ingestion (bonus)",
+        id: "w1l17", title: "Managed Connectors : bases de données & Partner Connect",
         html: `
-<h4>Fonctionnalités hors périmètre détaillé du cours, mais à connaître</h4>
-<div class="cards-3">
-<div class="mini-card"><h4>Delta Sharing</h4><p>Partager des données de façon sécurisée entre plateformes, clouds et régions.</p></div>
-<div class="mini-card"><h4>Lakehouse Federation</h4><p>Interroger des sources externes <em>sans déplacer</em> les données. Utile pour : reporting ad hoc, PoC, phase exploratoire de nouveaux pipelines/rapports, support des charges pendant une migration incrémentale.</p></div>
-<div class="mini-card"><h4>Zerobus (à venir)</h4><p>API Lakeflow Connect : écrire des événements directement dans le lakehouse à <strong>très haut débit (100 Mo/s)</strong> et <strong>latence quasi temps réel (&lt;5 s)</strong> — IoT, clickstream, télémétrie.</p></div>
-</div>
-<h4>Databricks Marketplace</h4>
-<p>Place de marché ouverte pour tous les <strong>data products</strong> : datasets, notebooks, dashboards, modèles ML, solution accelerators. <strong>Propulsée par Delta Sharing.</strong> En 3 étapes : ouvrir le Marketplace dans le workspace → rechercher des assets → <em>Get instant access</em>.</p>
-<h4>Ingérer dans des tables Delta existantes : MERGE INTO</h4>
-<p><code>MERGE INTO</code> fusionne un ensemble de mises à jour, insertions et suppressions depuis une table <strong>source</strong> vers une table Delta <strong>cible</strong>, en <strong>une seule opération atomique</strong>. Il supporte l'<strong>application</strong> ou l'<strong>évolution</strong> de schéma, et permet des actions différentes selon l'appariement :</p>
+<h4>Lakeflow Connect Managed Connectors: Database Ingestion</h4>
+<p>Voyons comment l'architecture change avec un <strong>managed database connector</strong>. Comme pour les connecteurs SaaS, cette architecture est conçue pour amener les données vers des <strong>Streaming Delta Tables</strong> — mais cette fois depuis des <strong>bases de données externes</strong> plutôt que des API publiques.</p>
+<svg viewBox="0 0 700 210" style="width:100%;height:auto;background:#1c232d;border:1px solid #2b3542;border-radius:9px;margin-bottom:14px" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="w1ar9" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a97a8"/></marker></defs>
+  <rect x="14" y="66" width="66" height="34" rx="6" fill="#232c38" stroke="#2b3542"/><text x="47" y="88" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:10px;fill:#e8ecf2">Users</text>
+  <rect x="92" y="66" width="80" height="34" rx="6" fill="#232c38" stroke="#2b3542"/><text x="132" y="82" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#e8ecf2">WebUI,</text><text x="132" y="94" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#e8ecf2">API &amp; CLI</text>
+  <path d="M84 83 L 88 83 M176 83 L 190 83" stroke="#8a97a8" stroke-width="1.4" marker-end="url(#w1ar9)"/>
+
+  <rect x="188" y="24" width="380" height="130" rx="9" fill="none" stroke="#ff4a2e" stroke-dasharray="5 4"/>
+  <text x="440" y="42" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:700;fill:#ff6a52">Lakeflow Connect</text>
+  <circle cx="212" cy="42" r="9" fill="#e3b23c"/><text x="212" y="46" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#0d1014">1</text>
+  <text x="252" y="40" style="font-family:'Inter',sans-serif;font-size:9px;fill:#e8ecf2">Credentials (Unity Catalog)</text>
+  <rect x="196" y="66" width="112" height="52" rx="6" fill="#232c38" stroke="#ff6a52"/>
+  <text x="252" y="84" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#e8ecf2">Ingestion Gateway</text>
+  <text x="252" y="96" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">(Classic Compute</text>
+  <text x="252" y="106" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Declarative Pipeline)</text>
+  <circle cx="330" cy="52" r="9" fill="#e3b23c"/><text x="330" y="56" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#0d1014">3</text>
+  <rect x="316" y="66" width="112" height="52" rx="6" fill="#232c38" stroke="#2272b4"/>
+  <text x="372" y="84" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#e8ecf2">Staging &amp; State</text>
+  <text x="372" y="95" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#e8ecf2">Management</text>
+  <text x="372" y="107" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">(Unity Catalog Volume)</text>
+  <circle cx="452" cy="52" r="9" fill="#e3b23c"/><text x="452" y="56" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#0d1014">4</text>
+  <rect x="436" y="66" width="118" height="52" rx="6" fill="#232c38" stroke="#ff6a52"/>
+  <text x="495" y="84" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#e8ecf2">Managed Ingestion</text>
+  <text x="495" y="96" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">(Serverless Declarative</text>
+  <text x="495" y="106" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8px;fill:#8a97a8">Pipeline)</text>
+  <path d="M312 92 L 312 92 M312 92 L 314 92 M310 92 L 314 92" stroke="#8a97a8" stroke-width="1.4"/>
+  <path d="M310 92 L 314 92 M432 92 L 434 92" stroke="#8a97a8" stroke-width="1.4" marker-end="url(#w1ar9)"/>
+  <path d="M558 92 L 596 92" stroke="#8a97a8" stroke-width="1.4" marker-end="url(#w1ar9)"/>
+  <rect x="600" y="66" width="86" height="52" rx="6" fill="#232c38" stroke="#3fcf8e"/>
+  <text x="643" y="86" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#e8ecf2">Streaming</text>
+  <text x="643" y="99" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#e8ecf2">Delta Tables</text>
+
+  <circle cx="180" cy="160" r="9" fill="#e3b23c"/><text x="180" y="164" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9px;font-weight:700;fill:#0d1014">2</text>
+  <rect x="200" y="142" width="120" height="46" rx="6" fill="#232c38" stroke="#2b3542"/>
+  <text x="260" y="160" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:9.5px;fill:#e8ecf2">Traditional Database</text>
+  <text x="260" y="176" text-anchor="middle" style="font-family:'Inter',sans-serif;font-size:8.5px;fill:#8a97a8">(On-prem or cloud)</text>
+  <path d="M252 138 L 252 122" stroke="#8a97a8" stroke-width="1.4" stroke-dasharray="3 2" marker-end="url(#w1ar9)"/>
+</svg>
+<p><strong>Comment ça fonctionne :</strong></p>
+<ol>
+<li>Le job <strong>Declarative Pipelines sur compute classique</strong> collecte les <strong>credentials depuis UC</strong> (Unity Catalog).</li>
+<li>Il <strong>utilise ces credentials pour se connecter et collecter les données</strong> depuis vos sources base de données.</li>
+<li>Le <strong>dernier état et les données de staging</strong> (métadonnées, snapshots, change logs) <strong>sont sauvegardés dans votre volume Unity Catalog</strong>.</li>
+<li>Un job <strong>Serverless Declarative Pipelines</strong> traite les données collectées vers vos <strong>Streaming Delta Tables</strong>.</li>
+</ol>
+
+<h5>Key Components Introduced</h5>
+<p>Deux nouveaux éléments architecturaux sont introduits ici :</p>
 <ul>
-<li><strong>Lignes appariées (matched) :</strong> <code>UPDATE</code> ou <code>DELETE</code> ;</li>
-<li><strong>Lignes non appariées par la cible (not matched) :</strong> <code>INSERT</code> ;</li>
-<li><strong>Lignes non appariées par la source (not matched by source) :</strong> <code>UPDATE</code> ou <code>DELETE</code>.</li>
+<li><strong>Ingestion Gateway</strong> — un <strong>pipeline dédié</strong> qui se connecte à la base de données pour en extraire : les <strong>métadonnées</strong>, les <strong>snapshots</strong> et les <strong>change logs</strong>. Il <strong>stage l'ensemble dans le volume Unity Catalog (UC)</strong>.</li>
+<li><strong>Unity Catalog Volume</strong> — agit comme <strong>couche de staging intermédiaire</strong>, permettant au pipeline suivant de récupérer et de streamer les données. Il est <strong>sécurisé par les mécanismes standards d'UC</strong> et, par défaut, l'accès est <strong>limité à l'utilisateur qui exécute le pipeline</strong>.</li>
 </ul>
-<p>Cela rend <code>MERGE INTO</code> idéal pour les <strong>dimensions à variation lente (SCD Type 1)</strong>, les <strong>chargements incrémentaux</strong> et les scénarios complexes de <strong>change data capture (CDC)</strong>.</p>
+<div class="callout"><strong>Pourquoi cette étape de gateway ?</strong><br/><br/>
+<strong>1 · Le réseau.</strong> Beaucoup de clients ont des bases de données [1] situées <strong>derrière un firewall</strong>, [2] qui <strong>ne sont pas publiquement accessibles depuis Internet</strong>, etc. Si vous n'avez pas d'option comme <em>Private Link</em>, Databricks peut <strong>déployer la gateway à l'intérieur de votre réseau</strong>.<br/><br/>
+<strong>2 · La charge.</strong> La gateway aide aussi à <strong>limiter la charge placée sur la base de données</strong> — vous voulez probablement limiter le nombre de connexions directes à votre source. En séparant la gateway du pipeline, <strong>une seule gateway parle à la base — puis fait un « fan-out » vers N pipelines</strong> pour la scalabilité. <em>(Ce n'est pas un problème dans un connecteur SaaS, car la charge y est typiquement contrôlée par les limites d'API.)</em></div>
+
+<h4>Data Ingestion with Partner Connect</h4>
+<p>S'il n'y a <strong>pas de managed connector disponible</strong> pour votre source de données spécifique, vous pouvez aussi utiliser <strong>Partner Connect</strong>. Partner Connect vous permet de créer des <strong>comptes d'essai</strong> avec des partenaires technologiques Databricks sélectionnés et de <strong>connecter votre workspace Databricks aux solutions partenaires depuis l'UI Databricks</strong>. Cela vous permet d'essayer les solutions partenaires avec vos données dans le lakehouse Databricks, puis d'adopter celles qui répondent le mieux à vos besoins métier.</p>
+<p><strong>Sources couvertes par Partner Connect :</strong> bases de données on-prem, bases de données cloud, sources de fichiers, applications d'entreprise. <em>Utilize a rich ecosystem of partner solutions for data ingestion.</em></p>
+<div class="callout">Les partenaires d'ingestion <strong>restent essentiels</strong>. Ils offrent une <strong>très large gamme de connecteurs</strong>, et ceux-ci tendent à avoir une <strong>fonctionnalité approfondie</strong>, maintenue par des équipes dédiées d'ingénieurs expérimentés.<br/><br/>
+Databricks veut que vous continuiez à avoir ce choix et continuera donc à travailler avec ces partenaires pour offrir autant de connecteurs de haute qualité que possible. <strong>Même quand il existe un connecteur natif</strong> pour une source donnée, cette optionalité restera supportée. Databricks ajoute simplement les <strong>connecteurs critiques que les clients ont demandés</strong> — <em>il s'agit du choix du client</em>.</div>`
+      },
+      {
+        id: "w1l18", title: "Fonctionnalités additionnelles — au-delà du cours",
+        html: `
+<p>Databricks offre des fonctionnalités additionnelles comme <strong>Lakehouse Federation</strong> pour les requêtes externes directes, <strong>Zerobus</strong> pour l'ingestion d'événements à haut débit, <strong>Delta Sharing</strong> pour l'échange sécurisé de données entre plateformes, et le <strong>Databricks Marketplace</strong> pour un accès instantané à des données et assets IA partagés — étendant vos capacités de gestion et de collaboration dans le Lakehouse.</p>
+<p>Bien que ce cours se concentre sur les managed connectors de Lakeflow Connect, il existe <strong>d'autres fonctionnalités d'ingestion</strong> dans Databricks qui peuvent être utiles à mesure que votre architecture évolue.</p>
+
+<div class="cards-3">
+  <div class="mini-card"><h4>Lakehouse Federation</h4><p><strong>Allows you to query external data sources without moving your data.</strong><br/>Particulièrement utile pour :<br/>· Ad hoc reporting<br/>· Proof-of-concept work<br/>· The exploratory phase of new ETL pipelines or reports<br/>· Supporting workloads during incremental migration</p></div>
+  <div class="mini-card"><h4>Zerobus (coming soon)</h4><p>Une <strong>API Lakeflow Connect</strong> qui permet aux développeurs d'écrire des <strong>données d'événements directement dans leur lakehouse</strong> à très haut débit (<strong>100 MB/s</strong>) avec une latence quasi temps réel (<strong>&lt;5 secondes</strong>).<br/>Simplifie l'ingestion pour <strong>IoT, clickstreams, télémétrie</strong>, et plus. (Application logging, Unity Catalog Buffer, and more!)</p></div>
+  <div class="mini-card"><h4>Delta Sharing</h4><p><strong>Allows you to securely share data across platforms, clouds, and regions.</strong></p></div>
+</div>
+<ol>
+<li><strong>Lakehouse Federation</strong> vous permet d'interroger des sources de données externes directement <strong>sans déplacer les données</strong> dans le lakehouse. Utile pour l'analyse ad hoc, le développement de PoC, le travail exploratoire pour de nouveaux pipelines ETL ou rapports, et le support de charges hybrides pendant une migration cloud incrémentale.</li>
+<li><strong>Zerobus</strong> est une API Lakeflow Connect qui permet aux développeurs d'écrire des données d'événements directement dans leur lakehouse à très haut débit (100 MB/s) avec une latence quasi temps réel (&lt;5 secondes). Elle simplifie l'ingestion pour l'IoT, les clickstreams, la télémétrie, et plus.</li>
+<li><strong>Delta Sharing</strong> vous permet de partager des données de façon sécurisée entre plateformes, clouds et régions.</li>
+</ol>
+
+<h4>Ingesting Data with Databricks Marketplace</h4>
+<p>Le <strong>Databricks Marketplace</strong> est une <strong>place de marché ouverte</strong> pour toutes vos données, votre analytique et votre IA, <strong>propulsée par le standard open source Delta Sharing</strong>. Le Databricks Marketplace élargit votre opportunité de délivrer de l'innovation et de faire avancer toutes vos initiatives d'analytique et d'IA.</p>
+<p>C'est un <strong>open exchange for all data products</strong> :</p>
+<ul>
+<li><strong>Datasets</strong> (Data Files, Data Tables)</li>
+<li><strong>Notebooks</strong></li>
+<li><strong>Dashboards</strong></li>
+<li><strong>ML models</strong></li>
+<li><strong>Solutions Accelerators</strong></li>
+</ul>
+
+<h5>Delta Sharing with Databricks Marketplace — en 3 étapes</h5>
+<div style="background:#1c232d;border:1px solid #2b3542;border-radius:9px;padding:14px;margin-bottom:14px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px">
+  <div style="display:flex;gap:9px;align-items:flex-start"><span style="background:#ff4a2e;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:0 0 22px">1</span><span style="font-size:13px;color:#e8ecf2"><strong>Open the Marketplace</strong> — dans votre Databricks Workspace, naviguez vers le Databricks Marketplace.</span></div>
+  <div style="display:flex;gap:9px;align-items:flex-start"><span style="background:#ff4a2e;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:0 0 22px">2</span><span style="font-size:13px;color:#e8ecf2"><strong>Search for Assets</strong> (<em>Find your assets</em>) — utilisez la barre de recherche pour parcourir les assets disponibles. Un bon point de départ : les assets fournis directement par Databricks.</span></div>
+  <div style="display:flex;gap:9px;align-items:flex-start"><span style="background:#ff4a2e;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:0 0 22px">3</span><span style="font-size:13px;color:#e8ecf2"><strong>Get Instant Access</strong> (<em>Get access!</em>) — sélectionnez l'asset dont vous avez besoin et cliquez sur « Get instant access ».</span></div>
+</div>
+</div>
+<div class="callout">C'est tout ! Vous êtes prêt à commencer à utiliser des <strong>data assets partagés et curés</strong>.<br/><br/><strong>Question type :</strong> « Partager des données entre régions/clouds sans copie propriétaire » → <strong>Delta Sharing</strong>. « Requêter une base externe sans la migrer » → <strong>Lakehouse Federation</strong>.</div>`
+      },
+      {
+        id: "w1l19", title: "Ingérer dans des tables Delta existantes : MERGE INTO",
+        html: `
+<p>L'ingestion dans des tables Delta existantes est fluidifiée par la commande <strong><code>MERGE INTO</code></strong>, permettant des <strong>mises à jour, insertions et suppressions atomiques</strong> depuis une source — le tout en <strong>une seule opération</strong> pour des chargements incrémentaux robustes et de la capture de changements.</p>
+
+<h4>Updates, Inserts, and Deletes on Delta Tables with MERGE INTO</h4>
+<ul>
+<li><strong>Fusionne un ensemble de mises à jour, insertions et suppressions</strong> depuis une table <strong>source</strong> vers une table Delta <strong>cible</strong>.</li>
+<li><code>MERGE INTO</code> supporte l'<strong>application (enforcement)</strong> ou l'<strong>évolution</strong> de schéma, et permet des <strong>actions différentes</strong> selon qu'une ligne est appariée ou non entre source et cible :
+  <ul>
+    <li><strong>Matched rows :</strong> <code>UPDATE</code> ou <code>DELETE</code></li>
+    <li><strong>Unmatched rows by target :</strong> <code>INSERT</code></li>
+    <li><strong>Unmatched rows by source :</strong> <code>UPDATE</code> ou <code>DELETE</code></li>
+  </ul>
+</li>
+<li>Cette fonctionnalité rend <code>MERGE INTO</code> <strong>idéal</strong> pour gérer les <strong>slowly changing dimensions (SCDs)</strong>, les <strong>chargements incrémentaux</strong> et les scénarios complexes de <strong>change data capture (CDC)</strong>.</li>
+</ul>
+
+<h4>Le scénario</h4>
+<p>Il existe des situations où vous devez <strong>mettre à jour, insérer ou supprimer des enregistrements</strong> dans une table cible sur la base d'informations provenant d'une autre table. Ici, nous avons une table cible <code>target_table</code> qui contient une liste d'utilisateurs et leurs statuts, et une table <code>source_table</code> qui contient des informations utilisateur mises à jour.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;align-items:start">
+<div>
+<p style="margin:0 0 6px;font-size:13px"><strong><code>target_table</code></strong> (avant)</p>
+<table class="tbl" style="font-size:12px">
+<thead><tr><th>users</th><th>email</th><th>status</th></tr></thead>
+<tbody>
+<tr><td>peter</td><td>peter@email.com</td><td>current</td></tr>
+<tr><td>zebi</td><td>zebi@email.com</td><td>current</td></tr>
+<tr><td>…</td><td>…</td><td>…</td></tr>
+</tbody>
+</table>
+</div>
+<div>
+<p style="margin:0 0 6px;font-size:13px"><strong><code>source_table</code></strong></p>
+<table class="tbl" style="font-size:12px">
+<thead><tr><th>users</th><th>email</th><th>status</th></tr></thead>
+<tbody>
+<tr><td>peter</td><td>peter@email.com</td><td style="color:#ff6a52">delete</td></tr>
+<tr><td>zebi</td><td>zebi@other.com</td><td style="color:#e3b23c">update</td></tr>
+<tr><td>samarth</td><td>samarth@other.com</td><td style="color:#3fcf8e">new</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>La <code>target_table</code> indique qu'il faut <strong>supprimer l'utilisateur Peter</strong>, <strong>mettre à jour l'email de Zebi</strong>, et <strong>ajouter un nouvel utilisateur Samarth</strong>. Le but est de mettre à jour la table cible avec l'information la plus à jour.</p>
+
+<h4>La commande MERGE INTO, clause par clause</h4>
 <pre><code>MERGE INTO target_table target
 USING source_table source
 ON target.id = source.id
@@ -1927,9 +2570,37 @@ WHEN MATCHED AND source.status = 'delete' THEN
   DELETE
 WHEN NOT MATCHED THEN
   INSERT (id, first_name, email, sign_up_date, status)
-  VALUES (source.id, source.first_name, source.email, source.sign_up_date, source.status);</code></pre>
-<p>Mécanique : <code>MERGE INTO … target</code> déclare la cible (alias <code>target</code>) ; <code>USING … source</code> déclare la source (alias <code>source</code>) ; <code>ON</code> fixe la <strong>condition de fusion</strong> (souvent une clé unique <code>id</code>) ; puis on enchaîne les clauses <code>WHEN MATCHED …</code> (UPDATE/DELETE selon le statut) et <code>WHEN NOT MATCHED THEN INSERT …</code> pour insérer les nouvelles lignes.</p>
-<div class="callout"><strong>Question type :</strong> « appliquer en une opération atomique des updates + inserts + deletes pour du CDC ou du SCD Type 1 » → <strong>MERGE INTO</strong>. « Partager des données entre régions/clouds sans copie propriétaire » → <strong>Delta Sharing</strong>. « Requêter une base externe sans la migrer » → <strong>Lakehouse Federation</strong>.</div><div class="demo"><span class="demo-label">Exemple — MERGE WITH SCHEMA EVOLUTION</span><p>Quand la table <strong>source</strong> possède une colonne absente de la <strong>cible</strong> (ici <code>country</code>), <code>MERGE WITH SCHEMA EVOLUTION INTO</code> fait évoluer automatiquement le schéma de la cible :</p><pre><code>MERGE WITH SCHEMA EVOLUTION INTO main_users_target target
+  VALUES (source.id, source.first_name, source.email,
+          source.sign_up_date, source.status);</code></pre>
+<table class="tbl">
+<thead><tr><th style="width:36%">Clause</th><th>Rôle</th></tr></thead>
+<tbody>
+<tr><td><code>MERGE INTO target_table target</code></td><td><strong>Target table (table to update)</strong> — déclare la table cible, celle que vous voulez mettre à jour, alimenter ou dont vous voulez supprimer des lignes. On lui donne l'alias <code>target</code> pour la référencer plus loin dans la requête.</td></tr>
+<tr><td><code>USING source_table source</code></td><td><strong>Source table (table to merge into target)</strong> — définit la table source, celle qui contient les nouvelles données ou changements à appliquer à la cible. On lui donne l'alias <code>source</code>.</td></tr>
+<tr><td><code>ON target.id = source.id</code></td><td><strong>Specify the condition for merging</strong> — définit la <strong>condition d'appariement</strong> entre source et cible, typiquement via une clé unique comme <code>id</code>.</td></tr>
+<tr><td><code>WHEN MATCHED AND source.status = 'update' THEN UPDATE SET …</code></td><td><strong>First WHEN clause for merge</strong> — si une ligne existe dans les deux tables <em>et</em> que la source indique une mise à jour, <code>UPDATE SET</code> met à jour la table cible avec les nouvelles valeurs de la source : <code>email</code> et <code>status</code>.</td></tr>
+<tr><td><code>WHEN MATCHED AND source.status = 'delete' THEN DELETE</code></td><td><strong>Second WHEN clause for merge</strong> — si la ligne existe dans les deux tables et que la source dit qu'elle doit être supprimée, elle est <strong>retirée de la cible</strong>.</td></tr>
+<tr><td><code>WHEN NOT MATCHED THEN INSERT (…) VALUES (…)</code></td><td><strong>WHEN NOT MATCHED clause for merge</strong> — si la ligne existe dans la source mais <strong>pas</strong> dans la cible, une <strong>nouvelle ligne est insérée</strong> dans la table cible avec les valeurs de la source.</td></tr>
+</tbody>
+</table>
+
+<h4>Le résultat</h4>
+<p style="margin:0 0 6px;font-size:13px"><strong>Fully Updated <code>target_table</code></strong></p>
+<table class="tbl" style="font-size:12px;max-width:520px">
+<thead><tr><th>id</th><th>users</th><th>email</th><th>status</th></tr></thead>
+<tbody>
+<tr><td>2</td><td>zebi</td><td>zebi@email</td><td>current</td></tr>
+<tr><td>4</td><td>matt</td><td>matt@email</td><td>current</td></tr>
+<tr><td>3</td><td>samarth</td><td>samarth@email</td><td>new</td></tr>
+</tbody>
+</table>
+<div class="callout">Cette <strong>unique commande MERGE INTO</strong> :<br/>
+· <strong>Met à jour</strong> les lignes quand <code>status = 'update'</code><br/>
+· <strong>Supprime</strong> les lignes quand <code>status = 'delete'</code><br/>
+· <strong>Insère</strong> les nouvelles lignes absentes de la cible<br/><br/>
+<strong>Parfait pour les chargements incrémentaux, le CDC ou les patterns SCD Type 1.</strong></div>
+<div class="callout"><strong>Question type :</strong> « appliquer en une opération atomique des updates + inserts + deletes pour du CDC ou du SCD Type 1 » → <strong>MERGE INTO</strong>.</div>
+<div class="demo"><span class="demo-label">Exemple — MERGE WITH SCHEMA EVOLUTION</span><p>Quand la table <strong>source</strong> possède une colonne absente de la <strong>cible</strong> (ici <code>country</code>), <code>MERGE WITH SCHEMA EVOLUTION INTO</code> fait évoluer automatiquement le schéma de la cible :</p><pre><code>MERGE WITH SCHEMA EVOLUTION INTO main_users_target target
 USING new_users_source source
 ON target.id = source.id
 WHEN MATCHED AND source.status = 'update' THEN
